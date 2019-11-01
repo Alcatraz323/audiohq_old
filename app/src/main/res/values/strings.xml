@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">AudioHQ</string>
+    <string name="activity_pref">Preferences</string>
+    <string name="main_menu_1">Settings</string>
+    <string name="main_menu_2">About</string>
+    <string name="main_menu_3">Start service</string>
+    <string name="main_menu_4">Stop service</string>
+    <string name="main_menu_5">Refresh</string>
+    <string name="main_report_bug">Please deliver the error to the address below</string>
+    <string name="toast_no_root">No root, this program will not work</string>
+    <string name="toast_implementing">Implementing</string>
+    <string name="service_toast_already_running">Service already running</string>
+    <string name="service_toast_already_killed">Service has been killed</string>
+    <string name="adjust_title">Precise Control</string>
+    <string name="adjust_confirm">Apply</string>
+    <string name="til_err_parse">Not a float number</string>
+    <string name="til_err_ofr">Out of range</string>
+
+    <string name="toast_copied">Copied</string>
+    <string name="ad_pb">Yes</string>
+    <string name="ad_nb">Cancel</string>
+    <string name="ad_pb2">Yes</string>
+    <string name="ad_pb_no_rc_modify">Install, but no modify to .rc files</string>
+    <string name="ad_nb2">No</string>
+    <string name="ad_nb3">Close</string>
+    <string name="ad_nb4">Clear</string>
+    <string name="ad_processing">Processing…</string>
+    <string name="empty_view">Empty</string>
+
+    <string name="check_root">Root</string>
+    <string name="check_selinux">Selinux Status</string>
+    <string name="check_support">Supported</string>
+    <string name="check_native_elf_info">Native version</string>
+    <string name="check_native_lib_info">Lib version</string>
+    <string name="check_audioserver_info">\'audioserver\' elf info </string>
+    <string name="aplc_split_control">Split control</string>
+    <string name="aplc_precise_control">Precise control</string>
+    <string name="aplc_left">L[0,1]</string>
+    <string name="aplc_right">R[0,1]</string>
+    <string name="aplc_general">General[0,1]</string>
+
+    <string name="status_server">Native server</string>
+    <string name="status_track_ctl_position">Track ctrl position</string>
+    <string name="status_auto_remove_flag">Auto remove</string>
+    <string name="status_thread_count">Existing threads</string>
+    <string name="status_track_lock_ctl">Track control lock type</string>
+
+    <!--Preferences-->
+    <string name="pref_1_t">Background</string>
+    <string name="pref_1_1">Service type</string>
+    <string name="pref_1_2">Use modified se context to avoid Enforced Selinux(Current using:Magisk)</string>
+    <string name="pref_1_2_summary">Supporting other \'su\'</string>
+    <string name="pref_1_3">Boot</string>
+    <string name="pref_1_3_summary">Better way developing</string>
+    <string name="pref_2_t">Security</string>
+    <string name="pref_2_1">Unset progress default silenced</string>
+    <string name="pref_2_1_summary">Warning:Not work after reboot</string>
+    <string name="pref_3_t">Others</string>
+    <string name="pref_3_1">Check update</string>
+    <string name="pref_3_2">Clear profiles</string>
+    <string name="pref_3_3">Uninstall native files</string>
+
+    <string name="pref_default_silent_warning_title">Warning</string>
+    <string name="pref_default_silent_warning_message">If you enable this option,
+        please make sure your phone and other critical system process\'s volume has been set, unless
+    you want to make your phone call to hear like silent</string>
+    <string name="pref_clear_profile_confirm">You are clearing profiles,proceed?</string>
+
+
+    <!--About-->
+    <string name="au_l_1">Version 0.1</string>
+    <string name="au_l_2">Developer</string>
+    <string name="au_l_2_1">Alcatraz,Mr_Dennis(Coolapk)</string>
+    <string name="au_l_3">Check sourcecode</string>
+    <string name="au_l_4">Open source Licenses</string>
+    <string name="au_l_4_1">Respect to opensource</string>
+    <string name="au_osp">Opensource Projects</string>
+    <string name="adjust_default_value" tools:ignore="MissingTranslation">1.0</string>
+
+    <string name="install_warning">The installation process contains a dangerous action,
+        replace the /system/lib(64)/libaudioflinger.so, and the /system/etc/init/audioserver.rc
+        this action may cause system can\'t start, turning your device into a brick or cause unrecoverable damage to your hardware,
+        I strongly recommend to you proceed this action ONLY IF you have installed a file manager functional recovery
+        and BACKUP the file(s) I mentioned above.</string>
+    <string name="uninstall_steps">1. Replace the backup libaudioflinger.so to /system/lib(64), set
+        permission as 0644 (rw-r-r)\n
+        2. Delete /system/bin/audiohq\n
+        3. Replace the backup audioserver.rc to /system/etc/init/audioserver.rc\n
+        Auto backup position:/sdcard/audiohq_backups
+    </string>
+    <string name="install_title">Native file not installed</string>
+    <string name="install_confirm_title">Install?</string>
+    <string name="install_confirm_support">Support: "32-bit LSB arm" /system/bin/audioserver elf, auto backup position /sdcard/audiohq_backups,The system will reboot after the installation is successful!!!,
+        If your selinux in disabled or permissive you may select "Install, but no modify to .rc files"</string>
+    <string name="install_confirm_detect">Detected: </string>
+    <string name="install_fail_title">Installation Failed</string>
+    <string name="install_fail_message">You may retry，if this dialog always shown, please try install manually</string>
+    <string name="install_cant_mount_rw">Can\'t mount /system as read-write, please try install manually</string>
+    <string name="install_magisk_not_installed">Magisk not installed, do not try install native file before you get Magisk installed</string>
+    <string name="install_retry">Retry</string>
+
+</resources>

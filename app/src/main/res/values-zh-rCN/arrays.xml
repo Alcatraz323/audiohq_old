@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="main_tabs">
+        <item>正在播放</item>
+        <item>状态</item>
+        <item>控制台</item>
+        <item>检查</item>
+    </string-array>
+
+    <string-array name="entries_for_server_mode">
+        <item>Fifo(Native)Selinux Enforing 状态将不会工作</item>
+        <item>Memory(Native)兼容性低</item>
+        <item>Log bridge(Native)兼容性高，可能会出现瞬时响度不符</item>
+        <item>无自动调整特性的服务</item>
+        <item>不启动外挂服务(Magisk上下文)</item>
+    </string-array>
+
+
+</resources>

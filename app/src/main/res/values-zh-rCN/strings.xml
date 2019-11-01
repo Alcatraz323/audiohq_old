@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AudioHQ</string>
+    <string name="activity_pref">设置</string>
+    <string name="main_menu_1">设置</string>
+    <string name="main_menu_2">关于</string>
+    <string name="main_menu_3">启动服务</string>
+    <string name="main_menu_4">停止服务</string>
+    <string name="main_menu_5">刷新</string>
+    <string name="main_report_bug">请把错误信息发至以下地址</string>
+    <string name="toast_no_root">无法获取root, 软件将不会工作</string>
+    <string name="toast_implementing">实现中</string>
+    <string name="service_toast_already_running">服务已经运行</string>
+    <string name="service_toast_already_killed">服务已被杀死</string>
+    <string name="adjust_title">精确调整</string>
+    <string name="adjust_confirm">执行</string>
+    <string name="til_err_parse">不是一个有效的浮点数</string>
+    <string name="til_err_ofr">超出范围</string>
+
+    <string name="toast_copied">已复制</string>
+    <string name="ad_pb">确定</string>
+    <string name="ad_nb">取消</string>
+    <string name="ad_pb2">是</string>
+    <string name="ad_pb_no_rc_modify">安装(不修改上下文)</string>
+    <string name="ad_nb2">否</string>
+    <string name="ad_nb3">关闭</string>
+    <string name="ad_nb4">清除</string>
+    <string name="ad_processing">进行中…</string>
+    <string name="empty_view">无结果</string>
+
+    <string name="check_root">Root权限</string>
+    <string name="check_selinux">Selinux状态</string>
+    <string name="check_support">是否支持</string>
+    <string name="check_native_elf_info">原生文件版本</string>
+    <string name="check_native_lib_info">运行库信息</string>
+    <string name="check_audioserver_info">\'audioserver\'可执行文件信息</string>
+    <string name="aplc_split_control">双声道控制</string>
+    <string name="aplc_precise_control">精确控制</string>
+    <string name="aplc_left">L[0,1]</string>
+    <string name="aplc_right">R[0,1]</string>
+    <string name="aplc_general">综合[0.1]</string>
+
+    <string name="status_server">原生服务</string>
+    <string name="status_track_ctl_position">音轨控制位置</string>
+    <string name="status_auto_remove_flag">自动移除配置</string>
+    <string name="status_thread_count">回放线程</string>
+    <string name="status_track_lock_ctl">音轨控制类型</string>
+
+    <!--设置-->
+    <string name="pref_1_t">后台</string>
+    <string name="pref_1_1">服务类型</string>
+    <string name="pref_1_2">使用修改的上下文规避Enforced Selinux(当前:Magisk)</string>
+    <string name="pref_1_2_summary">不支持其他的主要是因为开发者不知道其他su的上下文…</string>
+    <string name="pref_1_3">开机启动</string>
+    <string name="pref_1_3_summary">若使用Magisk上下文越过Selinux Enforcing禁止开启此项，原生外挂服务非广播方式研究中</string>
+    <string name="pref_2_t">安全</string>
+    <string name="pref_2_1">未设置进程默认静音</string>
+    <string name="pref_2_1_summary">注意:若未使用Magisk上下文越过Selinux Enforcing将不是永久设置</string>
+    <string name="pref_3_t">其他</string>
+    <string name="pref_3_1">检查更新</string>
+    <string name="pref_3_2">清除配置</string>
+    <string name="pref_3_3">卸载原生文件</string>
+
+    <string name="pref_default_silent_warning_title">警告</string>
+    <string name="pref_default_silent_warning_message">若启用此项，请确保电话等进程的音量已被设置，若未设置可能导致听筒静音</string>
+    <string name="pref_clear_profile_confirm">你正在清除配置，执行?</string>
+
+
+
+    <!--关于-->
+    <string name="au_l_1">版本 0.1</string>
+    <string name="au_l_2">开发者</string>
+    <string name="au_l_2_1">Alcatraz,Mr_Dennis(Coolapk)</string>
+    <string name="au_l_3">查看源码</string>
+    <string name="au_l_4">开放源代码许可</string>
+    <string name="au_l_4_1">向开源致敬</string>
+    <string name="au_osp">开源相关</string>
+
+    <string name="install_warning">安装过程包含危险操作(替换/system/lib(64)/libaudioflinger.so,修改/system/etc/init/audioserver.rc),
+        这个操作可能导致你的设备无法开机，变砖，甚至对硬件造成损害
+        请在设备安装的recovery具有文件管理器的情况下(如Twrp),做好上述文件的备份后进行安装操作</string>
+    <string name="uninstall_steps">1. 将备份的libaudioflinger.so放入/system/lib(64)替换文件, 并设置其权限为
+        0644 (rw-r-r)\n
+        2. 删除/system/bin/audiohq\n
+        3. 用备份的audioserver.rc替换/system/etc/init/audioserver.rc\n
+        自动备份文件位置:/sdcard/audiohq_backups
+    </string>
+    <string name="install_title">原生文件未安装</string>
+    <string name="install_confirm_title">安装?</string>
+    <string name="install_confirm_support">支持: "32-bit LSB arm" /system/bin/audioserver 可执行文件,自动备份位置/sdcard/audiohq_backups,自动备份可能失效，请确认手动备份文件存在,安装成功后将自动重启!!!</string>
+    <string name="install_confirm_detect">当前: </string>
+    <string name="install_fail_title">安装未成功完成</string>
+    <string name="install_fail_message">可以选择重试，若多次出现此内容请尝试手动安装</string>
+    <string name="install_cant_mount_rw">无法挂载/system为读写，请执行手动安装</string>
+    <string name="install_magisk_not_installed">Magisk未安装，请不要在安装Magisk前安装原生文件</string>
+    <string name="install_retry">重试</string>
+
+</resources>

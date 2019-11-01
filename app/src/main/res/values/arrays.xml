@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string-array name="main_tabs">
+        <item>Playing</item>
+        <item>Status</item>
+        <item>Console</item>
+        <item>Check</item>
+    </string-array>
+
+    <string-array name="entries_for_server_mode">
+        <item>Fifo(Native)Not work when selinux enforcing</item>
+        <item>Memory(Native)Low compatibility</item>
+        <item>Log bridge(Native)High compatibility,but may occur volume incorrect delay</item>
+        <item>No Automatical adjust service(Native)</item>
+        <item>Disable server(When using Magisk context)</item>
+    </string-array>
+
+    <string-array name="entryvalues_for_server_mode" tools:ignore="MissingTranslation">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>256</item>
+    </string-array>
+
+    <string-array name="preference_keys" tools:ignore="MissingTranslation">
+        <item>service</item>
+        <item>modified_context</item>
+        <item>boot</item>
+        <item>default_silent</item>
+    </string-array>
+
+</resources>
