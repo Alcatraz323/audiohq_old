@@ -50,11 +50,17 @@
     <string name="setup_step_next">Next</string>
     <string name="setup_step_next_final">Done</string>
     <string name="setup_step_before">Forward</string>
+    <string name="setup_1_intro">Hello my friend, before you can start, let\'s take some minutes to complete the setup</string>
+    <string name="setup_2_warning_vendor_system_title">Caution!Vendor modified system detected:%s</string>
+    <string name="setup_2_warning_vendor_system_info">I strongly recommend you NOT TO try installing,
+        this action may cause your phone stuck at the boot animation,if you know what you are doing click
+    the button below to unlock the next step</string>
+    <string name="setup_2_warning_vendor_system_unlock">Understood and unlock</string>
 
     <!--Preferences-->
     <string name="pref_1_t">Background</string>
     <string name="pref_1_1">Service type</string>
-    <string name="pref_1_2">Modify audioserver.rc to enable built-in server</string>
+    <string name="pref_1_2">Modify audioserver.rc to enable built-in server(requires reboot)</string>
     <string name="pref_1_2_summary">This would NOT work when /system is ro or .rc files are packaged in boot.img</string>
     <string name="pref_1_3">Boot</string>
     <string name="pref_1_3_summary">Better way developing</string>
@@ -71,7 +77,6 @@
         please make sure your phone and other critical system process\'s volume has been set, unless
     you want to make your phone call to hear like silent</string>
     <string name="pref_clear_profile_confirm">You are clearing profiles,proceed?</string>
-
 
     <!--About-->
     <string name="au_l_1">Version 0.1</string>

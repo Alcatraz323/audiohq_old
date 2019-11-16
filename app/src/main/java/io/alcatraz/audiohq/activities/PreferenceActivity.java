@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.alcatraz.support.v4.appcompat.DrawerLayoutUtil;
 
-import io.alcatraz.audiohq.CompatWithPipeActivity;
+import io.alcatraz.audiohq.extended.CompatWithPipeActivity;
 import io.alcatraz.audiohq.Constants;
 import io.alcatraz.audiohq.R;
 import io.alcatraz.audiohq.fragments.PrefFragment;
@@ -20,7 +20,7 @@ public class PreferenceActivity extends CompatWithPipeActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.preference);
+        setContentView(R.layout.activity_preference);
         initViews();
         DrawerLayoutUtil.Immersive(toolbar, true, this);
         FragmentManager fragmentManager = getFragmentManager();

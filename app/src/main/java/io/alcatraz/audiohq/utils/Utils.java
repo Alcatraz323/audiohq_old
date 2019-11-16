@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -27,7 +26,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -121,7 +119,7 @@ public class Utils {
         parent.setPadding(parent.getPaddingLeft(), parent.getPaddingTop(), parent.getPaddingRight(), getNavigationBarHeight(parent.getContext()));
         LayoutInflater inflater = (LayoutInflater) adapterView.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         assert inflater != null;
-        View emptyView = inflater.inflate(R.layout.empty_view, null);
+        View emptyView = inflater.inflate(R.layout.panel_empty_view, null);
         ((ViewGroup) adapterView.getParent()).addView(emptyView);
         adapterView.setEmptyView(emptyView);
     }
@@ -135,7 +133,7 @@ public class Utils {
 
     public static AlertDialog getProcessingDialog(Context ctx, List<View> out, boolean cancelable, boolean showProgressBar, boolean needAsync, Runnable async) {
         LayoutInflater lf = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        @SuppressLint("InflateParams") View root = lf.inflate(R.layout.ad_processing, null);
+        @SuppressLint("InflateParams") View root = lf.inflate(R.layout.dialog_processing, null);
         TextView content = root.findViewById(R.id.ad_content);
         ProgressBar pb = root.findViewById(R.id.ad_processing_progress);
         if (!showProgressBar) {

@@ -72,4 +72,8 @@ public class CheckUtils {
         }
         return pName.contains("com.topjohnwu.magisk");//判断pName中是否有目标程序的包名，有TRUE，没有FALSE
     }
+
+
+
+
 }

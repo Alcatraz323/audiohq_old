@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -30,9 +31,10 @@ import java.util.List;
 import java.util.Map;
 
 import io.alcatraz.audiohq.AsyncInterface;
-import io.alcatraz.audiohq.CompatWithPipeActivity;
+import io.alcatraz.audiohq.extended.CompatWithPipeActivity;
 import io.alcatraz.audiohq.LogBuff;
 import io.alcatraz.audiohq.R;
+import io.alcatraz.audiohq.extended.SetupWizardBaseActivity;
 import io.alcatraz.audiohq.adapters.PlayingExpandableAdapter;
 import io.alcatraz.audiohq.beans.AppListBean;
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
@@ -221,7 +223,7 @@ public class MainActivity extends CompatWithPipeActivity {
     }
 
     private View initConsolePanel() {
-        @SuppressLint("InflateParams") View root = getLayoutInflater().inflate(R.layout.console_panel, null);
+        @SuppressLint("InflateParams") View root = getLayoutInflater().inflate(R.layout.panel_console, null);
         console = root.findViewById(R.id.console_text);
         console_refresh = root.findViewById(R.id.console_refresh);
         Utils.setupSRL(console_refresh);

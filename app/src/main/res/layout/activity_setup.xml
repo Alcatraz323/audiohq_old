@@ -39,8 +39,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
-                        android:textColor="#FFFFFF"
-                        android:textSize="32sp" />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textColor="@color/white" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -53,7 +53,8 @@
         android:id="@+id/setup_progress_bar_limit"
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:layout_below="@id/setup_appbar">
+        android:layout_below="@id/setup_appbar"
+        android:visibility="gone">
 
         <ProgressBar
             android:id="@+id/setup_progress"

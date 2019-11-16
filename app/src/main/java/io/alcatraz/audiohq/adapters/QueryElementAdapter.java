@@ -28,7 +28,7 @@ public class QueryElementAdapter extends RecyclerView.Adapter<QueryElementContai
 
     @Override
     public QueryElementContainer onCreateViewHolder(ViewGroup p1, int p2) {
-        View v = lf.inflate(R.layout.opensource_holder, p1, false);
+        View v = lf.inflate(R.layout.item_opensource_holder, p1, false);
         QueryElementContainer mvh = new QueryElementContainer(v);
         return mvh;
     }

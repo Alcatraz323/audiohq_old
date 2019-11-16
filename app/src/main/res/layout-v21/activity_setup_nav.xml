@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:id="@+id/setup_nav_bar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_weight="1.0"
     android:gravity="bottom"
     android:orientation="horizontal">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="55dp">
 
@@ -18,11 +18,12 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/setupnavButton1"
+                android:id="@+id/setup_btn_forward"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="32dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:drawableStart="@drawable/ic_chevron_left"
                 android:text="@string/setup_step_before"
                 android:textAllCaps="false"
@@ -36,11 +37,12 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/setupnavButton2"
+                    android:id="@+id/setup_btn_next"
                     style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="32dp"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:drawableEnd="@drawable/ic_chevron_right"
                     android:text="@string/setup_step_next"
                     android:textAllCaps="false"
@@ -54,4 +56,3 @@
     </android.support.design.widget.AppBarLayout>
 
 </LinearLayout>
-

@@ -12,10 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.List;
@@ -33,7 +31,7 @@ public class Panels {
     @SuppressLint("SetTextI18n")
     public static View getCheckPanel(Activity activity) {
         LayoutInflater lf = activity.getLayoutInflater();
-        @SuppressLint("InflateParams") View view = lf.inflate(R.layout.check_panel, null);
+        @SuppressLint("InflateParams") View view = lf.inflate(R.layout.panel_check, null);
 
         TextView root = view.findViewById(R.id.check_root);
         TextView selinux = view.findViewById(R.id.check_selinux);
@@ -66,7 +64,7 @@ public class Panels {
         textViews.clear();
         imgvs.clear();
         LayoutInflater lf = activity.getLayoutInflater();
-        @SuppressLint("InflateParams") View view = lf.inflate(R.layout.status_panel, null);
+        @SuppressLint("InflateParams") View view = lf.inflate(R.layout.panel_status, null);
 
         TextView server = view.findViewById(R.id.status_server);
         TextView auto_remove = view.findViewById(R.id.status_auto_remove);
@@ -91,7 +89,7 @@ public class Panels {
     @SuppressLint("SetTextI18n")
     public static AlertDialog getAdjustPanel(Activity ctx, AppListBean bean, AsyncInterface through) {
         LayoutInflater lf = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        @SuppressLint("InflateParams") View root = lf.inflate(R.layout.adjust_panel, null);
+        @SuppressLint("InflateParams") View root = lf.inflate(R.layout.panel_adjust, null);
         TextInputLayout general = root.findViewById(R.id.adjust_general);
         TextInputLayout left = root.findViewById(R.id.adjust_left);
         TextInputLayout right = root.findViewById(R.id.adjust_right);

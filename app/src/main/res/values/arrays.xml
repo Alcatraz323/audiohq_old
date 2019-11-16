@@ -8,13 +8,24 @@
     </string-array>
 
     <string-array name="entries_for_server_mode">
-        <item>Fifo(Native)Not work when selinux enforcing</item>
+        <item>Fifo(Native)(Recommended)</item>
         <item>Memory(Native)Low compatibility</item>
         <item>Log bridge(Native)High compatibility,but may occur volume incorrect delay</item>
         <item>No Automatical adjust service(Native)</item>
-        <item>Disable server(When using Magisk context)</item>
+        <item>Disable server(When using modified rc)</item>
     </string-array>
 
+    <string-array name="setup_page_titles">
+        <item>Welcome</item>
+        <item>Requirements check</item>
+        <item>Server mode</item>
+        <item>Wait a minute…</item>
+        <item>Done!</item>
+        <item>Current update</item>
+    </string-array>
+
+
+    <!--Please DO NOT add translation to the arrays below-->
     <string-array name="entryvalues_for_server_mode" tools:ignore="MissingTranslation">
         <item>1</item>
         <item>2</item>

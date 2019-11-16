@@ -46,7 +46,7 @@ public class AuthorAdapter extends BaseAdapter
     {
         if(p2==null){
             LayoutInflater lf=(LayoutInflater) c.getSystemService(c.LAYOUT_INFLATER_SERVICE);
-            p2=lf.inflate(R.layout.author_item,null);
+            p2=lf.inflate(R.layout.item_author_main_list,null);
         }
         ImageView iv= p2.findViewById(R.id.authoritemImageView1);
         TextView txv1= p2.findViewById(R.id.authoritemTextView1);

@@ -11,25 +11,45 @@ public class AudioHqApis {
     public static final String AUDIOHQ_SERVER_NONE = "256";
 
 
-    public static ShellUtils.CommandResult setPkgVolume(String pkgname, float prog_general, float prog_left, float prog_right, boolean split_control, String thread) {
+    public static ShellUtils.CommandResult setPkgVolume(String pkgname,
+                                                        float prog_general,
+                                                        float prog_left,
+                                                        float prog_right,
+                                                        boolean split_control,
+                                                        String thread) {
         String split = "0";
         if (split_control)
             split = "1";
-        return runAudioHqCmd(AudioHqCmds.SET_PKG_VOLUME, pkgname, prog_left + "", prog_right + "", prog_general + "", split, thread);
+        return runAudioHqCmd(AudioHqCmds.SET_PKG_VOLUME, pkgname,
+                prog_left + "", prog_right + "", prog_general + "", split, thread);
     }
 
-    public static ShellUtils.CommandResult setPidVolume(String pid, float prog_general, float prog_left, float prog_right, boolean split_control, String thread) {
+    public static ShellUtils.CommandResult setPidVolume(String pid,
+                                                        float prog_general,
+                                                        float prog_left,
+                                                        float prog_right,
+                                                        boolean split_control,
+                                                        String thread) {
         String split = "0";
         if (split_control)
             split = "1";
-        return runAudioHqCmd(AudioHqCmds.SET_PID_VOLUME, pid, prog_left + "", prog_right + "", prog_general + "", split, thread);
+        return runAudioHqCmd(AudioHqCmds.SET_PID_VOLUME, pid,
+                prog_left + "", prog_right + "", prog_general + "", split, thread);
     }
 
-    public static ShellUtils.CommandResult setPidVolume(String pid, float prog_general, float prog_left, float prog_right, boolean split_control) {
+    public static ShellUtils.CommandResult setPidVolume(String pid,
+                                                        float prog_general,
+                                                        float prog_left,
+                                                        float prog_right,
+                                                        boolean split_control) {
         return setPidVolume(pid, prog_left, prog_right, prog_general, split_control, AUDIOHQ_THREAD_ALL_USE);
     }
 
-    public static ShellUtils.CommandResult setPkgVolume(String pkgname, float prog_general, float prog_left, float prog_right, boolean split_control) {
+    public static ShellUtils.CommandResult setPkgVolume(String pkgname,
+                                                        float prog_general,
+                                                        float prog_left,
+                                                        float prog_right,
+                                                        boolean split_control) {
         return setPkgVolume(pkgname, prog_general, prog_left, prog_right, split_control, AUDIOHQ_THREAD_ALL_USE);
     }
 
@@ -126,11 +146,16 @@ public class AudioHqApis {
         return runAudioHqCmd(AudioHqCmds.M_GET_SET_PKGS);
     }
 
-    public static ShellUtils.CommandResult setMPackageVolume(String pkgname, float prog_general, float prog_left, float prog_right, boolean split_control) {
+    public static ShellUtils.CommandResult setMPackageVolume(String pkgname,
+                                                             float prog_general,
+                                                             float prog_left,
+                                                             float prog_right,
+                                                             boolean split_control) {
         String split = "0";
         if (split_control)
             split = "1";
-        return runAudioHqCmd(AudioHqCmds.M_SET_PKG_VOLUME, pkgname, prog_left + "", prog_right + "", prog_general + "", split);
+        return runAudioHqCmd(AudioHqCmds.M_SET_PKG_VOLUME, pkgname,
+                prog_left + "", prog_right + "", prog_general + "", split);
     }
 
     public static ShellUtils.CommandResult mUnsetForPkg(String pkg) {

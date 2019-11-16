@@ -143,7 +143,7 @@ public class AnimateUtils {
         }
     }
 
-    public static void textChange(final TextView txv, final String tx) {
+    public static void textChange(final TextView txv, final CharSequence tx) {
         AnimationSet as1 = new AnimationSet(true);
         AlphaAnimation aa1 = new AlphaAnimation(1, 0);
         aa1.setDuration(200);

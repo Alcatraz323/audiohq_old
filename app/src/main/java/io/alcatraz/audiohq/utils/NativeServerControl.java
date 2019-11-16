@@ -1,8 +1,7 @@
 package io.alcatraz.audiohq.utils;
 
-import io.alcatraz.audiohq.CompatWithPipeActivity;
+import io.alcatraz.audiohq.extended.CompatWithPipeActivity;
 import io.alcatraz.audiohq.R;
-import io.alcatraz.audiohq.beans.ServerStatus;
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
 import io.alcatraz.audiohq.core.utils.ShellUtils;
 

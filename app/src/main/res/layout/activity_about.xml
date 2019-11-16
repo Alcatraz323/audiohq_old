@@ -20,7 +20,6 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.CardView
-        android:id="@+id/listcardCardView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="3dp"
@@ -30,7 +29,7 @@
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true">
 
-        <include layout="@layout/author_content" />
+        <include layout="@layout/activity_author_content" />
     </android.support.v7.widget.CardView>
 
 </LinearLayout>

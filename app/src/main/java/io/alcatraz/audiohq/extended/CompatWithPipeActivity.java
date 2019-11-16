@@ -1,4 +1,4 @@
-package io.alcatraz.audiohq;
+package io.alcatraz.audiohq.extended;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.alcatraz.support.v4.appcompat.StatusBarUtil;
 
+import io.alcatraz.audiohq.Constants;
 import io.alcatraz.audiohq.utils.PermissionInterface;
 import io.alcatraz.audiohq.utils.SharedPreferenceUtil;
 

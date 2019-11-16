@@ -8,12 +8,20 @@
     </string-array>
 
     <string-array name="entries_for_server_mode">
-        <item>Fifo(Native)Selinux Enforing 状态将不会工作</item>
+        <item>Fifo(Native)(推荐)</item>
         <item>Memory(Native)兼容性低</item>
         <item>Log bridge(Native)兼容性高，可能会出现瞬时响度不符</item>
         <item>无自动调整特性的服务</item>
-        <item>不启动外挂服务(Magisk上下文)</item>
+        <item>不启动外挂服务(修改的rc)</item>
     </string-array>
 
+    <string-array name="setup_page_titles">
+        <item>欢迎</item>
+        <item>要求检查</item>
+        <item>后台模式</item>
+        <item>请稍候…</item>
+        <item>完成!</item>
+        <item>当前更新</item>
+    </string-array>
 
 </resources>

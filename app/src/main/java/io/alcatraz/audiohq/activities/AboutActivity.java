@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.alcatraz.audiohq.CompatWithPipeActivity;
+import io.alcatraz.audiohq.extended.CompatWithPipeActivity;
 import io.alcatraz.audiohq.Constants;
 import io.alcatraz.audiohq.R;
 import io.alcatraz.audiohq.adapters.AuthorAdapter;
@@ -39,7 +39,7 @@ public class AboutActivity extends CompatWithPipeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.about);
+        setContentView(R.layout.activity_about);
         initData();
         initViews();
     }
@@ -86,7 +86,7 @@ public class AboutActivity extends CompatWithPipeActivity {
     }
 
     public void showOSPDialog(){
-        View v=getLayoutInflater().inflate(R.layout.ad_ops,null);
+        View v=getLayoutInflater().inflate(R.layout.dialog_ops,null);
         new android.support.v7.app.AlertDialog.Builder(this)
                 .setTitle(R.string.au_osp)
                 .setView(v)

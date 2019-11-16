@@ -50,11 +50,16 @@
     <string name="setup_step_next">下一步</string>
     <string name="setup_step_next_final">完成</string>
     <string name="setup_step_before">上一步</string>
+    <string name="setup_1_intro">你好朋友,在正式开始之前,让我们花一些时间完成设置</string>
+    <string name="setup_2_warning_vendor_system_title">警告！检测到非原生/类原生系统:%s</string>
+    <string name="setup_2_warning_vendor_system_info">我很不推荐你继续安装，这类系统往往会对底层进行一些更改，本软件需要连接的库较为重要
+    在该类系统上安装将大概率卡在开机界面！如果你知道你在做什么并且懂得怎么通过twrp删除模块，请点击下面的解锁以继续操作</string>
+    <string name="setup_2_warning_vendor_system_unlock">明白风险并解锁</string>
 
     <!--设置-->
     <string name="pref_1_t">后台</string>
     <string name="pref_1_1">服务类型</string>
-    <string name="pref_1_2">修改audioserver.rc以使用audioserver嵌入方式</string>
+    <string name="pref_1_2">修改audioserver.rc以使用audioserver嵌入方式(需要重启系统)</string>
     <string name="pref_1_2_summary">/system无法写入或rc打包于boot.img时将不会工作</string>
     <string name="pref_1_3">开机启动</string>
     <string name="pref_1_3_summary">若修改rc启用，禁止开启此项，原生外挂服务非广播方式研究中</string>
