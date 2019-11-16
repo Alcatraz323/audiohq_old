@@ -149,6 +149,18 @@ public class AudioHqApis {
         return runAudioHqCmd(AudioHqCmds.SET_DEFAULT_SILENT_STATE, state ? "true" : "false");
     }
 
+    public static ShellUtils.CommandResult setMute(String pkg, boolean mute) {
+        return runAudioHqCmd(AudioHqCmds.M_SET_PKG_MUTE, pkg, mute ? "true" : "false");
+    }
+
+    public static ShellUtils.CommandResult getReadProcState() {
+        return runAudioHqCmd(AudioHqCmds.GET_READPROC_STATE);
+    }
+
+    public static ShellUtils.CommandResult setReadProcState(boolean use_readproc) {
+        return runAudioHqCmd(AudioHqCmds.SET_READPROC_STATE, use_readproc ? "true" : "false");
+    }
+
     public static ShellUtils.CommandResult runAudioHqCmd(AudioHqCmds audioHqCmds, String... params) {
         String cmd;
         if (audioHqCmds.hasParams())
@@ -180,9 +192,13 @@ public class AudioHqApis {
         GET_LIB_INFO("audiohq -V", true, true),
         GET_DEFAULT_SILENT_STATE("audiohq -n", false, false),
         SET_DEFAULT_SILENT_STATE("audiohq -n%s", true, true),
+        GET_READPROC_STATE("audiohq -S", false, false),
+        SET_READPROC_STATE("audiohq -S%s", true, true),
 
         M_SET_PKG_VOLUME("audiohq -z\"%s|%s,%s,%s,%s\"", true, true),
         M_GET_SET_PKGS("audiohq -z", false, false),
+        M_SET_PKG_MUTE("audiohq -M\"%s|%s\"", true, true),
+        M_GET_PKG_MUTE("audiohq -M", false, false),
         M_UNSET_PKG("audiohq -x \"%s\"", true, true),
         M_CLEAR("audiohq -b", true, false);
 

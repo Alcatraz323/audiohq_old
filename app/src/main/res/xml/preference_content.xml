@@ -6,20 +6,18 @@
     <PreferenceCategory android:title="@string/pref_1_t">
         <SwitchPreference
             android:defaultValue="true"
-            android:enabled="false"
-            android:key="modified_context"
+            android:key="modified_rc"
             android:summary="@string/pref_1_2_summary"
             android:title="@string/pref_1_2" />
         <ListPreference
+            android:enabled="false"
             android:defaultValue="5"
-            android:dependency="modified_context"
             android:dialogTitle="@string/pref_1_1"
             android:entries="@array/entries_for_server_mode"
             android:entryValues="@array/entryvalues_for_server_mode"
             android:key="service"
             android:title="@string/pref_1_1" />
         <SwitchPreference
-            android:dependency="modified_context"
             android:key="boot"
             android:summary="@string/pref_1_3_summary"
             android:title="@string/pref_1_3" />

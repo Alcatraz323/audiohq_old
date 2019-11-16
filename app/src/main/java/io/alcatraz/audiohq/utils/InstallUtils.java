@@ -86,7 +86,7 @@ public class InstallUtils {
         ServerStatus.updateStatus();
         ServerStatus.requestForPending(() -> activity.runOnUiThread(() -> {
             if (!ServerStatus.isServerInstalled())
-                Panels.getInstallPanel(activity).show();
+                Panels.getNotInstalledPanel(activity).show();
         }));
     }
 

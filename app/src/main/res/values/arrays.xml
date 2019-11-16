@@ -25,7 +25,7 @@
 
     <string-array name="preference_keys" tools:ignore="MissingTranslation">
         <item>service</item>
-        <item>modified_context</item>
+        <item>modified_rc</item>
         <item>boot</item>
         <item>default_silent</item>
     </string-array>

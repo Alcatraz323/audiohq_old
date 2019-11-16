@@ -179,7 +179,14 @@ public class Panels {
         return alertDialog;
     }
 
-    public static AlertDialog getInstallPanel(Context context) {
+    public static AlertDialog getNotInstalledPanel(Context context){
+        return new AlertDialog.Builder(context)
+                .setTitle(R.string.install_title)
+                .setMessage(R.string.install_not_installed)
+                .setPositiveButton(R.string.ad_pb,null).create();
+    }
+
+    public static AlertDialog getOldInstallPanel(Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setTitle(R.string.install_title)
                 .setMessage(R.string.install_warning)

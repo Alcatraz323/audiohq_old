@@ -49,13 +49,13 @@ public class ShellDataBridge {
 
                     String[] process_2 = i.split(";");
 
-                    if (process_2.length <= 6) {
+                    if (process_2.length <= 7) {
                         context.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
 
                                 Toast.makeText(context,i,Toast.LENGTH_LONG).show();
-
+                                Toast.makeText(context,R.string.lib_version_mismatch,Toast.LENGTH_LONG).show();
                             }
                         });
                         Toast.makeText(context,i,Toast.LENGTH_LONG).show();
@@ -80,6 +80,7 @@ public class ShellDataBridge {
                     //new_app.setPkgName(PackageCtlUtils.getProcessName(current.getPid()));
                     new_app.setPkgName(process_2[5]);
                     new_app.setProfile(process_2[6]);
+                    new_app.setMuted(process_2[7].equals("muted"));
 
                     Drawable icon = PackageCtlUtils.getIcon(context, new_app.getPkgName().contains(":") ? new_app.getPkgName().split(":")[0] : new_app.getPkgName());
                     if (icon != null) {

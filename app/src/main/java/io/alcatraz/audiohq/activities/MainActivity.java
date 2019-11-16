@@ -139,13 +139,14 @@ public class MainActivity extends CompatWithPipeActivity {
             }
         });
         playing_list.setAdapter(playingExpandableAdapter);
+        updatePlayingData();
         return root;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        updatePlayingData();
+        //updatePlayingData();
     }
 
     private View initStatusPanel() {

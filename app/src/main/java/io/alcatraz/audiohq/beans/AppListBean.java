@@ -9,6 +9,7 @@ public class AppListBean {
     private Drawable icon;
     private String profile = "1,1,1,0";
     private String pid;
+    private boolean muted;
     private LinkedList<TrackBean> tracks = new LinkedList<>();
 
     public String getPkgName() {
@@ -66,5 +67,13 @@ public class AppListBean {
                 count++;
         }
         return count;
+    }
+
+    public boolean isMuted() {
+        return muted;
+    }
+
+    public void setMuted(boolean muted) {
+        this.muted = muted;
     }
 }

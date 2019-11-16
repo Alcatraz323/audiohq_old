@@ -15,6 +15,8 @@ public class Constants {
     public static String ACCOUNT_TRANSITION_NAME_PREFIX = "accountname:";
 
     //===============================================
+    public static final String PREF_MODIFY_RC = "modified_rc";
+    public static final boolean DEFAULT_VALUE_PREF_MODIFY_RC = true;
     public static final String PREF_SERVICE_TYPE = "service";
     public static final String DEFAULT_VALUE_PREF_SERVICE = AudioHqApis.AUDIOHQ_SERVER_NONE;
     public static final String PREF_BOOT = "boot";

@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -96,6 +97,11 @@ public class PlayingExpandableAdapter extends BaseExpandableListAdapter {
         TextView aplc_pkgname = view.findViewById(R.id.app_pkg);
         ImageView aplc_icon = view.findViewById(R.id.app_icon);
         ImageButton show_adjust = view.findViewById(R.id.app_adjust_switch);
+        Switch app_allowed = view.findViewById(R.id.app_allowed);
+
+        app_allowed.setChecked(!element.isMuted());
+
+        app_allowed.setOnCheckedChangeListener((compoundButton, b1) -> AudioHqApis.setMute(element.getPkgName(), !b1));
 
         aplc_pkgname.setText(element.getPkgName().trim());
 
@@ -130,7 +136,7 @@ public class PlayingExpandableAdapter extends BaseExpandableListAdapter {
         TextView aplc_track_info_brief = view.findViewById(R.id.aplc_track_info_brief);
         TextView aplc_track_info_thread = view.findViewById(R.id.aplc_track_info_thread);
         aplc_track_info_brief.setText("Track:   sessionid=" + element.getSessionId() +
-                "    sameplerate=" + element.getSampleRate() +
+                "    samplerate=" + element.getSampleRate() +
                 "    framecount=" + element.getFrameSize() +
                 "   " + element.getActive() +
                 "   thread:");

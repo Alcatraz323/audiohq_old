@@ -49,13 +49,13 @@
     <!--设置-->
     <string name="pref_1_t">后台</string>
     <string name="pref_1_1">服务类型</string>
-    <string name="pref_1_2">使用修改的上下文规避Enforced Selinux(当前:Magisk)</string>
-    <string name="pref_1_2_summary">不支持其他的主要是因为开发者不知道其他su的上下文…</string>
+    <string name="pref_1_2">修改audioserver.rc以使用audioserver嵌入方式</string>
+    <string name="pref_1_2_summary">/system无法写入或rc打包于boot.img时将不会工作</string>
     <string name="pref_1_3">开机启动</string>
-    <string name="pref_1_3_summary">若使用Magisk上下文越过Selinux Enforcing禁止开启此项，原生外挂服务非广播方式研究中</string>
-    <string name="pref_2_t">安全</string>
+    <string name="pref_1_3_summary">若修改rc启用，禁止开启此项，原生外挂服务非广播方式研究中</string>
+    <string name="pref_2_t">实验室-安全</string>
     <string name="pref_2_1">未设置进程默认静音</string>
-    <string name="pref_2_1_summary">注意:若未使用Magisk上下文越过Selinux Enforcing将不是永久设置</string>
+    <string name="pref_2_1_summary">或许以后会有动态授权之类的</string>
     <string name="pref_3_t">其他</string>
     <string name="pref_3_1">检查更新</string>
     <string name="pref_3_2">清除配置</string>
@@ -75,17 +75,20 @@
     <string name="au_l_4">开放源代码许可</string>
     <string name="au_l_4_1">向开源致敬</string>
     <string name="au_osp">开源相关</string>
+    
+    <string name="lib_version_mismatch">Lib文件版本与Apk兼容不符，当前apk适用于lib[0.6],11.7.17,elf 0.9</string>
 
     <string name="install_warning">安装过程包含危险操作(替换/system/lib(64)/libaudioflinger.so,修改/system/etc/init/audioserver.rc),
         这个操作可能导致你的设备无法开机，变砖，甚至对硬件造成损害
-        请在设备安装的recovery具有文件管理器的情况下(如Twrp),做好上述文件的备份后进行安装操作</string>
-    <string name="uninstall_steps">1. 将备份的libaudioflinger.so放入/system/lib(64)替换文件, 并设置其权限为
+        请在设备安装的recovery具有文件管理器的情况下(如Twrp),做好上述文件的备份后进行安装操4作</string>
+    <string name="uninstall_steps">在Magisk中卸载或禁用模块即可<!--1. 将备份的libaudioflinger.so放入/system/lib(64)替换文件, 并设置其权限为
         0644 (rw-r-r)\n
         2. 删除/system/bin/audiohq\n
         3. 用备份的audioserver.rc替换/system/etc/init/audioserver.rc\n
-        自动备份文件位置:/sdcard/audiohq_backups
+        自动备份文件位置:/sdcard/audiohq_backups-->
     </string>
     <string name="install_title">原生文件未安装</string>
+    <string name="install_not_installed">请刷入原生文件/模块安装后再打开本应用,若已安装，请检查audioserver文件是否为模块相应位数，或是系统版本</string>
     <string name="install_confirm_title">安装?</string>
     <string name="install_confirm_support">支持: "32-bit LSB arm" /system/bin/audioserver 可执行文件,自动备份位置/sdcard/audiohq_backups,自动备份可能失效，请确认手动备份文件存在,安装成功后将自动重启!!!</string>
     <string name="install_confirm_detect">当前: </string>

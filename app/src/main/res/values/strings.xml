@@ -49,8 +49,8 @@
     <!--Preferences-->
     <string name="pref_1_t">Background</string>
     <string name="pref_1_1">Service type</string>
-    <string name="pref_1_2">Use modified se context to avoid Enforced Selinux(Current using:Magisk)</string>
-    <string name="pref_1_2_summary">Supporting other \'su\'</string>
+    <string name="pref_1_2">Modify audioserver.rc to enable built-in server</string>
+    <string name="pref_1_2_summary">This would NOT work when /system is ro or .rc files are packaged in boot.img</string>
     <string name="pref_1_3">Boot</string>
     <string name="pref_1_3_summary">Better way developing</string>
     <string name="pref_2_t">Security</string>
@@ -78,18 +78,21 @@
     <string name="au_osp">Opensource Projects</string>
     <string name="adjust_default_value" tools:ignore="MissingTranslation">1.0</string>
 
+    <string name="lib_version_mismatch">Lib version mismatch，current apk support lib[0.6],11.7.17,elf 0.9</string>
+
     <string name="install_warning">The installation process contains a dangerous action,
         replace the /system/lib(64)/libaudioflinger.so, and the /system/etc/init/audioserver.rc
         this action may cause system can\'t start, turning your device into a brick or cause unrecoverable damage to your hardware,
         I strongly recommend to you proceed this action ONLY IF you have installed a file manager functional recovery
         and BACKUP the file(s) I mentioned above.</string>
-    <string name="uninstall_steps">1. Replace the backup libaudioflinger.so to /system/lib(64), set
+    <string name="uninstall_steps">Uninstall or disable id magisk<!--1. Replace the backup libaudioflinger.so to /system/lib(64), set
         permission as 0644 (rw-r-r)\n
         2. Delete /system/bin/audiohq\n
         3. Replace the backup audioserver.rc to /system/etc/init/audioserver.rc\n
-        Auto backup position:/sdcard/audiohq_backups
+        Auto backup position:/sdcard/audiohq_backups-->
     </string>
     <string name="install_title">Native file not installed</string>
+    <string name="install_not_installed">Please launch this application after the module is installed</string>
     <string name="install_confirm_title">Install?</string>
     <string name="install_confirm_support">Support: "32-bit LSB arm" /system/bin/audioserver elf, auto backup position /sdcard/audiohq_backups,The system will reboot after the installation is successful!!!,
         If your selinux in disabled or permissive you may select "Install, but no modify to .rc files"</string>
