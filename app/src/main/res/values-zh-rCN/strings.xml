@@ -46,6 +46,11 @@
     <string name="status_thread_count">回放线程</string>
     <string name="status_track_lock_ctl">音轨控制类型</string>
 
+    <!--向导-->
+    <string name="setup_step_next">下一步</string>
+    <string name="setup_step_next_final">完成</string>
+    <string name="setup_step_before">上一步</string>
+
     <!--设置-->
     <string name="pref_1_t">后台</string>
     <string name="pref_1_1">服务类型</string>

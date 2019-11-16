@@ -274,7 +274,7 @@ public class MainActivity extends CompatWithPipeActivity {
                 startActivity(new Intent(this,PreferenceActivity.class));
                 break;
             case R.id.item2:
-                startActivity(new Intent(this, AboutActivity.class));
+                startActivity(new Intent(this, SetupActivity.class));
                 break;
             case R.id.item3:
                 NativeServerControl.startServer(this);

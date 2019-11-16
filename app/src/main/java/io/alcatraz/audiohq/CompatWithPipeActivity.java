@@ -25,6 +25,7 @@ public class CompatWithPipeActivity extends AppCompatActivity {
     int requestQueue = 0;
 
     //=========PREFERENCES==============
+    public boolean modified_rc;
     public String service_type;
     public boolean default_silent;
     public boolean boot;
@@ -59,14 +60,15 @@ public class CompatWithPipeActivity extends AppCompatActivity {
         SharedPreferenceUtil spf = SharedPreferenceUtil.getInstance();
         service_type = (String) spf.get(this, Constants.PREF_SERVICE_TYPE, Constants.DEFAULT_VALUE_PREF_SERVICE);
         boot = (boolean) spf.get(this, Constants.PREF_BOOT, Constants.DEFAULT_VALUE_PREF_BOOT);
+        modified_rc = (boolean) spf.get(this, Constants.PREF_MODIFY_RC, Constants.DEFAULT_VALUE_PREF_MODIFY_RC);
         default_silent = (boolean) spf.get(this, Constants.PREF_DEFAULT_SILENT, Constants.DEFAULT_VALUE_PREF_DEFAULT_SILENT);
     }
 
-    public void registReceivers(){
-        IntentFilter ifil=new IntentFilter();
+    public void registReceivers() {
+        IntentFilter ifil = new IntentFilter();
         ifil.addAction(Constants.BROADCAST_ACTION_UPDATE_PREFERENCES);
-        updatePreferenceReceiver=new UpdatePreferenceReceiver();
-        registerReceiver(updatePreferenceReceiver,ifil);
+        updatePreferenceReceiver = new UpdatePreferenceReceiver();
+        registerReceiver(updatePreferenceReceiver, ifil);
     }
 
     @Override
@@ -87,7 +89,7 @@ public class CompatWithPipeActivity extends AppCompatActivity {
         Toast.makeText(this, resId, Toast.LENGTH_SHORT).show();
     }
 
-    class UpdatePreferenceReceiver extends BroadcastReceiver{
+    class UpdatePreferenceReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {

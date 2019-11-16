@@ -19,6 +19,8 @@
         </activity>
         <activity android:name=".activities.AboutActivity" />
         <activity android:name=".activities.PreferenceActivity" />
+        <activity android:name=".activities.SetupActivity" />
+
         <receiver
             android:name=".BootReceiver">
             <intent-filter>

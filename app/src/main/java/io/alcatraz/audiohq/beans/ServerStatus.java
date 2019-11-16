@@ -31,11 +31,18 @@ public class ServerStatus {
     public static void updateStatus() {
         setUpdatePending(true);
         ShellUtils.CommandResult result = AudioHqApis.getRunningServerType();
-        if (result.errorMsg.contains("not found"))
+        if (result.errorMsg == null || result.errorMsg.contains("not found"))
             serverInstalled = false;
 
-        if (AudioHqApis.getAudioFlingerInfo().responseMsg.length() < 20)
+        String lib_info = AudioHqApis.getAudioFlingerInfo().responseMsg;
+        if (lib_info == null || lib_info.length() < 20)
             serverInstalled = false;
+
+        if(result.errorMsg == null){
+            serverRunning =false;
+            setUpdatePending(false);
+            return;
+        }
         serverRunning = result.errorMsg.length() < 1 && !result.responseMsg.contains("running");
         setUpdatePending(false);
     }

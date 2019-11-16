@@ -46,6 +46,11 @@
     <string name="status_thread_count">Existing threads</string>
     <string name="status_track_lock_ctl">Track control lock type</string>
 
+    <!--SetupWizard-->
+    <string name="setup_step_next">Next</string>
+    <string name="setup_step_next_final">Done</string>
+    <string name="setup_step_before">Forward</string>
+
     <!--Preferences-->
     <string name="pref_1_t">Background</string>
     <string name="pref_1_1">Service type</string>
