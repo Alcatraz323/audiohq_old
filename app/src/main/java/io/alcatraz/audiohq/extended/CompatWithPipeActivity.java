@@ -78,6 +78,14 @@ public class CompatWithPipeActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    public void threadSleep(){
+        try {
+            Thread.sleep(500L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setupStaticColorPadding(int color) {
         StatusBarUtil.setColor(this, color);
     }

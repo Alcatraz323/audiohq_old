@@ -30,7 +30,7 @@
 
     <string name="check_root">Root</string>
     <string name="check_selinux">Selinux Status</string>
-    <string name="check_support">Supported</string>
+    <string name="check_support">If Api Supported</string>
     <string name="check_native_elf_info">Native version</string>
     <string name="check_native_lib_info">Lib version</string>
     <string name="check_audioserver_info">\'audioserver\' elf info </string>
@@ -53,9 +53,15 @@
     <string name="setup_1_intro">Hello my friend, before you can start, let\'s take some minutes to complete the setup</string>
     <string name="setup_2_warning_vendor_system_title">Caution!Vendor modified system detected:%s</string>
     <string name="setup_2_warning_vendor_system_info">I strongly recommend you NOT TO try installing,
-        this action may cause your phone stuck at the boot animation,if you know what you are doing click
-    the button below to unlock the next step</string>
+        this action may cause your phone stuck at the boot animation,if you know what you are doing, and know
+        how to remove the module from the recovery, click the button below to unlock the next step</string>
     <string name="setup_2_warning_vendor_system_unlock">Understood and unlock</string>
+    <string name="setup_2_requirements_not_meet_title">Requirements not meet</string>
+    <string name="setup_2_requirements_not_meet_info">There are risks to proceed further installation.
+    Next step has been locked, if you know what you are doing and know how to remove the module from recovery
+    You can click unlock below</string>
+    <string name="setup_check_granted">Granted</string>
+    <string name="setup_check_deny">Denied</string>
 
     <!--Preferences-->
     <string name="pref_1_t">Background</string>

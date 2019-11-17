@@ -116,6 +116,10 @@ public abstract class SetupWizardBaseActivity extends CompatWithPipeActivity {
                 setup_nav.getPaddingTop(),
                 setup_nav.getPaddingRight(),
                 setup_nav.getPaddingBottom() + Utils.getNavigationBarHeight(this));
+        setup_pager.setPadding(setup_pager.getPaddingLeft(),
+                setup_pager.getPaddingTop(),
+                setup_pager.getPaddingRight(),
+                setup_pager.getPaddingBottom() + Utils.getNavigationBarHeight(this));
         setup_pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {

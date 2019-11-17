@@ -8,18 +8,20 @@ import android.widget.*;
 
 public class AnimateUtils {
     public static void playstart(final View v, SimpleAnimateInterface animateInterface) {
+        v.setVisibility(View.VISIBLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Animator a = ViewAnimationUtils.createCircularReveal(v, (int) v.getX(), (int) v.getY(), 0, (float) Math.hypot((double) v.getWidth(), (double) v.getHeight()));
             a.setInterpolator(new AccelerateInterpolator());
-            a.setDuration(3000);
+            a.setDuration(500);
             a.start();
             a.addListener(new Animator.AnimatorListener() {
 
                 @Override
                 public void onAnimationStart(Animator p1) {
+                    v.setVisibility(View.VISIBLE);
                     AnimationSet as = new AnimationSet(true);
                     AlphaAnimation aa = new AlphaAnimation(0, 1);
-                    aa.setDuration(3000);
+                    aa.setDuration(700);
                     as.addAnimation(aa);
                     v.startAnimation(as);
                     as.setAnimationListener(new Animation.AnimationListener() {
@@ -69,7 +71,7 @@ public class AnimateUtils {
 
                 @Override
                 public void onAnimationStart(Animation p1) {
-
+                    v.setVisibility(View.VISIBLE);
                 }
 
                 @Override
@@ -209,6 +211,32 @@ public class AnimateUtils {
             @Override
             public void onAnimationEnd(Animation p1) {
                 v.setVisibility(View.VISIBLE);
+                animateInterface.onEnd();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation p1) {
+
+            }
+        });
+    }
+
+    public static void fadeOut(View v,SimpleAnimateInterface animateInterface){
+        AnimationSet as = new AnimationSet(true);
+        AlphaAnimation aa = new AlphaAnimation(1, 0);
+        aa.setDuration(300);
+        as.addAnimation(aa);
+        v.startAnimation(as);
+        as.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation p1) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation p1) {
+                v.setVisibility(View.GONE);
                 animateInterface.onEnd();
             }
 

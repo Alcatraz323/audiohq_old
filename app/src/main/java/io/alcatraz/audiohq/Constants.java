@@ -8,7 +8,7 @@ import io.alcatraz.audiohq.core.utils.AudioHqApis;
 
 public class Constants {
     public static String[] SUPPORT_ABIS = {"armeabi","armeabi-v7a","arm64-v8a"};
-    public static int[] SUPPORT_APIS = {28};
+    public static int[] SUPPORT_APIS = {28,29};
 
     //===============================================
     public static String AVATART_TRANSITION_NAME = "avatar";
