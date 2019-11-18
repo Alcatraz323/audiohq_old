@@ -69,7 +69,7 @@ public class MainActivity extends CompatWithPipeActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(CheckUtils.getRootStatus()){
+        if(!CheckUtils.getRootStatus()){
             toast(R.string.toast_no_root);
         }
         initViews();
