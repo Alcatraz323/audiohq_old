@@ -6,7 +6,7 @@ import android.content.Context;
 
 public class AudioHqApplication extends Application {
     private Context ctx;
-    //TODO : Check all ".equals()" to apply PropertyManager
+    //TODO : Check string.xml when release update
     //TODO : Set Empty View for all adapter views
     @Override
     public void onCreate() {

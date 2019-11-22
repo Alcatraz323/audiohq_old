@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.List;
@@ -50,6 +51,26 @@ public class SetupActivity extends SetupWizardBaseActivity {
                     case 2:
                         onSelectSetup3();
                         break;
+                    case 3:
+                        onSelectSetup4();
+                        break;
+                    case 4:
+                        startPending();
+                        new Thread(() -> {
+                            try {
+                                Thread.sleep(2000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            runOnUiThread(() -> {
+                                endPending();
+                                getPager().setCurrentItem(i+1);
+                            });
+                        }).start();
+                        break;
+                    case 5:
+                        banForwarStep();
+                        break;
                     default:
                         restoreState();
                 }
@@ -68,6 +89,24 @@ public class SetupActivity extends SetupWizardBaseActivity {
         finish();
     }
 
+    private void onSelectSetup4(){
+        startPending();
+
+        View root_view = getPageList().get(3).getRootView();
+
+        TextView detected_rc = root_view.findViewById(R.id.setup_4_rc_detected);
+        CheckBox modify_rc_check = root_view.findViewById(R.id.setup_4_modify_rc_check);
+        Spinner server_type = root_view.findViewById(R.id.setup_4_server_type);
+
+        //Initial state setup
+        modify_rc_check.setChecked(false);
+
+        detected_rc.setText(String.format(getResources().getString(R.string.setup_3_installed_detected),
+                CheckUtils.getLibVersion()));
+
+        endPending();
+    }
+
     private void onSelectSetup3() {
         startPending();
 
@@ -76,6 +115,9 @@ public class SetupActivity extends SetupWizardBaseActivity {
         Button btn_go_website = root_view.findViewById(R.id.setup_3_go_website);
         TextView detected_version = root_view.findViewById(R.id.setup_3_detected);
         CheckBox installed = root_view.findViewById(R.id.setup_3_installed);
+
+        //Initial state setup
+        installed.setChecked(false);
 
         detected_version.setText(String.format(getResources().getString(R.string.setup_3_installed_detected),
                 CheckUtils.getLibVersion()));

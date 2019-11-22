@@ -31,7 +31,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="12dp"
                 android:text="@string/setup_3_install_title"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                android:textAppearance="@style/TextAppearance.Widget.AppCompat.ExpandedMenu.Item" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -77,7 +77,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="12dp"
                 android:text="@string/setup_3_installed_title"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                android:textAppearance="@style/TextAppearance.Widget.AppCompat.ExpandedMenu.Item" />
 
             <TextView
                 android:layout_width="match_parent"

@@ -114,6 +114,11 @@ public abstract class SetupWizardBaseActivity extends CompatWithPipeActivity {
         getBtnNext().setTextColor(Color.GRAY);
     }
 
+    public void banForwarStep(){
+        getBtnForward().setEnabled(false);
+        getBtnForward().setTextColor(Color.GRAY);
+    }
+
     public void banPageSwitch(){
         getBtnNext().setEnabled(false);
         getBtnForward().setEnabled(false);

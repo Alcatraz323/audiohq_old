@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+    <!ENTITY current_match_version "0.6">
+    ]>
 <resources>
+    <!-- 更新修改部分 -->
+    <string name="au_l_1">版本 0.1</string>
+    <string name="update_title">20191122</string>
+    <string name="update_info">20191122</string>
+
+    <!-- 一般 -->
     <string name="app_name">AudioHQ</string>
     <string name="activity_pref">设置</string>
     <string name="main_menu_1">设置</string>
@@ -65,8 +74,12 @@
     <string name="setup_3_install_page">网页下载</string>
     <string name="setup_3_installed">我确认已经安装了对应版本模块</string>
     <string name="setup_3_installed_title">安装状态</string>
-    <string name="setup_3_installed_summary">当前apk适用原生文件版本 : 0.6</string>
+    <string name="setup_3_installed_summary">当前apk适用原生文件版本 : &current_match_version;</string>
     <string name="setup_3_installed_detected">检测到 : %s</string>
+    <string name="setup_4_modify_rc_title">修改audioserver.rc</string>
+    <string name="setup_4_modify_rc_info">修改/system/etc/init/audioserver.rc,
+        为audioserver获取读取/proc的权限以启用内置服务器,注意:若rc文件打包在.img中或/system不允许写入,则此项无效(对于后者可选择在recovery中写入)</string>
+    <string name="setup_6_done">好耶,安装过程已完成</string>
 
     <!--设置-->
     <string name="pref_1_t">后台</string>
@@ -87,9 +100,7 @@
     <string name="pref_default_silent_warning_message">若启用此项，请确保电话等进程的音量已被设置，若未设置可能导致听筒静音</string>
     <string name="pref_clear_profile_confirm">你正在清除配置，执行?</string>
 
-
     <!--关于-->
-    <string name="au_l_1">版本 0.1</string>
     <string name="au_l_2">开发者</string>
     <string name="au_l_2_1">Alcatraz,Mr_Dennis(Coolapk)</string>
     <string name="au_l_3">查看源码</string>
