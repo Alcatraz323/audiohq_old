@@ -73,6 +73,7 @@ public class MainActivity extends CompatWithPipeActivity {
             toast(R.string.toast_no_root);
         }
         initViews();
+        CheckUtils.getLibVersion();
     }
 
     private void findViews() {

@@ -30,7 +30,7 @@
 
     <string name="check_root">Root</string>
     <string name="check_selinux">Selinux Status</string>
-    <string name="check_support">If Api Supported</string>
+    <string name="check_support">If Api/Abi Supported</string>
     <string name="check_native_elf_info">Native version</string>
     <string name="check_native_lib_info">Lib version</string>
     <string name="check_audioserver_info">\'audioserver\' elf info </string>
@@ -62,6 +62,15 @@
     You can click unlock below</string>
     <string name="setup_check_granted">Granted</string>
     <string name="setup_check_deny">Denied</string>
+    <string name="setup_3_install_title">Installation</string>
+    <string name="setup_3_install_info">Now, go to the website to download the module and install.
+        This action may cause DAMAGE to your system, please make sure you know how to recover before you
+    install the module</string>
+    <string name="setup_3_install_page">Download</string>
+    <string name="setup_3_installed">I have installed the matched module</string>
+    <string name="setup_3_installed_title">Install Status</string>
+    <string name="setup_3_installed_summary">Current apk supports lib revision : 0.6</string>
+    <string name="setup_3_installed_detected">Detected : %s</string>
 
     <!--Preferences-->
     <string name="pref_1_t">Background</string>

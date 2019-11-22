@@ -2,12 +2,13 @@ package io.alcatraz.audiohq.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,7 +28,7 @@ public class SetupActivity extends SetupWizardBaseActivity {
     public void onPageInit(List<SetupPage> pages) {
         String[] setup_titles = getResources().getStringArray(R.array.setup_page_titles);
         int[] page_layout_ids = {R.layout.setup_1, R.layout.setup_2, R.layout.setup_3,
-                R.layout.setup_4, R.layout.setup_5, R.layout.setup_6};
+                R.layout.setup_4, R.layout.setup_5, R.layout.setup_6, R.layout.setup_7};
 
         for (int i = 0; i < setup_titles.length; i++) {
             SetupPage page = new SetupPage(setup_titles[i], page_layout_ids[i]);
@@ -46,9 +47,12 @@ public class SetupActivity extends SetupWizardBaseActivity {
                     case 1:
                         onSelectSetup2();
                         break;
+                    case 2:
+                        onSelectSetup3();
+                        break;
+                    default:
+                        restoreState();
                 }
-                if (i != 1)
-                    restoreState();
             }
 
             @Override
@@ -64,16 +68,37 @@ public class SetupActivity extends SetupWizardBaseActivity {
         finish();
     }
 
+    private void onSelectSetup3() {
+        startPending();
+
+        View root_view = getPageList().get(2).getRootView();
+
+        Button btn_go_website = root_view.findViewById(R.id.setup_3_go_website);
+        TextView detected_version = root_view.findViewById(R.id.setup_3_detected);
+        CheckBox installed = root_view.findViewById(R.id.setup_3_installed);
+
+        detected_version.setText(String.format(getResources().getString(R.string.setup_3_installed_detected),
+                CheckUtils.getLibVersion()));
+
+        endPending();
+        banNextStep();
+        btn_go_website.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW,
+                Uri.parse("https://alcatraz323.github.io/audiohq"))));
+        installed.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b) {
+                restoreState();
+            } else {
+                banNextStep();
+            }
+        });
+    }
+
     @SuppressLint("SetTextI18n")
     private void onSelectSetup2() {
         boolean can_go_next = true;
         int color_red = getResources().getColor(android.R.color.holo_red_light, null);
 
-        setShowProgress(true);
-        getBtnNext().setEnabled(false);
-        getBtnForward().setEnabled(false);
-        getBtnNext().setTextColor(Color.GRAY);
-        getBtnForward().setTextColor(Color.GRAY);
+        startPending();
 
         //Find views
         View root_view = getPageList().get(1).getRootView();
@@ -124,7 +149,7 @@ public class SetupActivity extends SetupWizardBaseActivity {
         });
 
         String audioserver_info = CheckUtils.getAudioServerInfo();
-        if(audioserver_info!=null) {
+        if (audioserver_info != null) {
             if (audioserver_info.split("dynamic")[0].contains("64") && Build.VERSION.SDK_INT == 28) {
                 audioserver_check_title.setTextColor(color_red);
                 Utils.setImageWithTint(audioserver_check_indicator, R.drawable.ic_close, color_red);
@@ -134,7 +159,7 @@ public class SetupActivity extends SetupWizardBaseActivity {
             audioserver_check_state.setText(audioserver_info_processed[0] + "," + audioserver_info_processed[1]);
             AnimateUtils.playstart(audioserver_check, () -> {
             });
-        }else {
+        } else {
             audioserver_check_title.setTextColor(color_red);
             Utils.setImageWithTint(audioserver_check_indicator, R.drawable.ic_close, color_red);
             can_go_next = false;
@@ -148,20 +173,18 @@ public class SetupActivity extends SetupWizardBaseActivity {
             Utils.setImageWithTint(api_check_indicator, R.drawable.ic_close, color_red);
             can_go_next = false;
         }
-        api_check_state.setText("Api:" + Build.VERSION.SDK_INT+
-                "("+Utils.extractStringArr(CheckUtils.getSupportArch())+")");
+        api_check_state.setText("Api:" + Build.VERSION.SDK_INT +
+                "(" + Utils.extractStringArr(CheckUtils.getSupportArch()) + ")");
         AnimateUtils.playstart(api_check, () -> {
         });
 
-        setShowProgress(false);
+        endPending();
 
-        if (can_go_next) {
-            restoreState();
-        } else {
+        if (!can_go_next) {
             AnimateUtils.playstart(requirements_not_meet, () -> {
             });
-            getBtnForward().setTextColor(Color.BLACK);
-            getBtnForward().setEnabled(true);
+            restoreState();
+            banNextStep();
         }
 
         vendor_warning_title.setText(String.format(getResources().getString(R.string.setup_2_warning_vendor_system_title),
@@ -174,13 +197,5 @@ public class SetupActivity extends SetupWizardBaseActivity {
             AnimateUtils.playEnd(requirements_not_meet/*, () -> {}*/);
             restoreState();
         });
-    }
-
-    private void restoreState() {
-        setShowProgress(false);
-        getBtnForward().setEnabled(true);
-        getBtnForward().setTextColor(Color.BLACK);
-        getBtnNext().setEnabled(true);
-        getBtnNext().setTextColor(Color.BLACK);
     }
 }

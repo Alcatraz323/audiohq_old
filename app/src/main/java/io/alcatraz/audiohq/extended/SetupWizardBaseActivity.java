@@ -1,5 +1,6 @@
 package io.alcatraz.audiohq.extended;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -100,6 +101,35 @@ public abstract class SetupWizardBaseActivity extends CompatWithPipeActivity {
         return setup_next;
     }
 
+    public void restoreState() {
+        setShowProgress(false);
+        getBtnForward().setEnabled(true);
+        getBtnForward().setTextColor(Color.BLACK);
+        getBtnNext().setEnabled(true);
+        getBtnNext().setTextColor(Color.BLACK);
+    }
+
+    public void banNextStep(){
+        getBtnNext().setEnabled(false);
+        getBtnNext().setTextColor(Color.GRAY);
+    }
+
+    public void banPageSwitch(){
+        getBtnNext().setEnabled(false);
+        getBtnForward().setEnabled(false);
+        getBtnNext().setTextColor(Color.GRAY);
+        getBtnForward().setTextColor(Color.GRAY);
+    }
+
+    public void startPending(){
+        setShowProgress(true);
+        banPageSwitch();
+    }
+
+    public void endPending(){
+        setShowProgress(false);
+        restoreState();
+    }
     private void findViews() {
         setup_title = findViewById(R.id.setup_title);
         setup_pager = findViewById(R.id.setup_pager);

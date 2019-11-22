@@ -27,8 +27,8 @@ public class CheckUtils {
         return ShellUtils.execCommand("getenforce", true).responseMsg;
     }
 
-    public static String getAudioServerInfo(){
-        return ShellUtils.execCommand("file /system/bin/audioserver",true).responseMsg;
+    public static String getAudioServerInfo() {
+        return ShellUtils.execCommand("file /system/bin/audioserver", true).responseMsg;
     }
 
     public static boolean getRootStatus() {
@@ -58,22 +58,31 @@ public class CheckUtils {
         return false;
     }
 
-    public static boolean getMagiskInstalled(Context context){
+    public static String getLibVersion() {
+        String raw = AudioHqApis.getAudioFlingerInfo().responseMsg;
+
+        if (Utils.isStringNotEmpty(raw)) {
+            String[] process_1 = raw.split("\\[");
+            String[] process_2 = process_1[1].split("]");
+            return process_2[0];
+        }
+        return null;
+    }
+
+    public static boolean getMagiskInstalled(Context context) {
         final PackageManager packageManager = context.getPackageManager();//获取packagemanager
         List<PackageInfo> pinfo;//获取所有已安装程序的包信息
         pinfo = packageManager.getInstalledPackages(0);
         List<String> pName = new ArrayList<String>();//用于存储所有已安装程序的包名
         //从pinfo中将包名字逐一取出，压入pName list中
-        if(pinfo != null){
-            for(int i = 0; i < pinfo.size(); i++){
+        if (pinfo != null) {
+            for (int i = 0; i < pinfo.size(); i++) {
                 String pn = pinfo.get(i).packageName;
                 pName.add(pn);
             }
         }
-        return pName.contains("com.topjohnwu.magisk");//判断pName中是否有目标程序的包名，有TRUE，没有FALSE
+        return true;//pName.contains("com.topjohnwu.magisk");//判断pName中是否有目标程序的包名，有TRUE，没有FALSE
     }
-
-
 
 
 }

@@ -18,6 +18,7 @@
     <string-array name="setup_page_titles">
         <item>Welcome</item>
         <item>Requirements check</item>
+        <item>Module Install</item>
         <item>Server mode</item>
         <item>Wait a minute…</item>
         <item>Done!</item>

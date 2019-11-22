@@ -17,7 +17,8 @@
 
     <string-array name="setup_page_titles">
         <item>欢迎</item>
-        <item>要求检查</item>
+        <item>安装要求检查</item>
+        <item>模块安装</item>
         <item>后台模式</item>
         <item>请稍候…</item>
         <item>完成!</item>
