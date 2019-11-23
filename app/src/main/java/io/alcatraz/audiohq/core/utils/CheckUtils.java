@@ -58,6 +58,12 @@ public class CheckUtils {
         return false;
     }
 
+    public static boolean hasModifiedRC(){
+        ShellUtils.CommandResult original = ShellUtils.execCommand("cat /system/etc/init/audioserver.rc", false);
+        String modify = original.responseMsg;
+        return modify.contains("readproc");
+    }
+
     public static String getLibVersion() {
         String raw = AudioHqApis.getAudioFlingerInfo().responseMsg;
 

@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -31,14 +30,13 @@ import java.util.List;
 import java.util.Map;
 
 import io.alcatraz.audiohq.AsyncInterface;
-import io.alcatraz.audiohq.extended.CompatWithPipeActivity;
 import io.alcatraz.audiohq.LogBuff;
 import io.alcatraz.audiohq.R;
-import io.alcatraz.audiohq.extended.SetupWizardBaseActivity;
 import io.alcatraz.audiohq.adapters.PlayingExpandableAdapter;
 import io.alcatraz.audiohq.beans.AppListBean;
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
 import io.alcatraz.audiohq.core.utils.CheckUtils;
+import io.alcatraz.audiohq.extended.CompatWithPipeActivity;
 import io.alcatraz.audiohq.utils.InstallUtils;
 import io.alcatraz.audiohq.utils.NativeServerControl;
 import io.alcatraz.audiohq.utils.Panels;
@@ -73,7 +71,6 @@ public class MainActivity extends CompatWithPipeActivity {
             toast(R.string.toast_no_root);
         }
         initViews();
-        CheckUtils.getLibVersion();
     }
 
     private void findViews() {
@@ -90,7 +87,10 @@ public class MainActivity extends CompatWithPipeActivity {
         ArrayList<View> vpd = new ArrayList<>();
 
         if (!CheckUtils.getMagiskInstalled(this))
-            new AlertDialog.Builder(this).setTitle(R.string.install_fail_title).setMessage(R.string.install_magisk_not_installed).setNegativeButton(R.string.ad_nb,null).show();
+            new AlertDialog.Builder(this).setTitle(R.string.install_fail_title)
+                    .setMessage(R.string.install_magisk_not_installed)
+                    .setNegativeButton(R.string.ad_nb,null)
+                    .show();
         vpd.add(initPlayingList());
         vpd.add(initStatusPanel());
         vpd.add(initConsolePanel());
@@ -142,14 +142,14 @@ public class MainActivity extends CompatWithPipeActivity {
             }
         });
         playing_list.setAdapter(playingExpandableAdapter);
-        updatePlayingData();
+//        updatePlayingData();
         return root;
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        //updatePlayingData();
+    protected void onStart() {
+        super.onStart();
+        updatePlayingData();
     }
 
     private View initStatusPanel() {
@@ -277,7 +277,7 @@ public class MainActivity extends CompatWithPipeActivity {
                 startActivity(new Intent(this,PreferenceActivity.class));
                 break;
             case R.id.item2:
-                startActivity(new Intent(this, SetupActivity.class));
+                startActivity(new Intent(this, AboutActivity.class));
                 break;
             case R.id.item3:
                 NativeServerControl.startServer(this);

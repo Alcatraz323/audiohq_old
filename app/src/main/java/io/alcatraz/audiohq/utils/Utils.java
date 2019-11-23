@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -185,10 +186,19 @@ public class Utils {
     }
 
     public static void setImageWithTint(ImageView imgv, int resId, int color) {
-        Drawable up = ContextCompat.getDrawable(imgv.getContext(), resId);
+        imgv.setImageDrawable(getTintedDrawable(imgv.getContext(), resId, color));
+    }
+
+    public static void setImageWithTint(ImageButton imgv, int resId, int color) {
+        imgv.setImageDrawable(getTintedDrawable(imgv.getContext(), resId, color));
+    }
+
+    public static Drawable getTintedDrawable(Context context, int resId, int color) {
+        Drawable up = ContextCompat.getDrawable(context, resId);
         Drawable drawableUp = DrawableCompat.wrap(up);
+        drawableUp.setBounds(0, 0, drawableUp.getMinimumWidth(), drawableUp.getMinimumHeight());
         DrawableCompat.setTint(drawableUp, color);
-        imgv.setImageDrawable(drawableUp);
+        return drawableUp;
     }
 
     public static boolean checkAndSetErr(TextInputLayout textInputLayout) {

@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -17,13 +18,20 @@ import io.alcatraz.audiohq.R;
 import io.alcatraz.audiohq.adapters.SetupPagerAdapter;
 import io.alcatraz.audiohq.beans.SetupPage;
 import io.alcatraz.audiohq.utils.AnimateUtils;
+import io.alcatraz.audiohq.utils.SharedPreferenceUtil;
 import io.alcatraz.audiohq.utils.Utils;
 
 public abstract class SetupWizardBaseActivity extends CompatWithPipeActivity {
+    public static final String PREF_ACTION_HAS_RUN_FULL_SETUP = "has_run_full_setup";
+    public static final String PREF_ACTION_PREVIOUS_VERSIONCODE = "previous_version_code";
+
+    private String setup_pref_prefix = "alc_setup_";
+    private SharedPreferenceUtil spf = SharedPreferenceUtil.getInstance();
+
     TextView setup_title;
     NoScrollViewPager setup_pager;
     ProgressBar setup_progress;
-    Button setup_forward;
+    ImageButton setup_forward;
     Button setup_next;
     LinearLayout setup_nav;
     FrameLayout setup_progress_bar_limit;
@@ -33,17 +41,26 @@ public abstract class SetupWizardBaseActivity extends CompatWithPipeActivity {
     //Data
     List<SetupPage> pages = new LinkedList<>();
 
+    //Prefs
+    int versionCode;
+    boolean hasRunFullSetup;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
         initViews();
+        initPrefs();
         initPages();
     }
 
-    public abstract void onPageInit(List<SetupPage> pages);
+    public abstract void onSetupPageInit(List<SetupPage> pages);
+
+    public abstract void onUpdate(List<SetupPage> pages);
 
     public abstract void onFinishSetup();
+
+    public abstract int getVersionCode();
 
     public ProgressBar getProgressBar() {
         return setup_progress;
@@ -93,7 +110,7 @@ public abstract class SetupWizardBaseActivity extends CompatWithPipeActivity {
             setup_progress_bar_limit.setVisibility(View.GONE);
     }
 
-    public Button getBtnForward() {
+    public ImageButton getBtnForward() {
         return setup_forward;
     }
 
@@ -104,37 +121,61 @@ public abstract class SetupWizardBaseActivity extends CompatWithPipeActivity {
     public void restoreState() {
         setShowProgress(false);
         getBtnForward().setEnabled(true);
-        getBtnForward().setTextColor(Color.BLACK);
+        Utils.setImageWithTint(getBtnForward(), R.drawable.ic_chevron_left, Color.DKGRAY);
         getBtnNext().setEnabled(true);
-        getBtnNext().setTextColor(Color.BLACK);
+        getBtnNext().setTextColor(Color.DKGRAY);
+        getBtnNext().setCompoundDrawablesRelative(null, null,
+                Utils.getTintedDrawable(this, R.drawable.ic_chevron_right, Color.DKGRAY), null);
     }
 
-    public void banNextStep(){
+    public void banNextStep() {
         getBtnNext().setEnabled(false);
         getBtnNext().setTextColor(Color.GRAY);
+        getBtnNext().setCompoundDrawablesRelative(null, null,
+                Utils.getTintedDrawable(this, R.drawable.ic_chevron_right, Color.GRAY), null);
     }
 
-    public void banForwarStep(){
+    public void banForwardStep() {
         getBtnForward().setEnabled(false);
-        getBtnForward().setTextColor(Color.GRAY);
+        Utils.setImageWithTint(getBtnForward(), R.drawable.ic_chevron_left, Color.GRAY);
     }
 
-    public void banPageSwitch(){
+    public void banPageSwitch() {
         getBtnNext().setEnabled(false);
         getBtnForward().setEnabled(false);
         getBtnNext().setTextColor(Color.GRAY);
-        getBtnForward().setTextColor(Color.GRAY);
+        getBtnNext().setCompoundDrawablesRelative(null, null,
+                Utils.getTintedDrawable(this, R.drawable.ic_chevron_right, Color.GRAY), null);
+        Utils.setImageWithTint(getBtnForward(), R.drawable.ic_chevron_left, Color.GRAY);
     }
 
-    public void startPending(){
+    public void startPending() {
         setShowProgress(true);
         banPageSwitch();
     }
 
-    public void endPending(){
+    public void endPending() {
         setShowProgress(false);
         restoreState();
     }
+
+    public String getSetupPrefPrefix() {
+        return setup_pref_prefix;
+    }
+
+    public SharedPreferenceUtil getSpf() {
+        return spf;
+    }
+
+    public String createPrefKey(String action) {
+        return setup_pref_prefix + action;
+    }
+
+    private void initPrefs() {
+        versionCode = (int) spf.get(this, createPrefKey(PREF_ACTION_PREVIOUS_VERSIONCODE), getVersionCode());
+        hasRunFullSetup = (boolean) spf.get(this, createPrefKey(PREF_ACTION_HAS_RUN_FULL_SETUP), false);
+    }
+
     private void findViews() {
         setup_title = findViewById(R.id.setup_title);
         setup_pager = findViewById(R.id.setup_pager);
@@ -187,14 +228,26 @@ public abstract class SetupWizardBaseActivity extends CompatWithPipeActivity {
         setup_next.setOnClickListener(view -> {
             if (setup_pager.getCurrentItem() != pages.size() - 1)
                 setup_pager.setCurrentItem(setup_pager.getCurrentItem() + 1);
-            else
+            else {
+                if (!hasRunFullSetup)
+                    spf.put(SetupWizardBaseActivity.this, createPrefKey(PREF_ACTION_HAS_RUN_FULL_SETUP), true);
+                spf.put(SetupWizardBaseActivity.this, createPrefKey(PREF_ACTION_PREVIOUS_VERSIONCODE), getVersionCode());
                 onFinishSetup();
+            }
         });
     }
 
     private void initPages() {
         pages.clear();
-        onPageInit(pages);
+        if (!hasRunFullSetup) {
+            onSetupPageInit(pages);
+            onUpdate(pages);
+        } else if (getVersionCode() > versionCode)
+            onUpdate(pages);
+        if (pages.size() == 0) {
+            onFinishSetup();
+            return;
+        }
         adapter = new SetupPagerAdapter(pages, this);
         setup_pager.setAdapter(adapter);
         setup_forward.setVisibility(View.GONE);

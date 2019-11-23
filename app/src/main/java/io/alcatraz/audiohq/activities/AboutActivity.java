@@ -1,5 +1,6 @@
 package io.alcatraz.audiohq.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import io.alcatraz.audiohq.extended.CompatWithPipeActivity;
 import io.alcatraz.audiohq.Constants;
@@ -27,6 +29,7 @@ import io.alcatraz.audiohq.adapters.AuthorAdapter;
 import io.alcatraz.audiohq.adapters.QueryElementAdapter;
 import io.alcatraz.audiohq.beans.QueryElement;
 import io.alcatraz.audiohq.extended.DividerItemDecoration;
+import io.alcatraz.audiohq.utils.PackageCtlUtils;
 import io.alcatraz.audiohq.utils.Utils;
 
 public class AboutActivity extends CompatWithPipeActivity {
@@ -50,9 +53,7 @@ public class AboutActivity extends CompatWithPipeActivity {
                 .setMessage("主代码:Alcatraz\n" +
                         "主要测试人员:Mr_Dennis(Coolapk)")
                 .setPositiveButton(R.string.ad_pb, null)
-                .create();
-        new AlertDialogUtil().setSupportDialogColor(g, Color.parseColor("#3f51b5"));
-        g.show();
+                .show();
     }
 
     @Override
@@ -68,9 +69,9 @@ public class AboutActivity extends CompatWithPipeActivity {
     public void initViews() {
         tb = findViewById(R.id.about_toolbar);
         setSupportActionBar(tb);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        DrawerLayoutUtil.Immersive(tb,true,this);
+        DrawerLayoutUtil.Immersive(tb, true, this);
         lv = findViewById(R.id.authorcontentListView1);
         AuthorAdapter aa = new AuthorAdapter(this, data, imgs);
         lv.setAdapter(aa);
@@ -85,21 +86,20 @@ public class AboutActivity extends CompatWithPipeActivity {
         });
     }
 
-    public void showOSPDialog(){
-        View v=getLayoutInflater().inflate(R.layout.dialog_ops,null);
+    public void showOSPDialog() {
+        @SuppressLint("InflateParams") View v = getLayoutInflater().inflate(R.layout.dialog_ops, null);
         new android.support.v7.app.AlertDialog.Builder(this)
                 .setTitle(R.string.au_osp)
                 .setView(v)
-                .setNegativeButton(R.string.ad_nb3,null).show();
-        RecyclerView rv= v.findViewById(R.id.opRc1);
-        List<QueryElement> dat= Constants.getOpenSourceProjects();
-        QueryElementAdapter mra=new QueryElementAdapter(this,dat);
+                .setNegativeButton(R.string.ad_nb3, null).show();
+        RecyclerView rv = v.findViewById(R.id.opRc1);
+        List<QueryElement> dat = Constants.getOpenSourceProjects();
+        QueryElementAdapter mra = new QueryElementAdapter(this, dat);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new DefaultItemAnimator());
         rv.setAdapter(mra);
-        rv.addItemDecoration(new DividerItemDecoration(this, LinearLayout.HORIZONTAL, Utils.Dp2Px(this,8),Color.parseColor("#eeeeee")));
+        rv.addItemDecoration(new DividerItemDecoration(this, LinearLayout.HORIZONTAL, Utils.Dp2Px(this, 8), Color.parseColor("#eeeeee")));
     }
-
 
 
     public void initData() {
@@ -109,7 +109,7 @@ public class AboutActivity extends CompatWithPipeActivity {
         imgs.add(R.drawable.ic_open_in_new);
         List<String> l1 = new ArrayList<>();
         l1.add(getString(R.string.au_l_1));
-        l1.add("---");
+        l1.add(PackageCtlUtils.getVersionName(this));
         List<String> l2 = new ArrayList<>();
         l2.add(getString(R.string.au_l_2));
         l2.add(getString(R.string.au_l_2_1));

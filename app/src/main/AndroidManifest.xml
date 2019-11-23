@@ -10,7 +10,7 @@
         android:name=".AudioHqApplication"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.SetupActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,7 +19,7 @@
         </activity>
         <activity android:name=".activities.AboutActivity" />
         <activity android:name=".activities.PreferenceActivity" />
-        <activity android:name=".activities.SetupActivity" />
+        <activity android:name=".activities.MainActivity" />
 
         <receiver
             android:name=".BootReceiver">

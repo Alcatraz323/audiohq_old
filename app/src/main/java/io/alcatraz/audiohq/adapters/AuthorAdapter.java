@@ -1,5 +1,6 @@
 package io.alcatraz.audiohq.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,50 +14,50 @@ import java.util.Map;
 
 import io.alcatraz.audiohq.R;
 
-public class AuthorAdapter extends BaseAdapter
-{
-    Map<Integer,List<String>> data;
-    List<Integer> img;
-    Context c;
-    public AuthorAdapter(Context c,Map<Integer,List<String>> data,List<Integer> img){
-        this.data=data;
-        this.c=c;
-        this.img=img;
+public class AuthorAdapter extends BaseAdapter {
+    private Map<Integer, List<String>> data;
+    private List<Integer> img;
+    private Context c;
+    private LayoutInflater lf;
+
+    public AuthorAdapter(Context c, Map<Integer, List<String>> data, List<Integer> img) {
+        this.data = data;
+        this.c = c;
+        this.img = img;
+        lf = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
+
     @Override
-    public int getCount()
-    {
+    public int getCount() {
         return data.size();
     }
 
     @Override
-    public Object getItem(int p1)
-    {
+    public Object getItem(int p1) {
         return data.get(p1).get(0);
     }
 
     @Override
-    public long getItemId(int p1)
-    {
+    public long getItemId(int p1) {
         return p1;
     }
 
+    @SuppressLint("InflateParams")
     @Override
-    public View getView(int p1, View p2, ViewGroup p3)
-    {
-        if(p2==null){
-            LayoutInflater lf=(LayoutInflater) c.getSystemService(c.LAYOUT_INFLATER_SERVICE);
-            p2=lf.inflate(R.layout.item_author_main_list,null);
+    public View getView(int p1, View p2, ViewGroup p3) {
+        if (p2 == null) {
+            p2 = lf.inflate(R.layout.item_author_main_list, null);
         }
-        ImageView iv= p2.findViewById(R.id.authoritemImageView1);
-        TextView txv1= p2.findViewById(R.id.authoritemTextView1);
-        TextView txv2= p2.findViewById(R.id.authoritemTextView2);
+        ImageView iv = p2.findViewById(R.id.authoritemImageView1);
+        TextView txv1 = p2.findViewById(R.id.authoritemTextView1);
+        TextView txv2 = p2.findViewById(R.id.authoritemTextView2);
         iv.setImageResource(img.get(p1));
         txv1.setText(data.get(p1).get(0));
         txv2.setText(data.get(p1).get(1));
-        if(txv1.getText().toString().equals(c.getString(R.string.au_l_3))){
+        if (p1 == 2)
             txv2.setVisibility(View.GONE);
-        }
+        else
+            txv2.setVisibility(View.VISIBLE);
         return p2;
     }
 

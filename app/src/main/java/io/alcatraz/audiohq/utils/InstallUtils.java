@@ -20,15 +20,15 @@ public class InstallUtils {
     public static String LIB64_NAME = "libaudioflinger64.so";
     public static String ELF64_NAME = "audiohq64";
 
-    public static int install(Context context, boolean need64,boolean modifyrc) {
-        String[] test_commands = {"mount -o remount,rw /system","touch /system/test_audiohq"};
+    public static int install(Context context, boolean need64, boolean modifyrc) {
+        String[] test_commands = {"mount -o remount,rw /system", "touch /system/test_audiohq"};
 
-        ShellUtils.CommandResult try_rw = ShellUtils.execCommand(test_commands,true,true);
-        if(try_rw.errorMsg.length() > 2){
+        ShellUtils.CommandResult try_rw = ShellUtils.execCommand(test_commands, true, true);
+        if (try_rw.errorMsg.length() > 2) {
 
             return -2;
-        }else {
-            ShellUtils.execCommand("rm -rf /system/test_audiohq",true);
+        } else {
+            ShellUtils.execCommand("rm -rf /system/test_audiohq", true);
         }
         String backup_cmds[] = new String[]{"mkdir /sdcard/audiohq_backups",
                 "mkdir /sdcard/audiohq_backups/lib",
@@ -69,8 +69,8 @@ public class InstallUtils {
         install_cmds.add("mv " + COPY_FILE_INTERMIDIATES_DIRECTORY + "/" + LIB_NAME + " /system/lib");
         install_cmds.add("mount -o remount,ro /system");
 
-        if(modifyrc){
-            modifyRCFile();
+        if (modifyrc) {
+            modifyRCFile(true);
         }
 
         ShellUtils.CommandResult result = ShellUtils.execCommand(install_cmds, true, true);
@@ -90,14 +90,22 @@ public class InstallUtils {
         }));
     }
 
-    public static void modifyRCFile(){
-        ShellUtils.execCommand("mount -o remount,rw /system",true);
-        ShellUtils.CommandResult original = ShellUtils.execCommand("cat /system/etc/init/audioserver.rc",false);
+    public static ShellUtils.CommandResult modifyRCFile(boolean readproc) {
+        ShellUtils.CommandResult original = ShellUtils.execCommand("cat /system/etc/init/audioserver.rc", false);
         String modify = original.responseMsg;
-        modify = modify.replace("user audioserver","#user audioserver\n    seclabel u:r:magisk:s0");
-        modify = modify.replace("group","#group");
-        ShellUtils.execCommand("echo \""+modify+"\" > /system/etc/init/audioserver.rc",true);
-        ShellUtils.execCommand("mount -o remount,ro /system",true);
+//        modify = modify.replace("user audioserver","#user audioserver\n    seclabel u:r:magisk:s0");
+//        modify = modify.replace("group","#group");
+        if (readproc) {
+            if (!modify.contains("readproc"))
+                modify = modify.replace("group", "group readproc");
+        } else {
+            modify = modify.replace(" readproc", "");
+        }
+        String write_cmds[] = {"mount -o remount,rw /system",
+                "echo \"" + modify + "\" > /system/etc/init/audioserver.rc",
+                "mount -o remount,ro /system",
+                "reboot"};
+        return ShellUtils.execCommand(write_cmds, true, true);
     }
 
     private static void showRetryDialog(Context context, String exc, boolean need64) {
@@ -108,7 +116,7 @@ public class InstallUtils {
                 .setPositiveButton(R.string.install_retry, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        install(context, need64,true);
+                        install(context, need64, true);
                     }
                 }).show();
     }
