@@ -260,6 +260,11 @@ public class Panels {
                 }
                 alertDialog.dismiss();
                 through.onAyncDone(null);
+                adjust_apply_cover.setVisibility(View.GONE);
+                adjust_cancel.setEnabled(true);
+                adjust_apply.setEnabled(true);
+                adjust_apply.setVisibility(View.VISIBLE);
+                alertDialog.setCancelable(true);
             } else {
                 adjust_apply_cover.setVisibility(View.GONE);
                 adjust_cancel.setEnabled(true);

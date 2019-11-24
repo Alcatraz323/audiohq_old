@@ -5,8 +5,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Change every update -->
     <string name="support_lib_version">&current_match_version;</string>
-    <string name="update_title">20191122</string>
-    <string name="update_info">20191122</string>
+    <string name="update_title">20191124</string>
+    <string name="update_info">1.Added outside server mode which is not requiring .rc modification\n
+    2.Added setup wizard\n
+    3.Added preset function\n
+    4.Optimize multi-mode logic\n
+    5.Now it can be fully systemless\n
+    6.Added pid mode to enable adjust temporarily\n
+    7.Fixed wrong root toast\n
+    8."Check sourcecode" now has its own link</string>
 
     <!-- Common -->
     <string name="app_name">AudioHQ</string>

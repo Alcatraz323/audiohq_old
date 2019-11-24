@@ -5,8 +5,15 @@
 <resources>
     <!-- 更新修改部分 -->
     <string name="support_lib_version">&current_match_version;</string>
-    <string name="update_title">20191122</string>
-    <string name="update_info">20191122</string>
+    <string name="update_title">20191124</string>
+    <string name="update_info">1.增加非rc修改的外部服务器方式\n
+    2.增加了设置向导\n
+    3.增加了预设功能\n
+    4.优化多模式逻辑\n
+    5.现在可以完全不修改/system了\n
+    6.增加以pid为主键的临时调整方式\n
+    7.修复了错误的root toast\n
+    8."查看源代码"指向具体项目了</string>
 
     <!-- 一般 -->
     <string name="app_name">AudioHQ</string>
