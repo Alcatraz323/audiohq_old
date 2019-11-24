@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.Nullable;
 
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import io.alcatraz.audiohq.AsyncInterface;
 import io.alcatraz.audiohq.R;
 import io.alcatraz.audiohq.beans.ServerStatus;
 import io.alcatraz.audiohq.core.utils.ShellUtils;
@@ -70,7 +72,17 @@ public class InstallUtils {
         install_cmds.add("mount -o remount,ro /system");
 
         if (modifyrc) {
-            modifyRCFile(true);
+            modifyRCFile(true, new AsyncInterface<ShellUtils.CommandResult>() {
+                @Override
+                public boolean onAyncDone(@Nullable ShellUtils.CommandResult val) {
+                    return true;
+                }
+
+                @Override
+                public void onFailure(String reason) {
+
+                }
+            });
         }
 
         ShellUtils.CommandResult result = ShellUtils.execCommand(install_cmds, true, true);
@@ -90,7 +102,7 @@ public class InstallUtils {
         }));
     }
 
-    public static ShellUtils.CommandResult modifyRCFile(boolean readproc) {
+    public static ShellUtils.CommandResult modifyRCFile(boolean readproc, AsyncInterface<ShellUtils.CommandResult> beforeReboot) {
         ShellUtils.CommandResult original = ShellUtils.execCommand("cat /system/etc/init/audioserver.rc", false);
         String modify = original.responseMsg;
 //        modify = modify.replace("user audioserver","#user audioserver\n    seclabel u:r:magisk:s0");
@@ -103,9 +115,13 @@ public class InstallUtils {
         }
         String write_cmds[] = {"mount -o remount,rw /system",
                 "echo \"" + modify + "\" > /system/etc/init/audioserver.rc",
-                "mount -o remount,ro /system",
-                "reboot"};
-        return ShellUtils.execCommand(write_cmds, true, true);
+                "mount -o remount,ro /system"};
+
+        ShellUtils.CommandResult result = ShellUtils.execCommand(write_cmds, true, true);
+        if(beforeReboot.onAyncDone(result)){
+            ShellUtils.execCommand("reboot",true);
+        }
+        return result;
     }
 
     private static void showRetryDialog(Context context, String exc, boolean need64) {

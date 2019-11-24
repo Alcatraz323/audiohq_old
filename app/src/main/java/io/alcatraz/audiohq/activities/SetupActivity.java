@@ -101,7 +101,8 @@ public class SetupActivity extends SetupWizardBaseActivity {
         Spinner server_type = root_view.findViewById(R.id.setup_4_server_type);
 
         getSpf().put(this, Constants.PREF_SERVICE_TYPE,
-                server_type.getSelectedItemPosition() == 4 ? 256 + "" : server_type.getSelectedItemPosition() + "");
+                server_type.getSelectedItemPosition() == 4 ? 256 + "" : (server_type.getSelectedItemPosition() + 1) + "");
+
         sendBroadcast(new Intent().setAction(Constants.BROADCAST_ACTION_UPDATE_PREFERENCES));
 
         new Thread(() -> {
@@ -117,6 +118,7 @@ public class SetupActivity extends SetupWizardBaseActivity {
         }).start();
     }
 
+    @SuppressLint("DefaultLocale")
     private void onSelectSetup4() {
         startPending();
 

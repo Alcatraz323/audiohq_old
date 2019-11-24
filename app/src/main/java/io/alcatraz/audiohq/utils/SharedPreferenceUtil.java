@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 
 public final class SharedPreferenceUtil {
 
-    private static final String FILE_NAME = "io.alcatraz.myu_preferences"; //文件名
+    private static final String FILE_NAME = "io.alcatraz.audiohq_preferences"; //文件名
     private static SharedPreferenceUtil mInstance;
 
     public static SharedPreferenceUtil getInstance(){

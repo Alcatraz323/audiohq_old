@@ -30,6 +30,7 @@ public class CompatWithPipeActivity extends AppCompatActivity {
     public String service_type;
     public boolean default_silent;
     public boolean boot;
+    public boolean pid_mode;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -63,6 +64,7 @@ public class CompatWithPipeActivity extends AppCompatActivity {
         boot = (boolean) spf.get(this, Constants.PREF_BOOT, Constants.DEFAULT_VALUE_PREF_BOOT);
         modified_rc = (boolean) spf.get(this, Constants.PREF_MODIFY_RC, Constants.DEFAULT_VALUE_PREF_MODIFY_RC);
         default_silent = (boolean) spf.get(this, Constants.PREF_DEFAULT_SILENT, Constants.DEFAULT_VALUE_PREF_DEFAULT_SILENT);
+        pid_mode = (boolean) spf.get(this,Constants.PREF_PID_MODE,Constants.DEFAULT_VALUE_PREF_PID_MODE);
     }
 
     public void registReceivers() {

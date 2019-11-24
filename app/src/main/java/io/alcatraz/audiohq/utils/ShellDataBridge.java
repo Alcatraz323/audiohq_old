@@ -18,9 +18,10 @@ import io.alcatraz.audiohq.beans.ServerStatus;
 import io.alcatraz.audiohq.beans.TrackBean;
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
 import io.alcatraz.audiohq.core.utils.ShellUtils;
+import io.alcatraz.audiohq.extended.CompatWithPipeActivity;
 
 public class ShellDataBridge {
-    public static void getPlayingMap(Activity context, AsyncInterface<Map<String, AppListBean>> asyncInterface) {
+    public static void getPlayingMap(CompatWithPipeActivity context, AsyncInterface<Map<String, AppListBean>> asyncInterface) {
         new Thread(() -> {
             Looper.prepare();
             ShellUtils.CommandResult raw = AudioHqApis.getAllPlayingClients();
@@ -49,16 +50,12 @@ public class ShellDataBridge {
 
                     String[] process_2 = i.split(";");
 
-                    if (process_2.length <= 7) {
-                        context.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                Toast.makeText(context,i,Toast.LENGTH_LONG).show();
-                                Toast.makeText(context,R.string.lib_version_mismatch,Toast.LENGTH_LONG).show();
-                            }
+                    if (process_2.length <= 6) {
+                        context.runOnUiThread(() -> {
+                            Toast.makeText(context, i, Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, R.string.lib_version_mismatch, Toast.LENGTH_LONG).show();
                         });
-                        Toast.makeText(context,i,Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, i, Toast.LENGTH_LONG).show();
                         continue;
                     }
 
@@ -79,8 +76,9 @@ public class ShellDataBridge {
 
                     //new_app.setPkgName(PackageCtlUtils.getProcessName(current.getPid()));
                     new_app.setPkgName(process_2[5]);
-                    new_app.setProfile(process_2[6]);
-                    new_app.setMuted(process_2[7].equals("muted"));
+                    new_app.setProfile(context.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE) ?
+                            process_2[6] : "1,1,1,0");
+                    new_app.setMuted(context.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE) && process_2[7].equals("muted"));
 
                     Drawable icon = PackageCtlUtils.getIcon(context, new_app.getPkgName().contains(":") ? new_app.getPkgName().split(":")[0] : new_app.getPkgName());
                     if (icon != null) {

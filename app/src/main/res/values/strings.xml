@@ -93,13 +93,17 @@
     <!--Preferences-->
     <string name="pref_1_t">Background</string>
     <string name="pref_1_1">Service type</string>
-    <string name="pref_1_2">Modify audioserver.rc to enable built-in server(requires reboot)</string>
-    <string name="pref_1_2_summary">This would NOT work when /system is ro or .rc files are packaged in boot.img</string>
+    <string name="pref_1_2">Modify audioserver.rc(requires reboot)</string>
+    <string name="pref_1_2_summary">Modify audioserver.rc to enable built-in server.
+        This would NOT work when /system is ro or .rc files are packaged in boot.img</string>
     <string name="pref_1_3">Boot</string>
     <string name="pref_1_3_summary">Better way developing</string>
     <string name="pref_2_t">Security</string>
     <string name="pref_2_1">Unset progress default silenced</string>
     <string name="pref_2_1_summary">Warning:Not work after reboot</string>
+    <string name="pref_2_2">Pid Mode</string>
+    <string name="pref_2_2_summary">Use pid as adjust indicator,use it when you don\t wnt to save settings
+    or the proc read function does not work</string>
     <string name="pref_3_t">Others</string>
     <string name="pref_3_1">Check update</string>
     <string name="pref_3_2">Clear profiles</string>
@@ -121,7 +125,7 @@
     <string name="au_osp">Opensource Projects</string>
     <string name="adjust_default_value" tools:ignore="MissingTranslation">1.0</string>
 
-    <string name="lib_version_mismatch">Lib version mismatch，current apk support lib[0.6],11.7.17,elf 0.9</string>
+    <string name="lib_version_mismatch">Lib version mismatch，current apk support lib[&current_match_version;],11.23.21,elf 0.9.2</string>
 
     <string name="install_warning">The installation process contains a dangerous action,
         replace the /system/lib(64)/libaudioflinger.so, and the /system/etc/init/audioserver.rc

@@ -88,13 +88,15 @@
     <!--设置-->
     <string name="pref_1_t">后台</string>
     <string name="pref_1_1">服务类型</string>
-    <string name="pref_1_2">修改audioserver.rc以使用audioserver嵌入方式(需要重启系统)</string>
-    <string name="pref_1_2_summary">/system无法写入或rc打包于boot.img时将不会工作</string>
+    <string name="pref_1_2">修改audioserver.rc(需要重启系统)</string>
+    <string name="pref_1_2_summary">修改audioserver.rc以使用audioserver嵌入方式./system无法写入或rc打包于boot.img时将不会工作</string>
     <string name="pref_1_3">开机启动</string>
     <string name="pref_1_3_summary">若修改rc启用，禁止开启此项，原生外挂服务非广播方式研究中</string>
     <string name="pref_2_t">实验室-安全</string>
     <string name="pref_2_1">未设置进程默认静音</string>
     <string name="pref_2_1_summary">或许以后会有动态授权之类的会用到此项</string>
+    <string name="pref_2_2">Pid模式</string>
+    <string name="pref_2_2_summary">如果想临时调整正在运行的程序，或读不出进程名时可使用此项</string>
     <string name="pref_3_t">其他</string>
     <string name="pref_3_1">检查更新</string>
     <string name="pref_3_2">清除配置</string>
@@ -113,7 +115,7 @@
     <string name="au_l_4_1">向开源致敬</string>
     <string name="au_osp">开源相关</string>
 
-    <string name="lib_version_mismatch">Lib文件版本与Apk兼容不符，当前apk适用于lib[0.6],11.7.17,elf 0.9</string>
+    <string name="lib_version_mismatch">Lib文件版本与Apk兼容不符，当前apk适用于lib[&current_match_version;],11.23.21,elf 0.9.2</string>
 
     <string name="install_warning">安装过程包含危险操作(替换/system/lib(64)/libaudioflinger.so,修改/system/etc/init/audioserver.rc),
         这个操作可能导致你的设备无法开机，变砖，甚至对硬件造成损害

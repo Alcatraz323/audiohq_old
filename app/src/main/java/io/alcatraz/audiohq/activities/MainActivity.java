@@ -132,8 +132,9 @@ public class MainActivity extends CompatWithPipeActivity {
 //        playing_refresh.setOnRefreshListener(this::updatePlayingData);
         playingExpandableAdapter = new PlayingExpandableAdapter(this, playing_data, new AsyncInterface() {
             @Override
-            public void onAyncDone(@Nullable Object val) {
+            public boolean onAyncDone(@Nullable Object val) {
                 updatePlayingData();
+                return true;
             }
 
             @Override
@@ -238,7 +239,7 @@ public class MainActivity extends CompatWithPipeActivity {
         alertDialog.show();
         ShellDataBridge.getPlayingMap(this, new AsyncInterface<Map<String, AppListBean>>() {
             @Override
-            public void onAyncDone(@Nullable Map<String, AppListBean> val) {
+            public boolean onAyncDone(@Nullable Map<String, AppListBean> val) {
                 if (val != null) {
                     playing_data.putAll(val);
                 }
@@ -247,6 +248,7 @@ public class MainActivity extends CompatWithPipeActivity {
                     alertDialog.dismiss();
 //                    playing_refresh.setRefreshing(false);
                 });
+                return true;
             }
 
             @Override

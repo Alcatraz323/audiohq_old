@@ -35,10 +35,11 @@
     </string-array>
 
     <string-array name="preference_keys" tools:ignore="MissingTranslation">
-        <item>service</item>
         <item>modified_rc</item>
+        <item>service</item>
         <item>boot</item>
         <item>default_silent</item>
+        <item>pid_mode</item>
     </string-array>
 
 </resources>

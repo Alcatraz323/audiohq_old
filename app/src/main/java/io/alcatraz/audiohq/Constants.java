@@ -7,8 +7,8 @@ import io.alcatraz.audiohq.beans.QueryElement;
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
 
 public class Constants {
-    public static String[] SUPPORT_ABIS = {"armeabi","armeabi-v7a","arm64-v8a"};
-    public static int[] SUPPORT_APIS = {28,29};
+    public static String[] SUPPORT_ABIS = {"armeabi", "armeabi-v7a", "arm64-v8a"};
+    public static int[] SUPPORT_APIS = {28, 29};
 
     //===============================================
     public static String AVATART_TRANSITION_NAME = "avatar";
@@ -20,9 +20,11 @@ public class Constants {
     public static final String PREF_SERVICE_TYPE = "service";
     public static final String DEFAULT_VALUE_PREF_SERVICE = AudioHqApis.AUDIOHQ_SERVER_NONE;
     public static final String PREF_BOOT = "boot";
-    public static final boolean DEFAULT_VALUE_PREF_BOOT = true;
+    public static final boolean DEFAULT_VALUE_PREF_BOOT = false;
     public static final String PREF_DEFAULT_SILENT = "default_silent";
     public static final boolean DEFAULT_VALUE_PREF_DEFAULT_SILENT = false;
+    public static final String PREF_PID_MODE = "pid_mode";
+    public static final boolean DEFAULT_VALUE_PREF_PID_MODE = false;
 
     public static final String PREF_CHECK_UPDATE = "check_update";
     public static final String PREF_CLEAR_PROFILES = "clear_profiles";
