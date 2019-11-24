@@ -25,6 +25,7 @@ import io.alcatraz.audiohq.beans.AppListBean;
 import io.alcatraz.audiohq.beans.ServerStatus;
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
 import io.alcatraz.audiohq.core.utils.CheckUtils;
+import io.alcatraz.audiohq.extended.CompatWithPipeActivity;
 
 public class Panels {
 
@@ -85,9 +86,93 @@ public class Panels {
         return view;
     }
 
+    public static View getPresetPanel(CompatWithPipeActivity activity, List<View> preset_widgets) {
+        preset_widgets.clear();
+        LayoutInflater lf = activity.getLayoutInflater();
+        @SuppressLint("InflateParams") View view = lf.inflate(R.layout.panel_preset, null);
+        TextInputLayout general = view.findViewById(R.id.adjust_general);
+        TextInputLayout left = view.findViewById(R.id.adjust_left);
+        TextInputLayout right = view.findViewById(R.id.adjust_right);
+        TextInputLayout process_name = view.findViewById(R.id.preset_process_name);
+        CheckBox split_control = view.findViewById(R.id.aplc_split_control);
+        LinearLayout adjust_apply_cover = view.findViewById(R.id.adjust_button_cover);
+        LinearLayout split_control_panel = view.findViewById(R.id.adjust_split_control_panel);
+        Button adjust_cancel = view.findViewById(R.id.adjust_cancel);
+        Button adjust_apply = view.findViewById(R.id.adjust_apply);
+
+        adjust_apply.setEnabled(false);
+        adjust_cancel.setVisibility(View.GONE);
+
+        split_control.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b) {
+                general.setEnabled(false);
+                left.setEnabled(true);
+                right.setEnabled(true);
+                split_control_panel.setVisibility(View.VISIBLE);
+            } else {
+                left.setEnabled(false);
+                right.setEnabled(false);
+                general.setEnabled(true);
+                AnimateUtils.playEnd(split_control_panel);
+            }
+        });
+        adjust_apply.setOnClickListener(view1 -> {
+            adjust_cancel.setEnabled(false);
+            adjust_apply.setEnabled(false);
+            adjust_apply.setVisibility(View.INVISIBLE);
+            adjust_apply_cover.setVisibility(View.VISIBLE);
+            general.setErrorEnabled(false);
+            left.setErrorEnabled(false);
+            right.setErrorEnabled(false);
+            if (Utils.checkAndSetErr(general) && Utils.checkAndSetErr(left) && Utils.checkAndSetErr(right) &&
+                    Utils.isStringNotEmpty(process_name.getEditText().getText().toString())) {
+                /*if (ServerStatus.isServerRunning()) {
+                    AudioHqApis.setPkgVolume(bean.getPkgName().replaceAll("\r|\n", ""),
+                            Float.parseFloat(general.getEditText().getText().toString()),
+                            Float.parseFloat(left.getEditText().getText().toString()),
+                            Float.parseFloat(right.getEditText().getText().toString()),
+                            split_control.isChecked());
+                } else {
+                    AudioHqApis.setPidVolume(bean.getPid(),
+                            Float.parseFloat(general.getEditText().getText().toString()),
+                            Float.parseFloat(left.getEditText().getText().toString()),
+                            Float.parseFloat(right.getEditText().getText().toString()),
+                            split_control.isChecked());
+                }*/
+                if (CheckUtils.hasModifiedRC()) {
+                    AudioHqApis.setMPackageVolume(process_name.getEditText().getText().toString().replaceAll("\r|\n", ""),
+                            Float.parseFloat(general.getEditText().getText().toString()),
+                            Float.parseFloat(left.getEditText().getText().toString()),
+                            Float.parseFloat(right.getEditText().getText().toString()),
+                            split_control.isChecked());
+                } else {
+                    AudioHqApis.setPkgVolume(process_name.getEditText().getText().toString().replaceAll("\r|\n", ""),
+                            Float.parseFloat(general.getEditText().getText().toString()),
+                            Float.parseFloat(left.getEditText().getText().toString()),
+                            Float.parseFloat(right.getEditText().getText().toString()),
+                            split_control.isChecked());
+                }
+            } else {
+                adjust_apply_cover.setVisibility(View.GONE);
+                adjust_cancel.setEnabled(true);
+                adjust_apply.setEnabled(true);
+                adjust_apply.setVisibility(View.VISIBLE);
+            }
+        });
+
+        preset_widgets.add(general);
+        preset_widgets.add(left);
+        preset_widgets.add(right);
+        preset_widgets.add(process_name);
+        preset_widgets.add(split_control);
+        preset_widgets.add(adjust_apply);
+
+        return view;
+    }
+
     @SuppressWarnings("unchecked")
     @SuppressLint("SetTextI18n")
-    public static AlertDialog getAdjustPanel(Activity ctx, AppListBean bean, AsyncInterface through) {
+    public static AlertDialog getAdjustPanel(CompatWithPipeActivity ctx, AppListBean bean, AsyncInterface through) {
         LayoutInflater lf = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams") View root = lf.inflate(R.layout.panel_adjust, null);
         TextInputLayout general = root.findViewById(R.id.adjust_general);
@@ -132,7 +217,10 @@ public class Panels {
 
         adjust_cancel.setOnClickListener(view -> alertDialog.dismiss());
 
-        ServerStatus.requestForPending(() -> ctx.runOnUiThread(() -> adjust_apply.setEnabled(true)));
+        ServerStatus.requestForPending(() -> ctx.runOnUiThread(() -> {
+            if(ServerStatus.isServerRunning() || ctx.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE))
+            adjust_apply.setEnabled(true);
+        }));
 
         adjust_apply.setOnClickListener(view -> {
             adjust_cancel.setEnabled(false);
@@ -157,11 +245,19 @@ public class Panels {
                             Float.parseFloat(right.getEditText().getText().toString()),
                             split_control.isChecked());
                 }*/
-                AudioHqApis.setMPackageVolume(bean.getPkgName().replaceAll("\r|\n", ""),
-                        Float.parseFloat(general.getEditText().getText().toString()),
-                        Float.parseFloat(left.getEditText().getText().toString()),
-                        Float.parseFloat(right.getEditText().getText().toString()),
-                        split_control.isChecked());
+                if (CheckUtils.hasModifiedRC()) {
+                    AudioHqApis.setMPackageVolume(bean.getPkgName().replaceAll("\r|\n", ""),
+                            Float.parseFloat(general.getEditText().getText().toString()),
+                            Float.parseFloat(left.getEditText().getText().toString()),
+                            Float.parseFloat(right.getEditText().getText().toString()),
+                            split_control.isChecked());
+                } else {
+                    AudioHqApis.setPkgVolume(bean.getPkgName().replaceAll("\r|\n", ""),
+                            Float.parseFloat(general.getEditText().getText().toString()),
+                            Float.parseFloat(left.getEditText().getText().toString()),
+                            Float.parseFloat(right.getEditText().getText().toString()),
+                            split_control.isChecked());
+                }
                 alertDialog.dismiss();
                 through.onAyncDone(null);
             } else {
@@ -177,11 +273,11 @@ public class Panels {
         return alertDialog;
     }
 
-    public static AlertDialog getNotInstalledPanel(Context context){
+    public static AlertDialog getNotInstalledPanel(Context context) {
         return new AlertDialog.Builder(context)
                 .setTitle(R.string.install_title)
                 .setMessage(R.string.install_not_installed)
-                .setPositiveButton(R.string.ad_pb,null).create();
+                .setPositiveButton(R.string.ad_pb, null).create();
     }
 
     public static AlertDialog getOldInstallPanel(Context context) {
@@ -192,22 +288,22 @@ public class Panels {
                 .setPositiveButton(R.string.adjust_confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        boolean magisk_installed =  CheckUtils.getMagiskInstalled(context);
+                        boolean magisk_installed = CheckUtils.getMagiskInstalled(context);
                         String audioserver_info = CheckUtils.getAudioServerInfo();
                         String[] process_1 = audioserver_info.split(",");
                         String confirm_msg = "<font color='#ff5722'>"
-                                + context.getResources().getString(R.string.install_confirm_detect) + "Api:" + Build.VERSION.SDK_INT+", Magisk installed:["+magisk_installed+"]" + "audioserver: %s</font>";
+                                + context.getResources().getString(R.string.install_confirm_detect) + "Api:" + Build.VERSION.SDK_INT + ", Magisk installed:[" + magisk_installed + "]" + "audioserver: %s</font>";
 
                         boolean show_install = false;
 
                         if (process_1[1].contains("32-bit LSB arm") && CheckUtils.getIfSupported() && magisk_installed) {
                             confirm_msg = "<font color='#4caf50'>"
-                                    + context.getResources().getString(R.string.install_confirm_detect) + "Api:" + Build.VERSION.SDK_INT +", Magisk installed:["+magisk_installed+"]"+ "audioserver: %s</font>";
+                                    + context.getResources().getString(R.string.install_confirm_detect) + "Api:" + Build.VERSION.SDK_INT + ", Magisk installed:[" + magisk_installed + "]" + "audioserver: %s</font>";
                             show_install = true;
                         }
 
                         if (!magisk_installed)
-                            new AlertDialog.Builder(context).setTitle(R.string.install_fail_title).setMessage(R.string.install_magisk_not_installed).setNegativeButton(R.string.ad_nb,null).show();
+                            new AlertDialog.Builder(context).setTitle(R.string.install_fail_title).setMessage(R.string.install_magisk_not_installed).setNegativeButton(R.string.ad_nb, null).show();
 
                         String final_confirm_message = context.getResources().getString(R.string.install_confirm_support)
                                 + "</br>" + String.format(confirm_msg, process_1[1]);

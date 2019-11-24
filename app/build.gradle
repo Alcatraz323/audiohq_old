@@ -7,8 +7,8 @@ android {
         minSdkVersion 28
         maxSdkVersion 29
         targetSdkVersion 28
-        versionCode 3
-        versionName "0.3_2019_11_7_focusing"
+        versionCode 4
+        versionName "0.4_2019_11_24_average"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

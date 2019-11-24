@@ -2,6 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string-array name="main_tabs">
         <item>Playing</item>
+        <item>Preset</item>
         <item>Status</item>
         <item>Console</item>
         <item>Check</item>

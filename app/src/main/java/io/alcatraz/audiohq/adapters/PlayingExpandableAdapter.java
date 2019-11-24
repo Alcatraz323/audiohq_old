@@ -27,6 +27,7 @@ import io.alcatraz.audiohq.beans.AppListBean;
 import io.alcatraz.audiohq.beans.ServerStatus;
 import io.alcatraz.audiohq.beans.TrackBean;
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
+import io.alcatraz.audiohq.core.utils.CheckUtils;
 import io.alcatraz.audiohq.extended.CompatWithPipeActivity;
 import io.alcatraz.audiohq.utils.AnimateUtils;
 import io.alcatraz.audiohq.utils.PackageCtlUtils;
@@ -100,7 +101,12 @@ public class PlayingExpandableAdapter extends BaseExpandableListAdapter {
         ImageButton show_adjust = view.findViewById(R.id.app_adjust_switch);
         Switch app_allowed = view.findViewById(R.id.app_allowed);
 
-        app_allowed.setChecked(ctx.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE) && !element.isMuted());
+        if(ctx.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE)){
+            app_allowed.setChecked(!element.isMuted());
+        }else {
+            app_allowed.setChecked(true);
+        }
+
         app_allowed.setEnabled(ctx.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE));
 
         app_allowed.setOnCheckedChangeListener((compoundButton, b1) -> AudioHqApis.setMute(element.getPkgName(), !b1));
@@ -188,7 +194,7 @@ public class PlayingExpandableAdapter extends BaseExpandableListAdapter {
                             right.getProgress() * 0.0001f,
                             split_control.isChecked());
                 }else {
-                    if (ctx.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE)) {
+                    if (CheckUtils.hasModifiedRC()) {
                         AudioHqApis.setMPackageVolume(bean.getPkgName(),
                                 general.getProgress() * 0.0001f,
                                 left.getProgress() * 0.0001f,
@@ -225,7 +231,7 @@ public class PlayingExpandableAdapter extends BaseExpandableListAdapter {
                             right.getProgress() * 0.0001f,
                             split_control.isChecked());
                 }else {
-                    if (ctx.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE)) {
+                    if (CheckUtils.hasModifiedRC()) {
                         AudioHqApis.setMPackageVolume(bean.getPkgName(),
                                 general.getProgress() * 0.0001f,
                                 left.getProgress() * 0.0001f,

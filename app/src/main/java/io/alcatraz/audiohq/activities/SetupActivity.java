@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import io.alcatraz.audiohq.AsyncInterface;
 import io.alcatraz.audiohq.Constants;
 import io.alcatraz.audiohq.R;
 import io.alcatraz.audiohq.beans.LambdaBridge;
@@ -91,7 +93,7 @@ public class SetupActivity extends SetupWizardBaseActivity {
 
     @Override
     public int getVersionCode() {
-        return 3;
+        return 4;
     }
 
     private void onSelectSetup5_Apply() {
@@ -146,19 +148,29 @@ public class SetupActivity extends SetupWizardBaseActivity {
                 .setTitle(R.string.pref_default_silent_warning_title)
                 .setMessage(R.string.setup_4_modify_rc_warning)
                 .setNegativeButton(R.string.ad_nb, null)
-                .setPositiveButton(R.string.adjust_confirm, (dialogInterface, i) -> {
-                    ShellUtils.CommandResult result = InstallUtils.modifyRCFile(!has_modified_rc.getTarget());
-                    if (result.result < 0 || result.errorMsg.length() > 0) {
-                        new AlertDialog.Builder(SetupActivity.this)
-                                .setTitle(R.string.setup_check_deny)
-                                .setMessage(String.format("result = %d\nerr = %s", result.result, result.errorMsg))
-                                .setNegativeButton(R.string.ad_nb, null)
-                                .show();
-                    } else {
-                        has_modified_rc.setTarget(!has_modified_rc.getTarget());
-                        modify_rc_check.setChecked(has_modified_rc.getTarget());
+                .setPositiveButton(R.string.adjust_confirm, (dialogInterface, i) -> InstallUtils.modifyRCFile(!has_modified_rc.getTarget(), new AsyncInterface<ShellUtils.CommandResult>() {
+                    @Override
+                    public boolean onAyncDone(@Nullable ShellUtils.CommandResult val) {
+                        assert val != null;
+                        if (val.result < 0 || val.errorMsg.length() > 0) {
+                            new AlertDialog.Builder(SetupActivity.this)
+                                    .setTitle(R.string.setup_check_deny)
+                                    .setMessage(String.format("result = %d\nerr = %s", val.result, val.errorMsg))
+                                    .setNegativeButton(R.string.ad_nb, null)
+                                    .show();
+                            return false;
+                        } else {
+                            has_modified_rc.setTarget(!has_modified_rc.getTarget());
+                            modify_rc_check.setChecked(has_modified_rc.getTarget());
+                        }
+                        return true;
                     }
-                })
+
+                    @Override
+                    public void onFailure(String reason) {
+
+                    }
+                }))
                 .show());
         //Initial state setup
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,

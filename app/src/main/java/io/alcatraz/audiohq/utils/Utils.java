@@ -193,6 +193,12 @@ public class Utils {
         imgv.setImageDrawable(getTintedDrawable(imgv.getContext(), resId, color));
     }
 
+    public static void setViewsEnabled(List<View> views,boolean enabled){
+        for(View v : views){
+            v.setEnabled(enabled);
+        }
+    }
+
     public static Drawable getTintedDrawable(Context context, int resId, int color) {
         Drawable up = ContextCompat.getDrawable(context, resId);
         Drawable drawableUp = DrawableCompat.wrap(up);

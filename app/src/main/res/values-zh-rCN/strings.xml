@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
-    <!ENTITY current_match_version "0.6">
+    <!ENTITY current_match_version "0.7">
     ]>
 <resources>
     <!-- 更新修改部分 -->
@@ -48,6 +48,13 @@
     <string name="aplc_left">L[0,1]</string>
     <string name="aplc_right">R[0,1]</string>
     <string name="aplc_general">综合[0.1]</string>
+
+    <string name="preset_disabled">预设功能不可用</string>
+    <string name="preset_disabled_define">无外部服务运行或内置服务运行时将不可用</string>
+    <string name="preset_tutorial_title">教程</string>
+    <string name="preset_tutorial_content">填入完整进程名，如io.alcatraz.audiohq:play(注意!!!进程名与包名不是一个概念
+        你可以通过ps命令查看正在运行的进程的进程名), 随后填入其他数据，检查无误后点击应用</string>
+    <string name="preset_process_name">Process name:</string>
 
     <string name="status_server">原生服务</string>
     <string name="status_track_ctl_position">音轨控制位置</string>

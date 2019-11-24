@@ -51,7 +51,7 @@ public class PrefFragment extends PreferenceFragment implements Preference.OnPre
         service = (ListPreference) findPreference(Constants.PREF_SERVICE_TYPE);
         check_update = (PreferenceScreen) findPreference(Constants.PREF_CHECK_UPDATE);
         default_silent = (CheckBoxPreference) findPreference(Constants.PREF_DEFAULT_SILENT);
-        boot = (SwitchPreference) findPreference(Constants.PREF_PID_MODE);
+        boot = (SwitchPreference) findPreference(Constants.PREF_BOOT);
         clear_profile = (PreferenceScreen) findPreference(Constants.PREF_CLEAR_PROFILES);
         uninstall_profile = (PreferenceScreen) findPreference(Constants.PREF_UNINSTALL_NATIVE);
         modified_rc = (SwitchPreference) findPreference(Constants.PREF_MODIFY_RC);
@@ -182,7 +182,10 @@ public class PrefFragment extends PreferenceFragment implements Preference.OnPre
         String[] location_options = getResources().getStringArray(R.array.entries_for_server_mode);
         service.setSummary(location_options[index_of_service_type]);
         service.setEnabled(!modified_rc_val);
-        boot.setEnabled(!modified_rc_val);
+        boot.setEnabled(!modified_rc_val && !AudioHqApis.AUDIOHQ_SERVER_NONE.equals(service_type));
+        if (AudioHqApis.AUDIOHQ_SERVER_NONE.equals(service_type)) {
+            boot.setChecked(false);
+        }
     }
 
     public void updateServiceSummary(String value) {
@@ -197,6 +200,7 @@ public class PrefFragment extends PreferenceFragment implements Preference.OnPre
         switch (preference.getKey()) {
             case Constants.PREF_SERVICE_TYPE:
                 updateServiceSummary(o.toString());
+                updateSummary();
                 break;
         }
         return true;

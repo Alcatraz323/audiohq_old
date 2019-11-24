@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
-    <!ENTITY current_match_version "0.6">
+    <!ENTITY current_match_version "0.7">
     ]>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Change every update -->
@@ -48,6 +48,15 @@
     <string name="aplc_left">L[0,1]</string>
     <string name="aplc_right">R[0,1]</string>
     <string name="aplc_general">General[0,1]</string>
+
+    <string name="preset_disabled">Preset function disabled</string>
+    <string name="preset_disabled_define">This would not work when there are no server running or the
+    built-in server is not enabled</string>
+    <string name="preset_tutorial_title">Tutorial</string>
+    <string name="preset_tutorial_content">Assume you want to set a process called io.alcatraz.audiohq:play
+    (Attention!!!Process name does not equals to package name, you can try run \'ps\' command to find out),
+    Then you type the full process name below and the parameter below, after everything is checked ,apply it</string>
+    <string name="preset_process_name">Process name:</string>
 
     <string name="status_server">Native server</string>
     <string name="status_track_ctl_position">Track ctrl position</string>

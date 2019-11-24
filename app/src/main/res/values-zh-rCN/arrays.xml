@@ -2,6 +2,7 @@
 <resources>
     <string-array name="main_tabs">
         <item>正在播放</item>
+        <item>预设</item>
         <item>状态</item>
         <item>控制台</item>
         <item>检查</item>

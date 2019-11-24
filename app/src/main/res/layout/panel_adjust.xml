@@ -28,12 +28,12 @@
             android:layout_marginTop="0dp">
 
             <EditText
-                android:text="@string/adjust_default_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:digits="0123456789."
                 android:ems="10"
-                android:hint="@string/aplc_general" />
+                android:hint="@string/aplc_general"
+                android:text="@string/adjust_default_value" />
 
         </android.support.design.widget.TextInputLayout>
 

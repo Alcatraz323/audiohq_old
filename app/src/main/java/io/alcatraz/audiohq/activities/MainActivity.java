@@ -10,11 +10,13 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +36,7 @@ import io.alcatraz.audiohq.LogBuff;
 import io.alcatraz.audiohq.R;
 import io.alcatraz.audiohq.adapters.PlayingExpandableAdapter;
 import io.alcatraz.audiohq.beans.AppListBean;
+import io.alcatraz.audiohq.beans.ServerStatus;
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
 import io.alcatraz.audiohq.core.utils.CheckUtils;
 import io.alcatraz.audiohq.extended.CompatWithPipeActivity;
@@ -59,6 +62,11 @@ public class MainActivity extends CompatWithPipeActivity {
     List<ImageView> status_imgvs = new LinkedList<>();
     SwipeRefreshLayout status_refresh;
 
+    //Preset Panel
+    CardView preset_disabled_panel;
+    Button preset_apply;
+    List<View> preset_widgets = new LinkedList<>();
+
     //Console out
     TextView console;
     SwipeRefreshLayout console_refresh;
@@ -67,7 +75,7 @@ public class MainActivity extends CompatWithPipeActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(!CheckUtils.getRootStatus()){
+        if (!CheckUtils.getRootStatus()) {
             toast(R.string.toast_no_root);
         }
         initViews();
@@ -89,9 +97,10 @@ public class MainActivity extends CompatWithPipeActivity {
         if (!CheckUtils.getMagiskInstalled(this))
             new AlertDialog.Builder(this).setTitle(R.string.install_fail_title)
                     .setMessage(R.string.install_magisk_not_installed)
-                    .setNegativeButton(R.string.ad_nb,null)
+                    .setNegativeButton(R.string.ad_nb, null)
                     .show();
         vpd.add(initPlayingList());
+        vpd.add(initPresetPanel());
         vpd.add(initStatusPanel());
         vpd.add(initConsolePanel());
         vpd.add(Panels.getCheckPanel(this));
@@ -109,10 +118,16 @@ public class MainActivity extends CompatWithPipeActivity {
 
             @Override
             public void onPageSelected(int i) {
-                if (i == 2) {
-                    updateConsole();
-                } else if (i == 1) {
-                    updateStatus();
+                switch (i) {
+                    case 1:
+                        updatePresetPanel();
+                        break;
+                    case 2:
+                        updateStatus();
+                        break;
+                    case 3:
+                        updateConsole();
+                        break;
                 }
             }
 
@@ -161,6 +176,30 @@ public class MainActivity extends CompatWithPipeActivity {
         return view;
     }
 
+    private View initPresetPanel() {
+        View view = Panels.getPresetPanel(this, preset_widgets);
+        preset_disabled_panel = view.findViewById(R.id.preset_disabled_panel);
+        preset_apply = view.findViewById(R.id.adjust_apply);
+        return view;
+    }
+
+    private void updatePresetPanel() {
+        Utils.setViewsEnabled(preset_widgets,false);
+        preset_disabled_panel.setVisibility(View.VISIBLE);
+        ServerStatus.setUpdatePending(true);
+        new Thread(ServerStatus::updateStatus).start();
+
+        ServerStatus.requestForPending(() -> runOnUiThread(() -> {
+            if(ServerStatus.isServerRunning() || CheckUtils.hasModifiedRC()) {
+                preset_apply.setEnabled(true);
+                preset_disabled_panel.setVisibility(View.GONE);
+                Utils.setViewsEnabled(preset_widgets,true);
+            }else {
+                preset_disabled_panel.setVisibility(View.VISIBLE);
+            }
+        }));
+    }
+
     private void updateStatus() {
         status_refresh.setRefreshing(true);
         AlertDialog alertDialog = Utils.getProcessingDialog(this, new ArrayList<>(), false, false);
@@ -204,7 +243,7 @@ public class MainActivity extends CompatWithPipeActivity {
                     lock_color = getResources().getColor(R.color.green_colorPrimary);
                 }
 
-                if(service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE)){
+                if (service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE)) {
                     lock_image = R.drawable.ic_check;
                     lock_color = getResources().getColor(R.color.green_colorPrimary);
                     server_indicator_image = R.drawable.ic_check;
@@ -276,7 +315,7 @@ public class MainActivity extends CompatWithPipeActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item1:
-                startActivity(new Intent(this,PreferenceActivity.class));
+                startActivity(new Intent(this, PreferenceActivity.class));
                 break;
             case R.id.item2:
                 startActivity(new Intent(this, AboutActivity.class));
@@ -288,16 +327,18 @@ public class MainActivity extends CompatWithPipeActivity {
                 NativeServerControl.stopServer(this);
                 break;
             case R.id.item5:
-                switch (viewPager.getCurrentItem()){
+                switch (viewPager.getCurrentItem()) {
                     case 0:
                         updatePlayingData();
                         break;
                     case 1:
-                        updateStatus();
+                        updatePresetPanel();
                         break;
                     case 2:
-                        updateConsole();
+                        updateStatus();
                         break;
+                    case 3:
+                        updateConsole();
                 }
                 break;
         }
