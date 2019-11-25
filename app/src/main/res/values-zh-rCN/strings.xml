@@ -25,6 +25,7 @@
     <string name="main_menu_5">刷新</string>
     <string name="main_report_bug">请把错误信息发至以下地址</string>
     <string name="toast_no_root">无法获取root, 软件将不会工作</string>
+    <string name="rc_modified_server_noneed">已使用内置服务，禁止启动外部服务</string>
     <string name="toast_implementing">实现中</string>
     <string name="service_toast_already_running">服务已经运行</string>
     <string name="service_toast_already_killed">服务已被杀死</string>

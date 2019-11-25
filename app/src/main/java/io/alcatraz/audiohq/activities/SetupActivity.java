@@ -23,12 +23,14 @@ import io.alcatraz.audiohq.Constants;
 import io.alcatraz.audiohq.R;
 import io.alcatraz.audiohq.beans.LambdaBridge;
 import io.alcatraz.audiohq.beans.SetupPage;
+import io.alcatraz.audiohq.core.utils.AudioHqApis;
 import io.alcatraz.audiohq.core.utils.CheckUtils;
 import io.alcatraz.audiohq.core.utils.OSUtils;
 import io.alcatraz.audiohq.core.utils.ShellUtils;
 import io.alcatraz.audiohq.extended.SetupWizardBaseActivity;
 import io.alcatraz.audiohq.utils.AnimateUtils;
 import io.alcatraz.audiohq.utils.InstallUtils;
+import io.alcatraz.audiohq.utils.NativeServerControl;
 import io.alcatraz.audiohq.utils.Utils;
 
 public class SetupActivity extends SetupWizardBaseActivity {
@@ -88,6 +90,7 @@ public class SetupActivity extends SetupWizardBaseActivity {
     @Override
     public void onFinishSetup() {
         startActivity(new Intent(this, MainActivity.class));
+        NativeServerControl.startServer(this);
         finish();
     }
 

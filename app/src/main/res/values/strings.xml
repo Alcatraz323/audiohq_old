@@ -26,6 +26,7 @@
     <string name="main_report_bug">Please deliver the error to the address below</string>
     <string name="toast_no_root">No root, this program will not work</string>
     <string name="toast_implementing">Implementing</string>
+    <string name="rc_modified_server_noneed">Built_in server running</string>
     <string name="service_toast_already_running">Service already running</string>
     <string name="service_toast_already_killed">Service has been killed</string>
     <string name="adjust_title">Precise Control</string>

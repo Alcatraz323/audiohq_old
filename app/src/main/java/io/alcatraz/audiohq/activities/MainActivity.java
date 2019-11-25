@@ -184,17 +184,17 @@ public class MainActivity extends CompatWithPipeActivity {
     }
 
     private void updatePresetPanel() {
-        Utils.setViewsEnabled(preset_widgets,false);
+        Utils.setViewsEnabled(preset_widgets, false);
         preset_disabled_panel.setVisibility(View.VISIBLE);
         ServerStatus.setUpdatePending(true);
         new Thread(ServerStatus::updateStatus).start();
 
         ServerStatus.requestForPending(() -> runOnUiThread(() -> {
-            if(ServerStatus.isServerRunning() || CheckUtils.hasModifiedRC()) {
+            if (ServerStatus.isServerRunning() || CheckUtils.hasModifiedRC()) {
                 preset_apply.setEnabled(true);
                 preset_disabled_panel.setVisibility(View.GONE);
-                Utils.setViewsEnabled(preset_widgets,true);
-            }else {
+                Utils.setViewsEnabled(preset_widgets, true);
+            } else {
                 preset_disabled_panel.setVisibility(View.VISIBLE);
             }
         }));
@@ -321,10 +321,16 @@ public class MainActivity extends CompatWithPipeActivity {
                 startActivity(new Intent(this, AboutActivity.class));
                 break;
             case R.id.item3:
-                NativeServerControl.startServer(this);
+                if (!CheckUtils.hasModifiedRC())
+                    NativeServerControl.startServer(this);
+                else
+                    toast(R.string.rc_modified_server_noneed);
                 break;
             case R.id.item4:
-                NativeServerControl.stopServer(this);
+                if (!CheckUtils.hasModifiedRC())
+                    NativeServerControl.stopServer(this);
+                else
+                    toast(R.string.rc_modified_server_noneed);
                 break;
             case R.id.item5:
                 switch (viewPager.getCurrentItem()) {
