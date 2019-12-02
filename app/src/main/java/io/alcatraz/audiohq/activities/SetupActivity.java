@@ -106,7 +106,7 @@ public class SetupActivity extends SetupWizardBaseActivity {
         Spinner server_type = root_view.findViewById(R.id.setup_4_server_type);
 
         getSpf().put(this, Constants.PREF_SERVICE_TYPE,
-                server_type.getSelectedItemPosition() == 4 ? 256 + "" : (server_type.getSelectedItemPosition() + 1) + "");
+                server_type.getSelectedItemPosition() == 1 ? 256 + "" : "Java");
 
         sendBroadcast(new Intent().setAction(Constants.BROADCAST_ACTION_UPDATE_PREFERENCES));
 
@@ -139,7 +139,7 @@ public class SetupActivity extends SetupWizardBaseActivity {
 
         modify_rc_check.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
-                server_type.setSelection(4);
+                server_type.setSelection(1);
                 server_type.setEnabled(false);
             } else {
                 server_type.setSelection(0);

@@ -25,7 +25,7 @@ public class InstallUtils {
     public static int install(Context context, boolean need64, boolean modifyrc) {
         String[] test_commands = {"mount -o remount,rw /system", "touch /system/test_audiohq"};
 
-        ShellUtils.CommandResult try_rw = ShellUtils.execCommand(test_commands, true, true);
+        ShellUtils.CommandResult try_rw = ShellUtils.execCommand(test_commands, true, true,true);
         if (try_rw.errorMsg.length() > 2) {
 
             return -2;
@@ -44,7 +44,7 @@ public class InstallUtils {
             backup_cmds[4] = "cp /system/lib64/libaudioflinger.so /sdcard/audiohq_backups/lib64";
         }
 
-        ShellUtils.execCommand(backup_cmds, true, true);
+        ShellUtils.execCommand(backup_cmds, true, true,true);
 
         COPY_FILE_INTERMIDIATES_DIRECTORY = context.getFilesDir() + "/intermediates";
         new File(COPY_FILE_INTERMIDIATES_DIRECTORY).mkdirs();
@@ -85,11 +85,11 @@ public class InstallUtils {
             });
         }
 
-        ShellUtils.CommandResult result = ShellUtils.execCommand(install_cmds, true, true);
+        ShellUtils.CommandResult result = ShellUtils.execCommand(install_cmds, true, true,true);
         if (result.errorMsg.length() >= 2) {
             showRetryDialog(context, result.errorMsg, need64);
         } else {
-            ShellUtils.execCommand("reboot", true, false);
+            ShellUtils.execCommand("reboot", true, false,true);
         }
         return 0;
     }
@@ -117,7 +117,7 @@ public class InstallUtils {
                 "echo \"" + modify + "\" > /system/etc/init/audioserver.rc",
                 "mount -o remount,ro /system"};
 
-        ShellUtils.CommandResult result = ShellUtils.execCommand(write_cmds, true, true);
+        ShellUtils.CommandResult result = ShellUtils.execCommand(write_cmds, true, true,true);
         if(beforeReboot.onAyncDone(result)){
             ShellUtils.execCommand("reboot",true);
         }

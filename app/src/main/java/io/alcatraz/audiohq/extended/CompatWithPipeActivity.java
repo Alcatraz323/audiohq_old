@@ -58,6 +58,8 @@ public class CompatWithPipeActivity extends AppCompatActivity {
         requestQueue++;
     }
 
+    public void onReloadPreferenceDone(){}
+
     public void loadPrefernce() {
         SharedPreferenceUtil spf = SharedPreferenceUtil.getInstance();
         service_type = (String) spf.get(this, Constants.PREF_SERVICE_TYPE, Constants.DEFAULT_VALUE_PREF_SERVICE);
@@ -105,6 +107,7 @@ public class CompatWithPipeActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             loadPrefernce();
+            onReloadPreferenceDone();
         }
     }
 }

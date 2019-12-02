@@ -4,15 +4,16 @@
         <item>正在播放</item>
         <item>预设</item>
         <item>状态</item>
-        <item>控制台</item>
+        <item>日志</item>
         <item>检查</item>
     </string-array>
 
     <string-array name="entries_for_server_mode">
-        <item>Fifo(Native)(推荐)</item>
-        <item>Memory(Native)兼容性低</item>
-        <item>Log bridge(Native)兼容性高，可能会出现瞬时响度不符</item>
-        <item>无自动调整特性的服务</item>
+        <item>Service(Java)(推荐)</item>
+        <!--<item>Fifo(Native)(推荐)</item>-->
+        <!--<item>Memory(Native)兼容性低</item>-->
+        <!--<item>Log bridge(Native)兼容性高，可能会出现瞬时响度不符</item>-->
+        <!--<item>无自动调整特性的服务</item>-->
         <item>不启动外挂服务(修改的rc)</item>
     </string-array>
 

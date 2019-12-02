@@ -40,6 +40,7 @@ import io.alcatraz.audiohq.beans.ServerStatus;
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
 import io.alcatraz.audiohq.core.utils.CheckUtils;
 import io.alcatraz.audiohq.extended.CompatWithPipeActivity;
+import io.alcatraz.audiohq.services.AudiohqJavaServer;
 import io.alcatraz.audiohq.utils.InstallUtils;
 import io.alcatraz.audiohq.utils.NativeServerControl;
 import io.alcatraz.audiohq.utils.Panels;
@@ -259,7 +260,7 @@ public class MainActivity extends CompatWithPipeActivity {
 
     private void updateConsole() {
         console_refresh.setRefreshing(true);
-        console.setText(LogBuff.getLog());
+        console.setText(LogBuff.getFinalLog());
         console_refresh.setRefreshing(false);
     }
 
@@ -298,6 +299,12 @@ public class MainActivity extends CompatWithPipeActivity {
 
     }
 
+    @Override
+    public void onReloadPreferenceDone() {
+        super.onReloadPreferenceDone();
+        invalidateOptionsMenu();
+    }
+
     public List<PackageInfo> getAppList() {
         PackageManager pm = getPackageManager();
         // Return a List of all packages that are installed on the device.
@@ -307,7 +314,8 @@ public class MainActivity extends CompatWithPipeActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater mi = new MenuInflater(this);
-        mi.inflate(R.menu.activity_main_menu, menu);
+        mi.inflate(service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE) ?
+                R.menu.activity_main_simplified_menu : R.menu.activity_main_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -321,12 +329,22 @@ public class MainActivity extends CompatWithPipeActivity {
                 startActivity(new Intent(this, AboutActivity.class));
                 break;
             case R.id.item3:
-                if (!CheckUtils.hasModifiedRC())
-                    NativeServerControl.startServer(this);
-                else
-                    toast(R.string.rc_modified_server_noneed);
+                switch (service_type) {
+                    case AudioHqApis.AUDIOHQ_SERVER_TYPE_JAVA:
+                        startService(new Intent(this, AudiohqJavaServer.class));
+                        break;
+                    case AudioHqApis.AUDIOHQ_SERVER_NONE:
+                        break;
+                    default:
+                        if (!CheckUtils.hasModifiedRC())
+                            NativeServerControl.startServer(this);
+                        else
+                            toast(R.string.rc_modified_server_noneed);
+                        break;
+                }
                 break;
             case R.id.item4:
+                stopService(new Intent(this, AudiohqJavaServer.class));
                 if (!CheckUtils.hasModifiedRC())
                     NativeServerControl.stopServer(this);
                 else

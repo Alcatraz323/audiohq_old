@@ -8,6 +8,7 @@ public class AudioHqApis {
     public static final String AUDIOHQ_SERVER_TYPE_MEMORY = "2";
     public static final String AUDIOHQ_SERVER_TYPE_LOG = "3";
     public static final String AUDIOHQ_SERVER_TYPE_NO_AUTOMATION = "3";
+    public static final String AUDIOHQ_SERVER_TYPE_JAVA = "Java";
     public static final String AUDIOHQ_SERVER_NONE = "256";
 
 
@@ -71,6 +72,10 @@ public class AudioHqApis {
 
     public static ShellUtils.CommandResult unsetForPkg(String pkg) {
         return unsetForPkg(pkg, AUDIOHQ_THREAD_ALL_USE);
+    }
+
+    public static ShellUtils.CommandResult unsetForPid(String pid) {
+        return runAudioHqCmd(AudioHqCmds.UNSET_PID_VOLUME,pid);
     }
 
     public static ShellUtils.CommandResult getRunningServerType() {
@@ -200,6 +205,7 @@ public class AudioHqApis {
         GET_SET_PKGS("audiohq -k -i %s", true, true),
         GET_ALL_PLAYING_CLIENTS("audiohq -P", false, false),
         UNSET_PKG_VOLUME("audiohq -U \"%s\" -i %s", true, true),
+        UNSET_PID_VOLUME("audiohq -u \"%s\"", true, true),
         GET_RUNNING_SERVER_TYPE("audiohq -y", true, false),
         KILL_SERVER("audiohq -R", true, false),
         GET_TRACK_CTL_POSITION("audiohq -o", false, false),

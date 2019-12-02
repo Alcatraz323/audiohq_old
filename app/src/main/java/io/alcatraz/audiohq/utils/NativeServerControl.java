@@ -10,6 +10,8 @@ public class NativeServerControl {
     public static void startServer(CompatWithPipeActivity activity) {
         if(activity.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE)) {
             activity.toast("No Server Type");
+        }else if(activity.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_TYPE_JAVA)){
+            activity.toast("Err : Attempt to start native server but type is Java");
         }else {
             new Thread(() -> {
                 ShellUtils.execCommand("mkdir " + activity.getFilesDir() + "/native_output", false);

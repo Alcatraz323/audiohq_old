@@ -4,15 +4,16 @@
         <item>Playing</item>
         <item>Preset</item>
         <item>Status</item>
-        <item>Console</item>
+        <item>Log</item>
         <item>Check</item>
     </string-array>
 
     <string-array name="entries_for_server_mode">
-        <item>Fifo(Native)(Recommended)</item>
-        <item>Memory(Native)Low compatibility</item>
-        <item>Log bridge(Native)High compatibility,but may occur volume incorrect delay</item>
-        <item>No Automatical adjust service(Native)</item>
+        <item>Service(Java)(Recommended)</item>
+        <!--<item>Fifo(Native)(Recommended)</item>-->
+        <!--<item>Memory(Native)Low compatibility</item>-->
+        <!--<item>Log bridge(Native)High compatibility,but may occur volume incorrect delay</item>-->
+        <!--<item>No Automatical adjust service(Native)</item>-->
         <item>Disable server(When using modified rc)</item>
     </string-array>
 
@@ -28,10 +29,11 @@
 
     <!--Please DO NOT add translation to the arrays below-->
     <string-array name="entryvalues_for_server_mode" tools:ignore="MissingTranslation">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
+        <item>Java</item>
+        <!--<item>1</item>-->
+        <!--<item>2</item>-->
+        <!--<item>3</item>-->
+        <!--<item>4</item>-->
         <item>256</item>
     </string-array>
 

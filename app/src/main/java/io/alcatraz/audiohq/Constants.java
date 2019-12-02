@@ -10,6 +10,8 @@ public class Constants {
     public static String[] SUPPORT_ABIS = {"armeabi", "armeabi-v7a", "arm64-v8a"};
     public static int[] SUPPORT_APIS = {28, 29};
 
+    public static String MY_PACKAGE_NAME = "io.alcatraz.audiohq";
+
     //===============================================
     public static String AVATART_TRANSITION_NAME = "avatar";
     public static String ACCOUNT_TRANSITION_NAME_PREFIX = "accountname:";

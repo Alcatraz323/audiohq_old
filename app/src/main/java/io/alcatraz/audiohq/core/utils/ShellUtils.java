@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 import io.alcatraz.audiohq.LogBuff;
+import io.alcatraz.audiohq.utils.Utils;
 
 public class ShellUtils {
     public static final String ERR_EMPTY_COMMAND = "Command can't be null";
@@ -17,20 +18,21 @@ public class ShellUtils {
      * check whether has root permission
      */
     public static boolean hasRootPermission() {
-        return execCommand("echo root", true, false).result == 0;
+        return execCommand("echo root", true, false, false).result == 0;
     }
+
 
     public static CommandResult execCommand(String command, boolean isRoot) {
-        return execCommand(new String[]{command}, isRoot, true);
+        return execCommand(new String[]{command}, isRoot, true, true);
     }
 
-    public static CommandResult execCommand(String command, boolean isRoot, boolean isNeedResultMsg) {
-        LogBuff.log(isRoot ? "# " : "$ " + command);
-        return execCommand(new String[]{command}, isRoot, isNeedResultMsg);
+    public static CommandResult execCommand(String command, boolean isRoot, boolean isNeedResultMsg, boolean needLogging) {
+
+        return execCommand(new String[]{command}, isRoot, isNeedResultMsg, needLogging);
     }
 
-    public static CommandResult execCommand(List<String> commands, boolean isRoot, boolean isNeedResultMsg) {
-        return execCommand(commands == null ? null : commands.toArray(new String[]{}), isRoot, isNeedResultMsg);
+    public static CommandResult execCommand(List<String> commands, boolean isRoot, boolean isNeedResultMsg, boolean needLogging) {
+        return execCommand(commands == null ? null : commands.toArray(new String[]{}), isRoot, isNeedResultMsg, needLogging);
     }
 
     /**
@@ -41,10 +43,11 @@ public class ShellUtils {
      * @param isRoot       whether need to run with root
      * @param needResponse whether need result msg
      */
-    public static CommandResult execCommand(String[] commands, boolean isRoot, boolean needResponse) {
+    public static CommandResult execCommand(String[] commands, boolean isRoot, boolean needResponse, boolean needLogging) {
+
         int result = -1;
         if (commands == null || commands.length == 0) {
-            return new CommandResult(result, null, ERR_EMPTY_COMMAND);
+            return new CommandResult(result, null, ERR_EMPTY_COMMAND, needLogging);
         }
 
         Process process = null;
@@ -61,9 +64,8 @@ public class ShellUtils {
                 if (command == null) {
                     continue;
                 }
-
-
-
+                if (needLogging)
+                    LogBuff.log((isRoot ? "# " : "$ ") + command);
                 // donnot use os.writeBytes(commmand), avoid chinese charset error
                 os.write(command.getBytes());
                 os.writeBytes(COMMAND_LINE_END);
@@ -111,7 +113,7 @@ public class ShellUtils {
 
         }
         return new CommandResult(result, successMsg == null ? null : successMsg.toString(), errorMsg == null ? null
-                : errorMsg.toString());
+                : errorMsg.toString(), needLogging);
     }
 
     public static class CommandResult {
@@ -124,12 +126,16 @@ public class ShellUtils {
             this.result = result;
         }
 
-        public CommandResult(int result, String responseMsg, String errorMsg) {
+        public CommandResult(int result, String responseMsg, String errorMsg, boolean needLogging) {
             this.result = result;
             this.responseMsg = responseMsg;
             this.errorMsg = errorMsg;
-            LogBuff.log(errorMsg);
-            LogBuff.log(responseMsg);
+            if (needLogging) {
+                if (Utils.isStringNotEmpty(errorMsg))
+                    LogBuff.log(errorMsg);
+                if (Utils.isStringNotEmpty(responseMsg))
+                    LogBuff.log(responseMsg);
+            }
         }
     }
 

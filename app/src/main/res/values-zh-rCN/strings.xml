@@ -33,6 +33,7 @@
     <string name="adjust_confirm">执行</string>
     <string name="til_err_parse">不是一个有效的浮点数</string>
     <string name="til_err_ofr">超出范围</string>
+    <string name="read_profile_err">配置文件读取失败</string>
 
     <string name="toast_copied">已复制</string>
     <string name="ad_pb">确定</string>
