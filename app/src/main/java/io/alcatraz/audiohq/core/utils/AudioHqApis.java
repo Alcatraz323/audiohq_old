@@ -1,5 +1,11 @@
 package io.alcatraz.audiohq.core.utils;
 
+import android.content.Context;
+import android.content.Intent;
+
+import io.alcatraz.audiohq.beans.ProcessProfile;
+import io.alcatraz.audiohq.services.AudiohqJavaServer;
+
 public class AudioHqApis {
     public static final String AUDIOHQ_THREAD_ALL_USE = "all";
     public static final String AUDIOHQ_THREAD_ENUM_CURRENT = "enum_current";
@@ -43,7 +49,7 @@ public class AudioHqApis {
                                                         float prog_left,
                                                         float prog_right,
                                                         boolean split_control) {
-        return setPidVolume(pid, prog_left, prog_right, prog_general, split_control, AUDIOHQ_THREAD_ALL_USE);
+        return setPidVolume(pid, prog_general, prog_left, prog_right, split_control, AUDIOHQ_THREAD_ALL_USE);
     }
 
     public static ShellUtils.CommandResult setPkgVolume(String pkgname,
@@ -52,6 +58,23 @@ public class AudioHqApis {
                                                         float prog_right,
                                                         boolean split_control) {
         return setPkgVolume(pkgname, prog_general, prog_left, prog_right, split_control, AUDIOHQ_THREAD_ALL_USE);
+    }
+
+    public static void sendAdjustBroadcast(Context context,
+                                           String pkgname,
+                                           float prog_general,
+                                           float prog_left,
+                                           float prog_right,
+                                           boolean split_control) {
+        Intent intent = new Intent();
+        intent.setAction(AudiohqJavaServer.SERVER_ACTION_ADJUST_PROCESS);
+        ProcessProfile profile = new ProcessProfile(pkgname);
+        profile.setGeneral(prog_general);
+        profile.setLeft(prog_left);
+        profile.setRight(prog_right);
+        profile.setControl_lr(split_control);
+        intent.putExtra(AudiohqJavaServer.SERVER_ACTION_ADJUST_PROCESS, profile);
+        context.sendBroadcast(intent);
     }
 
     public static ShellUtils.CommandResult getSetPkgs(String thread) {
@@ -75,7 +98,7 @@ public class AudioHqApis {
     }
 
     public static ShellUtils.CommandResult unsetForPid(String pid) {
-        return runAudioHqCmd(AudioHqCmds.UNSET_PID_VOLUME,pid);
+        return runAudioHqCmd(AudioHqCmds.UNSET_PID_VOLUME, pid);
     }
 
     public static ShellUtils.CommandResult getRunningServerType() {

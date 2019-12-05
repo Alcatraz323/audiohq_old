@@ -139,18 +139,27 @@ public class Panels {
                             Float.parseFloat(right.getEditText().getText().toString()),
                             split_control.isChecked());
                 }*/
-                if (CheckUtils.hasModifiedRC()) {
-                    AudioHqApis.setMPackageVolume(process_name.getEditText().getText().toString().replaceAll("\r|\n", ""),
+                if(activity.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_TYPE_JAVA)){
+                    AudioHqApis.sendAdjustBroadcast(activity,
+                            process_name.getEditText().getText().toString().replaceAll("\r|\n", ""),
                             Float.parseFloat(general.getEditText().getText().toString()),
                             Float.parseFloat(left.getEditText().getText().toString()),
                             Float.parseFloat(right.getEditText().getText().toString()),
                             split_control.isChecked());
-                } else {
-                    AudioHqApis.setPkgVolume(process_name.getEditText().getText().toString().replaceAll("\r|\n", ""),
-                            Float.parseFloat(general.getEditText().getText().toString()),
-                            Float.parseFloat(left.getEditText().getText().toString()),
-                            Float.parseFloat(right.getEditText().getText().toString()),
-                            split_control.isChecked());
+                }else {
+                    if (CheckUtils.hasModifiedRC()) {
+                        AudioHqApis.setMPackageVolume(process_name.getEditText().getText().toString().replaceAll("\r|\n", ""),
+                                Float.parseFloat(general.getEditText().getText().toString()),
+                                Float.parseFloat(left.getEditText().getText().toString()),
+                                Float.parseFloat(right.getEditText().getText().toString()),
+                                split_control.isChecked());
+                    } else {
+                        AudioHqApis.setPkgVolume(process_name.getEditText().getText().toString().replaceAll("\r|\n", ""),
+                                Float.parseFloat(general.getEditText().getText().toString()),
+                                Float.parseFloat(left.getEditText().getText().toString()),
+                                Float.parseFloat(right.getEditText().getText().toString()),
+                                split_control.isChecked());
+                    }
                 }
             } else {
                 adjust_apply_cover.setVisibility(View.GONE);
@@ -245,19 +254,29 @@ public class Panels {
                             Float.parseFloat(right.getEditText().getText().toString()),
                             split_control.isChecked());
                 }*/
-                if (CheckUtils.hasModifiedRC()) {
-                    AudioHqApis.setMPackageVolume(bean.getPkgName().replaceAll("\r|\n", ""),
+                if(ctx.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_TYPE_JAVA)){
+                    AudioHqApis.sendAdjustBroadcast(ctx,
+                            bean.getPkgName().replaceAll("\r|\n", ""),
                             Float.parseFloat(general.getEditText().getText().toString()),
                             Float.parseFloat(left.getEditText().getText().toString()),
                             Float.parseFloat(right.getEditText().getText().toString()),
                             split_control.isChecked());
-                } else {
-                    AudioHqApis.setPkgVolume(bean.getPkgName().replaceAll("\r|\n", ""),
-                            Float.parseFloat(general.getEditText().getText().toString()),
-                            Float.parseFloat(left.getEditText().getText().toString()),
-                            Float.parseFloat(right.getEditText().getText().toString()),
-                            split_control.isChecked());
+                }else {
+                    if (CheckUtils.hasModifiedRC()) {
+                        AudioHqApis.setMPackageVolume(bean.getPkgName().replaceAll("\r|\n", ""),
+                                Float.parseFloat(general.getEditText().getText().toString()),
+                                Float.parseFloat(left.getEditText().getText().toString()),
+                                Float.parseFloat(right.getEditText().getText().toString()),
+                                split_control.isChecked());
+                    } else {
+                        AudioHqApis.setPkgVolume(bean.getPkgName().replaceAll("\r|\n", ""),
+                                Float.parseFloat(general.getEditText().getText().toString()),
+                                Float.parseFloat(left.getEditText().getText().toString()),
+                                Float.parseFloat(right.getEditText().getText().toString()),
+                                split_control.isChecked());
+                    }
                 }
+
                 alertDialog.dismiss();
                 through.onAyncDone(null);
                 adjust_apply_cover.setVisibility(View.GONE);

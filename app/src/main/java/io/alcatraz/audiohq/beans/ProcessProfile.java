@@ -3,8 +3,7 @@ package io.alcatraz.audiohq.beans;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class ProcessProfile implements Parcelable{
-
+public class ProcessProfile extends ProcessProfileForSave implements Parcelable{
     private String processName;
     private float left;
     private float right;
@@ -93,6 +92,16 @@ public class ProcessProfile implements Parcelable{
 
     public void setControl_lr(boolean control_lr) {
         this.control_lr = control_lr;
+    }
+
+    public ProcessProfileForSave toSavingForm(){
+        ProcessProfileForSave saving = new ProcessProfileForSave();
+        saving.setLeft(left);
+        saving.setRight(right);
+        saving.setGeneral(general);
+        saving.setControl_lr(control_lr);
+        saving.setProcessName(processName);
+        return saving;
     }
 
     @Override

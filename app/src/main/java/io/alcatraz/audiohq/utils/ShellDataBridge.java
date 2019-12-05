@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Looper;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -14,6 +17,7 @@ import java.util.Map;
 import io.alcatraz.audiohq.AsyncInterface;
 import io.alcatraz.audiohq.R;
 import io.alcatraz.audiohq.beans.AppListBean;
+import io.alcatraz.audiohq.beans.LambdaBridge;
 import io.alcatraz.audiohq.beans.ServerStatus;
 import io.alcatraz.audiohq.beans.TrackBean;
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
@@ -21,7 +25,11 @@ import io.alcatraz.audiohq.core.utils.ShellUtils;
 import io.alcatraz.audiohq.extended.CompatWithPipeActivity;
 
 public class ShellDataBridge {
-    public static void getPlayingMap(CompatWithPipeActivity context, AsyncInterface<Map<String, AppListBean>> asyncInterface) {
+    public static void getPlayingMap(CompatWithPipeActivity context,
+                                     AsyncInterface<Map<String, AppListBean>> asyncInterface,
+                                     ArrayList<View> dialog_widgets) {
+        TextView text = (TextView) dialog_widgets.get(0);
+        ProgressBar progress = (ProgressBar) dialog_widgets.get(1);
         new Thread(() -> {
             Looper.prepare();
             ShellUtils.CommandResult raw = AudioHqApis.getAllPlayingClients();
@@ -34,6 +42,7 @@ public class ShellDataBridge {
                 asyncInterface.onAyncDone(out);
             } else {
                 String[] process_1 = raw.responseMsg.split("\n");
+                int index = 0;
 
                 String current_thread = "";
                 for (String i : process_1) {
@@ -75,12 +84,14 @@ public class ShellDataBridge {
                     AppListBean new_app = new AppListBean();
 
                     //new_app.setPkgName(PackageCtlUtils.getProcessName(current.getPid()));
-                    new_app.setPkgName(process_2[5]);
+                    new_app.setPkgName(context.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_TYPE_JAVA) ?
+                            PackageCtlUtils.getProcessName(current.getPid()).replaceAll("[\n\t]","") : process_2[5]);
                     new_app.setProfile(context.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE) ?
                             process_2[6] : "1,1,1,0");
                     new_app.setMuted(context.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE) && process_2[7].equals("muted"));
 
-                    Drawable icon = PackageCtlUtils.getIcon(context, new_app.getPkgName().contains(":") ? new_app.getPkgName().split(":")[0] : new_app.getPkgName());
+                    Drawable icon = PackageCtlUtils.getIcon(context, new_app.getPkgName().contains(":") ?
+                            new_app.getPkgName().split(":")[0] : new_app.getPkgName());
                     if (icon != null) {
                         new_app.setIcon(icon);
                     } else {
@@ -90,6 +101,14 @@ public class ShellDataBridge {
                     new_app.setPid(current.getPid());
                     new_app.addTrack(current);
                     out.put(current.getPid(), new_app);
+                    index++;
+
+                    LambdaBridge<Integer> bridge_1 = new LambdaBridge<>();
+                    bridge_1.setTarget(index);
+                    context.runOnUiThread(() -> {
+                        progress.setProgress(bridge_1.getTarget() + 1 / (process_1.length - 1) * 100);
+                        text.setText(new_app.getPkgName());
+                    });
                 }
                 asyncInterface.onAyncDone(out);
             }

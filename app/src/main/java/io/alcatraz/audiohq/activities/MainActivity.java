@@ -275,7 +275,8 @@ public class MainActivity extends CompatWithPipeActivity {
 
     private void updatePlayingData() {
         playing_data.clear();
-        AlertDialog alertDialog = Utils.getProcessingDialog(this, new ArrayList<>(), false, false);
+        ArrayList<View> dialog_widgets = new ArrayList<>();
+        AlertDialog alertDialog = Utils.getProcessingDialog(this, dialog_widgets, false, true);
         alertDialog.show();
         ShellDataBridge.getPlayingMap(this, new AsyncInterface<Map<String, AppListBean>>() {
             @Override
@@ -295,7 +296,7 @@ public class MainActivity extends CompatWithPipeActivity {
             public void onFailure(String reason) {
 
             }
-        });
+        },dialog_widgets);
 
     }
 

@@ -101,9 +101,9 @@ public class PlayingExpandableAdapter extends BaseExpandableListAdapter {
         ImageButton show_adjust = view.findViewById(R.id.app_adjust_switch);
         Switch app_allowed = view.findViewById(R.id.app_allowed);
 
-        if(ctx.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE)){
+        if (ctx.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE)) {
             app_allowed.setChecked(!element.isMuted());
-        }else {
+        } else {
             app_allowed.setChecked(true);
         }
 
@@ -124,7 +124,7 @@ public class PlayingExpandableAdapter extends BaseExpandableListAdapter {
         }
         aplc_label.append("(" + element.activeCount() + "/" + element.getTracks().size() + " active)");
 
-        show_adjust.setOnClickListener(view1 -> Panels.getAdjustPanel(ctx, element,throuth).show());
+        show_adjust.setOnClickListener(view1 -> Panels.getAdjustPanel(ctx, element, throuth).show());
 
         setupControlPanel(view, element);
 
@@ -187,25 +187,34 @@ public class PlayingExpandableAdapter extends BaseExpandableListAdapter {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if(ctx.pid_mode) {
+                if (ctx.pid_mode) {
                     AudioHqApis.setPidVolume(bean.getPid(),
                             general.getProgress() * 0.0001f,
                             left.getProgress() * 0.0001f,
                             right.getProgress() * 0.0001f,
                             split_control.isChecked());
-                }else {
-                    if (CheckUtils.hasModifiedRC()) {
-                        AudioHqApis.setMPackageVolume(bean.getPkgName(),
+                } else {
+                    if (ctx.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_TYPE_JAVA)) {
+                        AudioHqApis.sendAdjustBroadcast(ctx,
+                                bean.getPkgName(),
                                 general.getProgress() * 0.0001f,
                                 left.getProgress() * 0.0001f,
                                 right.getProgress() * 0.0001f,
                                 split_control.isChecked());
-                    } else {
-                        AudioHqApis.setPkgVolume(bean.getPkgName(),
-                                general.getProgress() * 0.0001f,
-                                left.getProgress() * 0.0001f,
-                                right.getProgress() * 0.0001f,
-                                split_control.isChecked());
+                    }else {
+                        if (CheckUtils.hasModifiedRC()) {
+                            AudioHqApis.setMPackageVolume(bean.getPkgName(),
+                                    general.getProgress() * 0.0001f,
+                                    left.getProgress() * 0.0001f,
+                                    right.getProgress() * 0.0001f,
+                                    split_control.isChecked());
+                        } else {
+                            AudioHqApis.setPkgVolume(bean.getPkgName(),
+                                    general.getProgress() * 0.0001f,
+                                    left.getProgress() * 0.0001f,
+                                    right.getProgress() * 0.0001f,
+                                    split_control.isChecked());
+                        }
                     }
                 }
             }
@@ -224,25 +233,34 @@ public class PlayingExpandableAdapter extends BaseExpandableListAdapter {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if(ctx.pid_mode) {
+                if (ctx.pid_mode) {
                     AudioHqApis.setPidVolume(bean.getPid(),
                             general.getProgress() * 0.0001f,
                             left.getProgress() * 0.0001f,
                             right.getProgress() * 0.0001f,
                             split_control.isChecked());
-                }else {
-                    if (CheckUtils.hasModifiedRC()) {
-                        AudioHqApis.setMPackageVolume(bean.getPkgName(),
+                } else {
+                    if (ctx.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_TYPE_JAVA)) {
+                        AudioHqApis.sendAdjustBroadcast(ctx,
+                                bean.getPkgName(),
                                 general.getProgress() * 0.0001f,
                                 left.getProgress() * 0.0001f,
                                 right.getProgress() * 0.0001f,
                                 split_control.isChecked());
-                    } else {
-                        AudioHqApis.setPkgVolume(bean.getPkgName(),
-                                general.getProgress() * 0.0001f,
-                                left.getProgress() * 0.0001f,
-                                right.getProgress() * 0.0001f,
-                                split_control.isChecked());
+                    }else {
+                        if (CheckUtils.hasModifiedRC()) {
+                            AudioHqApis.setMPackageVolume(bean.getPkgName(),
+                                    general.getProgress() * 0.0001f,
+                                    left.getProgress() * 0.0001f,
+                                    right.getProgress() * 0.0001f,
+                                    split_control.isChecked());
+                        } else {
+                            AudioHqApis.setPkgVolume(bean.getPkgName(),
+                                    general.getProgress() * 0.0001f,
+                                    left.getProgress() * 0.0001f,
+                                    right.getProgress() * 0.0001f,
+                                    split_control.isChecked());
+                        }
                     }
                 }
             }
@@ -260,25 +278,34 @@ public class PlayingExpandableAdapter extends BaseExpandableListAdapter {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if(ctx.pid_mode) {
+                if (ctx.pid_mode) {
                     AudioHqApis.setPidVolume(bean.getPid(),
                             general.getProgress() * 0.0001f,
                             left.getProgress() * 0.0001f,
                             right.getProgress() * 0.0001f,
                             split_control.isChecked());
-                }else {
-                    if (ctx.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE)) {
-                        AudioHqApis.setMPackageVolume(bean.getPkgName(),
+                } else {
+                    if (ctx.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_TYPE_JAVA)) {
+                        AudioHqApis.sendAdjustBroadcast(ctx,
+                                bean.getPkgName(),
                                 general.getProgress() * 0.0001f,
                                 left.getProgress() * 0.0001f,
                                 right.getProgress() * 0.0001f,
                                 split_control.isChecked());
-                    } else {
-                        AudioHqApis.setPkgVolume(bean.getPkgName(),
-                                general.getProgress() * 0.0001f,
-                                left.getProgress() * 0.0001f,
-                                right.getProgress() * 0.0001f,
-                                split_control.isChecked());
+                    }else {
+                        if (CheckUtils.hasModifiedRC()) {
+                            AudioHqApis.setMPackageVolume(bean.getPkgName(),
+                                    general.getProgress() * 0.0001f,
+                                    left.getProgress() * 0.0001f,
+                                    right.getProgress() * 0.0001f,
+                                    split_control.isChecked());
+                        } else {
+                            AudioHqApis.setPkgVolume(bean.getPkgName(),
+                                    general.getProgress() * 0.0001f,
+                                    left.getProgress() * 0.0001f,
+                                    right.getProgress() * 0.0001f,
+                                    split_control.isChecked());
+                        }
                     }
                 }
             }

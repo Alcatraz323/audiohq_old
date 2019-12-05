@@ -14,28 +14,28 @@ import io.alcatraz.audiohq.LogBuff;
 import io.alcatraz.audiohq.R;
 import io.alcatraz.audiohq.utils.IOUtils;
 
-public class AdjustProfiles {
+public class AdjustProfiles extends AdjustProfileForSave{
     public static String DEFAULT_PROFILE_POSITION_AFFIX = "/java_adjust_profiles/adjust_profiles.json";
     private Context mContext;
 
-    private String targetLink;
-    private List<ProcessProfile> processProfile;
+//    private String targetLink;
+//    private List<ProcessProfile> processProfile;
 
-    public void setProcessProfile(List<ProcessProfile> processProfile) {
-        this.processProfile = processProfile;
-    }
-
-    public List<ProcessProfile> getProcessProfile() {
-        return processProfile;
-    }
-
-    public String getTargetLink() {
-        return targetLink;
-    }
-
-    public void setTargetLink(String targetLink) {
-        this.targetLink = targetLink;
-    }
+//    public void setProcessProfile(List<ProcessProfile> processProfile) {
+//        this.processProfile = processProfile;
+//    }
+//
+//    public List<ProcessProfile> getProcessProfile() {
+//        return processProfile;
+//    }
+//
+//    public String getTargetLink() {
+//        return targetLink;
+//    }
+//
+//    public void setTargetLink(String targetLink) {
+//        this.targetLink = targetLink;
+//    }
 
     public Context getContext() {
         return mContext;
@@ -45,10 +45,6 @@ public class AdjustProfiles {
         this.mContext = mContext;
     }
 
-    public void saveToLocal() {
-        IOUtils.Okiowrite(mContext.getFilesDir() + DEFAULT_PROFILE_POSITION_AFFIX,
-                new Gson().toJson(this));
-    }
 
     public static synchronized AdjustProfiles getProfiles(Context context) {
         boolean successful = true;
@@ -67,8 +63,20 @@ public class AdjustProfiles {
             }
         }
 
-        AdjustProfiles result = new Gson().fromJson(
-                IOUtils.Okioread(targetLink), AdjustProfiles.class);
+        AdjustProfiles result = new AdjustProfiles();
+
+        String raw = IOUtils.Okioread(targetLink);
+        String[] process_1 = raw.trim().split("\n");
+        for(String i : process_1){
+            String process_2[]= i.split(";");
+            ProcessProfile profile = new ProcessProfile(process_2[0]);
+            profile.setLeft(Float.parseFloat(process_2[1]));
+            profile.setRight(Float.parseFloat(process_2[2]));
+            profile.setGeneral(Float.parseFloat(process_2[3]));
+            profile.setControl_lr(Boolean.parseBoolean(process_2[4]));
+            result.getProcessProfile().add(profile);
+        }
+
         if(result == null){
             result = new AdjustProfiles();
             result.setProcessProfile(new ArrayList<>());

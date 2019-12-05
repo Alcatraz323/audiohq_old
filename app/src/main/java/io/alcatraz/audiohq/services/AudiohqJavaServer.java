@@ -63,7 +63,7 @@ public class AudiohqJavaServer extends Service {
         LogBuff.I("Server has been stopped");
     }
 
-    public void adjustProcess(ProcessProfile profile) {
+    public synchronized void adjustProcess(ProcessProfile profile) {
         if (running_processes.containsKey(profile.getProcessName())) {
             RunningProcess process = running_processes.get(profile.getProcessName());
             AudioHqApis.setPidVolume(process.getPid(),
@@ -122,6 +122,7 @@ public class AudiohqJavaServer extends Service {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            LogBuff.I("Received broadcast from ["+intent.getPackage()+"]");
             switch (Objects.requireNonNull(intent.getAction())) {
                 case SERVER_ACTION_ADJUST_PROCESS:
                     ProcessProfile profile = intent.getParcelableExtra(SERVER_ACTION_ADJUST_PROCESS);
@@ -130,7 +131,7 @@ public class AudiohqJavaServer extends Service {
                         @Override
                         public boolean onAyncDone(@Nullable Object val) {
                             adjustProcess(profile);
-                            general_profile.saveToLocal();
+                            general_profile.saveToLocal(getFilesDir() + AdjustProfiles.DEFAULT_PROFILE_POSITION_AFFIX);
                             return false;
                         }
 
@@ -148,6 +149,7 @@ public class AudiohqJavaServer extends Service {
         private boolean require_pause = false;
         private boolean live = true;
         private AsyncInterface asyncInterface;
+        private int fail_count = 0;
 
         public void runOnNextCirculation(AsyncInterface asyncInterface) {
             this.asyncInterface = asyncInterface;
@@ -171,6 +173,15 @@ public class AudiohqJavaServer extends Service {
                 ShellUtils.CommandResult current_raw
                         = ShellUtils.execCommand("ps -A -o PID -o NAME -o CMDLINE", true, true, false);
 
+                if(current_raw.responseMsg == null ) {
+                    fail_count++;
+                    if(fail_count >= 5){
+                        kill();
+                        LogBuff.E("Failed to read shell too many times, server killed");
+                    }
+                    continue;
+                }
+                //Update running process info
                 String[] process_0 = current_raw.responseMsg.split("\n");
                 for (int i = 1; i < process_0.length; i++) {
                     String[] process_1 = process_0[i].trim().split(" +");
@@ -181,6 +192,7 @@ public class AudiohqJavaServer extends Service {
                     running_processes.put(process_1[1], process);
                     if (adjusted_processes_mkey_pid.containsKey(process.getPid())) {
                         if (!adjusted_processes_mkey_pid.get(process.getPid()).equals(process.getProcessName())) {
+                            LogBuff.I("Detected pid set but processed killed condition:["+process.getPid()+"], restoring");
                             AudioHqApis.unsetForPid(process.getPid());
                             adjusted_processes_mkey_pid.remove(process.getPid());
                             adjusted_processes.remove(process.getProcessName());
@@ -188,9 +200,11 @@ public class AudiohqJavaServer extends Service {
                     }
                 }
 
+                //Dynamically adjustment
                 List<ProcessProfile> processProfiles = general_profile.getProcessProfile();
                 for (ProcessProfile i : processProfiles) {
                     if (running_processes.containsKey(i.getProcessName()) && !adjusted_processes.containsKey(i.getProcessName())) {
+                        LogBuff.I("Profile found for :["+i.getProcessName()+"], doing adjust");
                         RunningProcess process = running_processes.get(i.getProcessName());
                         AudioHqApis.setPidVolume(process.getPid(),
                                 i.getGeneral(),
@@ -198,6 +212,7 @@ public class AudiohqJavaServer extends Service {
                                 i.getRight(),
                                 i.getControl_lr()
                         );
+                        LogBuff.I("Native adjust done, recording adjusted");
                         adjusted_processes.put(process.getProcessName(), process.getPid());
                         adjusted_processes_mkey_pid.put(process.getPid(), process.getProcessName());
                     }
