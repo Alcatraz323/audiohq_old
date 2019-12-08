@@ -195,7 +195,7 @@ public class Panels {
 
         adjust_apply.setEnabled(false);
         ServerStatus.setUpdatePending(true);
-        new Thread(ServerStatus::updateStatus).start();
+        new Thread(() -> ServerStatus.updateStatus(ctx)).start();
 
         split_control.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {

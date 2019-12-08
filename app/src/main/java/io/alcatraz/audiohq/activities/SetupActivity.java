@@ -22,12 +22,14 @@ import io.alcatraz.audiohq.AsyncInterface;
 import io.alcatraz.audiohq.Constants;
 import io.alcatraz.audiohq.R;
 import io.alcatraz.audiohq.beans.LambdaBridge;
+import io.alcatraz.audiohq.beans.ServerStatus;
 import io.alcatraz.audiohq.beans.SetupPage;
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
 import io.alcatraz.audiohq.core.utils.CheckUtils;
 import io.alcatraz.audiohq.core.utils.OSUtils;
 import io.alcatraz.audiohq.core.utils.ShellUtils;
 import io.alcatraz.audiohq.extended.SetupWizardBaseActivity;
+import io.alcatraz.audiohq.services.AudiohqJavaServer;
 import io.alcatraz.audiohq.utils.AnimateUtils;
 import io.alcatraz.audiohq.utils.InstallUtils;
 import io.alcatraz.audiohq.utils.NativeServerControl;
@@ -90,7 +92,21 @@ public class SetupActivity extends SetupWizardBaseActivity {
     @Override
     public void onFinishSetup() {
         startActivity(new Intent(this, MainActivity.class));
-        NativeServerControl.startServer(this);
+        ServerStatus.setUpdatePending(true);
+        new Thread(() -> ServerStatus.updateStatus(this)).start();
+
+        ServerStatus.requestForPending(() -> {
+            if (ServerStatus.isServerRunning() || CheckUtils.hasModifiedRC()) {
+
+            } else {
+                if (service_type.equals(AudioHqApis.AUDIOHQ_SERVER_TYPE_JAVA)) {
+                    startService(new Intent(this, AudiohqJavaServer.class));
+                } else if (!service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE)) {
+                    NativeServerControl.startServer(this);
+                }
+            }
+        });
+
         finish();
     }
 

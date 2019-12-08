@@ -1,7 +1,5 @@
 package io.alcatraz.audiohq.utils;
 
-import android.app.Activity;
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Looper;
 import android.view.View;
@@ -18,7 +16,6 @@ import io.alcatraz.audiohq.AsyncInterface;
 import io.alcatraz.audiohq.R;
 import io.alcatraz.audiohq.beans.AppListBean;
 import io.alcatraz.audiohq.beans.LambdaBridge;
-import io.alcatraz.audiohq.beans.ServerStatus;
 import io.alcatraz.audiohq.beans.TrackBean;
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
 import io.alcatraz.audiohq.core.utils.ShellUtils;
@@ -30,9 +27,11 @@ public class ShellDataBridge {
                                      ArrayList<View> dialog_widgets) {
         TextView text = (TextView) dialog_widgets.get(0);
         ProgressBar progress = (ProgressBar) dialog_widgets.get(1);
+
         new Thread(() -> {
             Looper.prepare();
             ShellUtils.CommandResult raw = AudioHqApis.getAllPlayingClients();
+
             InstallUtils.checkAndShowInstallation(context);
             HashMap<String, AppListBean> out = new HashMap<>();
             List<String> saved_pids = new ArrayList<>();
@@ -85,7 +84,7 @@ public class ShellDataBridge {
 
                     //new_app.setPkgName(PackageCtlUtils.getProcessName(current.getPid()));
                     new_app.setPkgName(context.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_TYPE_JAVA) ?
-                            PackageCtlUtils.getProcessName(current.getPid()).replaceAll("[\n\t]","") : process_2[5]);
+                            PackageCtlUtils.getProcessName(current.getPid()).replaceAll("[\n\t]", "") : process_2[5]);
                     new_app.setProfile(context.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE) ?
                             process_2[6] : "1,1,1,0");
                     new_app.setMuted(context.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE) && process_2[7].equals("muted"));
@@ -106,7 +105,7 @@ public class ShellDataBridge {
                     LambdaBridge<Integer> bridge_1 = new LambdaBridge<>();
                     bridge_1.setTarget(index);
                     context.runOnUiThread(() -> {
-                        progress.setProgress(bridge_1.getTarget() + 1 / (process_1.length - 1) * 100);
+                        progress.setProgress((bridge_1.getTarget() + 2 / (process_1.length)) * 100);
                         text.setText(new_app.getPkgName());
                     });
                 }

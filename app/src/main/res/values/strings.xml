@@ -34,6 +34,7 @@
     <string name="til_err_parse">Not a float number</string>
     <string name="til_err_ofr">Out of range</string>
     <string name="read_profile_err">Read profile error</string>
+    <string name="java_server_running">Java Server Running</string>
 
     <string name="toast_copied">Copied</string>
     <string name="ad_pb">Yes</string>

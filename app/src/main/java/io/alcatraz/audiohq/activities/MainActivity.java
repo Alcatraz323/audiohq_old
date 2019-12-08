@@ -43,6 +43,7 @@ import io.alcatraz.audiohq.extended.CompatWithPipeActivity;
 import io.alcatraz.audiohq.services.AudiohqJavaServer;
 import io.alcatraz.audiohq.utils.InstallUtils;
 import io.alcatraz.audiohq.utils.NativeServerControl;
+import io.alcatraz.audiohq.utils.PackageCtlUtils;
 import io.alcatraz.audiohq.utils.Panels;
 import io.alcatraz.audiohq.utils.ShellDataBridge;
 import io.alcatraz.audiohq.utils.Utils;
@@ -188,7 +189,7 @@ public class MainActivity extends CompatWithPipeActivity {
         Utils.setViewsEnabled(preset_widgets, false);
         preset_disabled_panel.setVisibility(View.VISIBLE);
         ServerStatus.setUpdatePending(true);
-        new Thread(ServerStatus::updateStatus).start();
+        new Thread(() -> ServerStatus.updateStatus(this)).start();
 
         ServerStatus.requestForPending(() -> runOnUiThread(() -> {
             if (ServerStatus.isServerRunning() || CheckUtils.hasModifiedRC()) {
@@ -240,6 +241,14 @@ public class MainActivity extends CompatWithPipeActivity {
                     lock_image = R.drawable.ic_alert;
                     lock_color = getResources().getColor(R.color.orange_colorPrimary);
                 } else {
+                    lock_image = R.drawable.ic_check;
+                    lock_color = getResources().getColor(R.color.green_colorPrimary);
+                }
+
+                if (PackageCtlUtils.isAudiohqJavaServiceRunning(this)){
+                    server_indicator_image = R.drawable.ic_check;
+                    server_indicator_color = getResources().getColor(R.color.green_colorPrimary);
+                    status_txvs.get(0).setText(R.string.java_server_running);
                     lock_image = R.drawable.ic_check;
                     lock_color = getResources().getColor(R.color.green_colorPrimary);
                 }

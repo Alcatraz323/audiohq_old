@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import io.alcatraz.audiohq.AsyncInterface;
 import io.alcatraz.audiohq.LogBuff;
 import io.alcatraz.audiohq.utils.Utils;
 
@@ -115,6 +116,7 @@ public class ShellUtils {
         return new CommandResult(result, successMsg == null ? null : successMsg.toString(), errorMsg == null ? null
                 : errorMsg.toString(), needLogging);
     }
+
 
     public static class CommandResult {
 

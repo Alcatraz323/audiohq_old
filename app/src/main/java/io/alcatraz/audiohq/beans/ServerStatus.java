@@ -1,7 +1,10 @@
 package io.alcatraz.audiohq.beans;
 
+import android.content.Context;
+
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
 import io.alcatraz.audiohq.core.utils.ShellUtils;
+import io.alcatraz.audiohq.utils.PackageCtlUtils;
 
 public class ServerStatus {
     private static boolean serverRunning = false;
@@ -28,7 +31,7 @@ public class ServerStatus {
         }).start();
     }
 
-    public static void updateStatus() {
+    public static void updateStatus(Context context) {
         setUpdatePending(true);
         ShellUtils.CommandResult result = AudioHqApis.getRunningServerType();
         if (result.errorMsg == null || result.errorMsg.contains("not found"))
@@ -38,12 +41,14 @@ public class ServerStatus {
         if (lib_info == null || lib_info.length() < 20)
             serverInstalled = false;
 
-        if(result.errorMsg == null){
-            serverRunning =false;
+        if (result.errorMsg == null) {
+            serverRunning = false;
             setUpdatePending(false);
             return;
         }
         serverRunning = result.errorMsg.length() < 1 && !result.responseMsg.contains("running");
+        if (PackageCtlUtils.isAudiohqJavaServiceRunning(context))
+            serverRunning = true;
         setUpdatePending(false);
     }
 

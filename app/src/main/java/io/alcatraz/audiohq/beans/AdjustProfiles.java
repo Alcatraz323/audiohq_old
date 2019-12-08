@@ -66,21 +66,20 @@ public class AdjustProfiles extends AdjustProfileForSave{
         AdjustProfiles result = new AdjustProfiles();
 
         String raw = IOUtils.Okioread(targetLink);
-        String[] process_1 = raw.trim().split("\n");
-        for(String i : process_1){
-            String process_2[]= i.split(";");
-            ProcessProfile profile = new ProcessProfile(process_2[0]);
-            profile.setLeft(Float.parseFloat(process_2[1]));
-            profile.setRight(Float.parseFloat(process_2[2]));
-            profile.setGeneral(Float.parseFloat(process_2[3]));
-            profile.setControl_lr(Boolean.parseBoolean(process_2[4]));
-            result.getProcessProfile().add(profile);
+
+        if(raw.length()>=3) {
+            String[] process_1 = raw.trim().split("\n");
+            for (String i : process_1) {
+                String process_2[] = i.split(";");
+                ProcessProfile profile = new ProcessProfile(process_2[0]);
+                profile.setLeft(Float.parseFloat(process_2[1]));
+                profile.setRight(Float.parseFloat(process_2[2]));
+                profile.setGeneral(Float.parseFloat(process_2[3]));
+                profile.setControl_lr(Boolean.parseBoolean(process_2[4]));
+                result.getProcessProfile().add(profile);
+            }
         }
 
-        if(result == null){
-            result = new AdjustProfiles();
-            result.setProcessProfile(new ArrayList<>());
-        }
         result.setTargetLink(targetLink);
         result.setContext(context);
         LogBuff.I("Profile read completed");

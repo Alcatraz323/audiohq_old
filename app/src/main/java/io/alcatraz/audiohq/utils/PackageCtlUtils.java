@@ -1,5 +1,6 @@
 package io.alcatraz.audiohq.utils;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -10,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
+import io.alcatraz.audiohq.Constants;
 import io.alcatraz.audiohq.core.utils.ShellUtils;
 
 public class PackageCtlUtils {
@@ -76,5 +80,16 @@ public class PackageCtlUtils {
 
     public static String getProcessName(String pid) {
         return ShellUtils.execCommand("ps -p " + pid + " -o NAME | grep -v NAME", true).responseMsg;
+    }
+
+    public static boolean isAudiohqJavaServiceRunning(Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        assert manager != null;
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if ((Constants.MY_PACKAGE_NAME+".services.AudiohqJavaServer").equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
