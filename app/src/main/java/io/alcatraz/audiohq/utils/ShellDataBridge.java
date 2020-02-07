@@ -87,7 +87,10 @@ public class ShellDataBridge {
                             PackageCtlUtils.getProcessName(current.getPid()).replaceAll("[\n\t]", "") : process_2[5]);
                     new_app.setProfile(context.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE) ?
                             process_2[6] : "1,1,1,0");
-                    new_app.setMuted(context.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE) && process_2[7].equals("muted"));
+                    if(context.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE))
+                        new_app.setMuted(process_2[7].equals("muted"));
+                    else
+                        new_app.setMuted(false);
 
                     Drawable icon = PackageCtlUtils.getIcon(context, new_app.getPkgName().contains(":") ?
                             new_app.getPkgName().split(":")[0] : new_app.getPkgName());
