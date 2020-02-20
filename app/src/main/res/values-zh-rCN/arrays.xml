@@ -3,9 +3,8 @@
     <string-array name="main_tabs">
         <item>正在播放</item>
         <item>预设</item>
-        <item>状态</item>
         <item>日志</item>
-        <item>检查</item>
+        <item>状态</item>
     </string-array>
 
     <string-array name="entries_for_server_mode">
@@ -21,7 +20,6 @@
         <item>欢迎</item>
         <item>安装要求检查</item>
         <item>模块安装</item>
-        <item>后台模式</item>
         <item>请稍候…</item>
         <item>完成!</item>
     </string-array>

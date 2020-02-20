@@ -13,25 +13,15 @@ public class Constants {
     public static String MY_PACKAGE_NAME = "io.alcatraz.audiohq";
 
     //===============================================
-    public static String AVATART_TRANSITION_NAME = "avatar";
-    public static String ACCOUNT_TRANSITION_NAME_PREFIX = "accountname:";
-
-    //===============================================
-    public static final String PREF_MODIFY_RC = "modified_rc";
-    public static final boolean DEFAULT_VALUE_PREF_MODIFY_RC = true;
-    public static final String PREF_SERVICE_TYPE = "service";
-    public static final String DEFAULT_VALUE_PREF_SERVICE = AudioHqApis.AUDIOHQ_SERVER_NONE;
     public static final String PREF_BOOT = "boot";
-    public static final boolean DEFAULT_VALUE_PREF_BOOT = false;
+    public static final boolean DEFAULT_VALUE_PREF_BOOT = true;
     public static final String PREF_DEFAULT_SILENT = "default_silent";
     public static final boolean DEFAULT_VALUE_PREF_DEFAULT_SILENT = false;
-    public static final String PREF_PID_MODE = "pid_mode";
-    public static final boolean DEFAULT_VALUE_PREF_PID_MODE = false;
 
+    public static final String PREF_DEFAULT_PROFILE = "default_profile";
     public static final String PREF_CHECK_UPDATE = "check_update";
     public static final String PREF_CLEAR_PROFILES = "clear_profiles";
     public static final String PREF_UNINSTALL_NATIVE = "uninstall_native";
-
 
     //==============================================
     public static String BROADCAST_ACTION_UPDATE_PREFERENCES = "update_preferences";

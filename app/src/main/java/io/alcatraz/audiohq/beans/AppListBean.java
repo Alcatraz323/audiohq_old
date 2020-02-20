@@ -8,6 +8,7 @@ public class AppListBean {
     private String pkgName;
     private Drawable icon;
     private String profile = "1,1,1,0";
+    private String default_profile;
     private String pid;
     private boolean muted;
     private LinkedList<TrackBean> tracks = new LinkedList<>();
@@ -75,5 +76,13 @@ public class AppListBean {
 
     public void setMuted(boolean muted) {
         this.muted = muted;
+    }
+
+    public String getDefault_profile() {
+        return default_profile;
+    }
+
+    public void setDefault_profile(String default_profile) {
+        this.default_profile = default_profile;
     }
 }

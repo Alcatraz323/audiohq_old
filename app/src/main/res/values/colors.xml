@@ -24,4 +24,5 @@
 	<color name="white">#FFFFFF</color>
 	<color name="whiteTransparent">#88FFFFFF</color>
 	<color name="transparent">#00000000</color>
+    <color name="color_secondary_indicator">#efefef</color>
 </resources>

@@ -1,19 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE resources [
-    <!ENTITY current_match_version "0.7">
-    ]>
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY current_match_version "0.8"><!ENTITY current_match_version_code "1">]>
 <resources>
     <!-- 更新修改部分 -->
     <string name="support_lib_version">&current_match_version;</string>
-    <string name="update_title">20191124</string>
-    <string name="update_info">1.增加非rc修改的外部服务器方式\n
-    2.增加了设置向导\n
-    3.增加了预设功能\n
-    4.优化多模式逻辑\n
-    5.现在可以完全不修改/system了\n
-    6.增加以pid为主键的临时调整方式\n
-    7.修复了错误的root toast\n
-    8."查看源代码"指向具体项目了</string>
+    <string name="update_title">20200211</string>
+    <string name="update_info">1.代码重构
+    2.不需要修改rc了,实现systemless\n
+    3.可以在Selinux Enforcing状态运行\n
+    4.使用守护进程后台\n
+    5.添加支持Android10 arm/arm64\n
+    6.Android10也可以使用完整Api了\n
+    7.修复静音开关问题\n
+    8.修复蓝牙/有线耳机问题\n
+    9.修复进度条不保存问题\n
+    10.修复“预设”板块问题\n
+    11.修复状态显示\n
+    12.设置中开关重启有效了\n
+    13.删除无用功能\n
+    14.调整布局\n
+    15.稳定性提升\n
+    16.修复列表显示不全/拖动问题\n
+    17.添加“默认配置”设置\n
+    18.优化算法，解决发热和掉电问题\n
+    19.修复内存泄露风险
+    </string>
 
     <!-- 一般 -->
     <string name="app_name">AudioHQ</string>
@@ -53,6 +62,10 @@
     <string name="check_native_elf_info">原生文件版本</string>
     <string name="check_native_lib_info">运行库信息</string>
     <string name="check_audioserver_info">\'audioserver\'可执行文件信息</string>
+    <string name="check_daemon_status">守护进程状态</string>
+    <string name="check_daemon_status_alive">运行中</string>
+    <string name="check_daemon_status_dead">未运行</string>
+    <string name="check_daemon_restart">尝试重启守护进程</string>
     <string name="aplc_split_control">双声道控制</string>
     <string name="aplc_precise_control">精确控制</string>
     <string name="aplc_left">L[0,1]</string>
@@ -108,12 +121,14 @@
     <string name="pref_1_2">修改audioserver.rc(需要重启系统)</string>
     <string name="pref_1_2_summary">修改audioserver.rc以使用audioserver嵌入方式./system无法写入或rc打包于boot.img时将不会工作</string>
     <string name="pref_1_3">开机启动</string>
-    <string name="pref_1_3_summary">若修改rc启用，禁止开启此项，原生外挂服务非广播方式研究中</string>
+    <string name="pref_1_3_summary">开机时将强制启动二进制daemon程序</string>
     <string name="pref_2_t">实验室-安全</string>
     <string name="pref_2_1">未设置进程默认静音</string>
     <string name="pref_2_1_summary">或许以后会有动态授权之类的会用到此项</string>
     <string name="pref_2_2">Pid模式</string>
     <string name="pref_2_2_summary">如果想临时调整正在运行的程序，或读不出进程名时可使用此项</string>
+    <string name="pref_2_3">默认配置</string>
+    <string name="pref_2_3_summary">所有未手动设置的进程的默认配置</string>
     <string name="pref_3_t">其他</string>
     <string name="pref_3_1">检查更新</string>
     <string name="pref_3_2">清除配置</string>

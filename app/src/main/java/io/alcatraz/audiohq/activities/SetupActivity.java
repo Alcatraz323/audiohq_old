@@ -4,12 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -18,29 +15,22 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import io.alcatraz.audiohq.AsyncInterface;
 import io.alcatraz.audiohq.Constants;
 import io.alcatraz.audiohq.R;
-import io.alcatraz.audiohq.beans.LambdaBridge;
-import io.alcatraz.audiohq.beans.ServerStatus;
 import io.alcatraz.audiohq.beans.SetupPage;
-import io.alcatraz.audiohq.core.utils.AudioHqApis;
 import io.alcatraz.audiohq.core.utils.CheckUtils;
 import io.alcatraz.audiohq.core.utils.OSUtils;
 import io.alcatraz.audiohq.core.utils.ShellUtils;
 import io.alcatraz.audiohq.extended.SetupWizardBaseActivity;
-import io.alcatraz.audiohq.services.AudiohqJavaServer;
 import io.alcatraz.audiohq.utils.AnimateUtils;
-import io.alcatraz.audiohq.utils.InstallUtils;
-import io.alcatraz.audiohq.utils.NativeServerControl;
 import io.alcatraz.audiohq.utils.Utils;
 
 public class SetupActivity extends SetupWizardBaseActivity {
     @Override
     public void onSetupPageInit(List<SetupPage> pages) {
         String[] setup_titles = getResources().getStringArray(R.array.setup_page_titles);
-        int[] page_layout_ids = {R.layout.setup_1, R.layout.setup_2, R.layout.setup_3,
-                R.layout.setup_4, R.layout.setup_5, R.layout.setup_6};
+        int[] page_layout_ids = {R.layout.setup_1, R.layout.setup_2,
+                R.layout.setup_3, R.layout.setup_4, R.layout.setup_5};
 
         for (int i = 0; i < setup_titles.length; i++) {
             SetupPage page = new SetupPage(setup_titles[i], page_layout_ids[i]);
@@ -63,12 +53,9 @@ public class SetupActivity extends SetupWizardBaseActivity {
                         onSelectSetup3();
                         break;
                     case 3:
-                        onSelectSetup4();
+                        onSelectSetup4_Apply();
                         break;
                     case 4:
-                        onSelectSetup5_Apply();
-                        break;
-                    case 5:
                         banForwardStep();
                         break;
                     default:
@@ -85,46 +72,26 @@ public class SetupActivity extends SetupWizardBaseActivity {
 
     @Override
     public void onUpdate(List<SetupPage> pages) {
-        SetupPage page = new SetupPage(getResources().getString(R.string.setup_current_update), R.layout.setup_7);
+        SetupPage page = new SetupPage(getResources().getString(R.string.setup_current_update), R.layout.setup_6);
         pages.add(page);
     }
 
     @Override
     public void onFinishSetup() {
         startActivity(new Intent(this, MainActivity.class));
-        ServerStatus.setUpdatePending(true);
-        new Thread(() -> ServerStatus.updateStatus(this)).start();
-
-        ServerStatus.requestForPending(() -> {
-            if (ServerStatus.isServerRunning() || CheckUtils.hasModifiedRC()) {
-
-            } else {
-                if (service_type.equals(AudioHqApis.AUDIOHQ_SERVER_TYPE_JAVA)) {
-                    startService(new Intent(this, AudiohqJavaServer.class));
-                } else if (!service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE)) {
-                    NativeServerControl.startServer(this);
-                }
-            }
-        });
 
         finish();
     }
 
     @Override
     public int getVersionCode() {
-        return 4;
+        return 6;
     }
 
-    private void onSelectSetup5_Apply() {
+    private void onSelectSetup4_Apply() {
         startPending();
 
-        View root_view = getPageList().get(3).getRootView();
-        Spinner server_type = root_view.findViewById(R.id.setup_4_server_type);
-
-        getSpf().put(this, Constants.PREF_SERVICE_TYPE,
-                server_type.getSelectedItemPosition() == 1 ? 256 + "" : "Java");
-
-        sendBroadcast(new Intent().setAction(Constants.BROADCAST_ACTION_UPDATE_PREFERENCES));
+        //Setup here
 
         new Thread(() -> {
             try {
@@ -137,72 +104,6 @@ public class SetupActivity extends SetupWizardBaseActivity {
                 getPager().setCurrentItem(getPager().getCurrentItem() + 1);
             });
         }).start();
-    }
-
-    @SuppressLint("DefaultLocale")
-    private void onSelectSetup4() {
-        startPending();
-
-        View root_view = getPageList().get(3).getRootView();
-
-        CardView modify_rc_card = root_view.findViewById(R.id.setup_4_modify_rc_card);
-        TextView detected_rc = root_view.findViewById(R.id.setup_4_rc_detected);
-        CheckBox modify_rc_check = root_view.findViewById(R.id.setup_4_modify_rc_check);
-        Spinner server_type = root_view.findViewById(R.id.setup_4_server_type);
-
-        final LambdaBridge<Boolean> has_modified_rc = new LambdaBridge<>();
-        has_modified_rc.setTarget(CheckUtils.hasModifiedRC());
-
-        modify_rc_check.setOnCheckedChangeListener((compoundButton, b) -> {
-            if (b) {
-                server_type.setSelection(1);
-                server_type.setEnabled(false);
-            } else {
-                server_type.setSelection(0);
-                server_type.setEnabled(true);
-            }
-        });
-
-        modify_rc_card.setOnClickListener(view -> new AlertDialog.Builder(SetupActivity.this)
-                .setTitle(R.string.pref_default_silent_warning_title)
-                .setMessage(R.string.setup_4_modify_rc_warning)
-                .setNegativeButton(R.string.ad_nb, null)
-                .setPositiveButton(R.string.adjust_confirm, (dialogInterface, i) -> InstallUtils.modifyRCFile(!has_modified_rc.getTarget(), new AsyncInterface<ShellUtils.CommandResult>() {
-                    @Override
-                    public boolean onAyncDone(@Nullable ShellUtils.CommandResult val) {
-                        assert val != null;
-                        if (val.result < 0 || val.errorMsg.length() > 0) {
-                            new AlertDialog.Builder(SetupActivity.this)
-                                    .setTitle(R.string.setup_check_deny)
-                                    .setMessage(String.format("result = %d\nerr = %s", val.result, val.errorMsg))
-                                    .setNegativeButton(R.string.ad_nb, null)
-                                    .show();
-                            return false;
-                        } else {
-                            has_modified_rc.setTarget(!has_modified_rc.getTarget());
-                            modify_rc_check.setChecked(has_modified_rc.getTarget());
-                        }
-                        return true;
-                    }
-
-                    @Override
-                    public void onFailure(String reason) {
-
-                    }
-                }))
-                .show());
-        //Initial state setup
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
-                getResources().getStringArray(R.array.entries_for_server_mode));
-        server_type.setAdapter(adapter);
-
-        modify_rc_check.setChecked(has_modified_rc.getTarget());
-
-        detected_rc.setText(String.format(getResources().getString(R.string.setup_3_installed_detected),
-                getResources().getString(has_modified_rc.getTarget() ?
-                        R.string.setup_4_modify_rc_already : R.string.setup_4_modify_rc_not_yet)));
-
-        endPending();
     }
 
     private void onSelectSetup3() {

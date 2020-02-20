@@ -5,17 +5,8 @@
 
     <PreferenceCategory android:title="@string/pref_1_t">
         <SwitchPreference
-            android:key="modified_rc"
-            android:summary="@string/pref_1_2_summary"
-            android:title="@string/pref_1_2" />
-        <ListPreference
-            android:defaultValue="5"
-            android:dialogTitle="@string/pref_1_1"
-            android:entries="@array/entries_for_server_mode"
-            android:entryValues="@array/entryvalues_for_server_mode"
-            android:key="service"
-            android:title="@string/pref_1_1" />
-        <SwitchPreference
+            android:defaultValue="true"
+            android:enabled="false"
             android:key="boot"
             android:summary="@string/pref_1_3_summary"
             android:title="@string/pref_1_3" />
@@ -28,11 +19,10 @@
             android:key="default_silent"
             android:summary="@string/pref_2_1_summary"
             android:title="@string/pref_2_1" />
-        <CheckBoxPreference
-            android:key="pid_mode"
-            android:summary="@string/pref_2_2_summary"
-            android:title="@string/pref_2_2" />
-
+        <PreferenceScreen
+            android:key="default_profile"
+            android:summary="@string/pref_2_3_summary"
+            android:title="@string/pref_2_3" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_3_t">
         <PreferenceScreen

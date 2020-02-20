@@ -3,9 +3,8 @@
     <string-array name="main_tabs">
         <item>Playing</item>
         <item>Preset</item>
-        <item>Status</item>
         <item>Log</item>
-        <item>Check</item>
+        <item>Status</item>
     </string-array>
 
     <string-array name="entries_for_server_mode">
@@ -21,7 +20,6 @@
         <item>Welcome</item>
         <item>Requirements check</item>
         <item>Module Install</item>
-        <item>Server mode</item>
         <item>Wait a minute…</item>
         <item>Done!</item>
     </string-array>

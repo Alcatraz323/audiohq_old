@@ -28,6 +28,7 @@ import io.alcatraz.audiohq.beans.RunningProcess;
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
 import io.alcatraz.audiohq.core.utils.ShellUtils;
 
+@Deprecated
 public class AudiohqJavaServer extends Service {
     private static final String SERVER_ACTION_PREFIX = "audiohq_server_action_";
     public static final String SERVER_ACTION_ADJUST_PROCESS = SERVER_ACTION_PREFIX + "add_process";
@@ -72,11 +73,11 @@ public class AudiohqJavaServer extends Service {
     public synchronized void adjustProcess(ProcessProfile profile) {
         if (running_processes.containsKey(profile.getProcessName())) {
             RunningProcess process = running_processes.get(profile.getProcessName());
-            AudioHqApis.setPidVolume(process.getPid(),
-                    profile.getGeneral(),
-                    profile.getLeft(),
-                    profile.getRight(),
-                    profile.getControl_lr());
+//            AudioHqApis.setPidVolume(process.getPid(),
+//                    profile.getGeneral(),
+//                    profile.getLeft(),
+//                    profile.getRight(),
+//                    profile.getControl_lr());
             adjusted_processes.put(profile.getProcessName(), process.getPid());
             adjusted_processes_mkey_pid.put(process.getPid(), process.getProcessName());
         }
@@ -170,44 +171,44 @@ public class AudiohqJavaServer extends Service {
             public boolean onAyncDone(@Nullable ShellUtils.CommandResult val) {
                 //TODO : Optimize sequence
 
-                running_processes.clear();
-
-                //Update running process info
-                String[] process_0 = Objects.requireNonNull(val).responseMsg.split("\n");
-                for (int i = 1; i < process_0.length; i++) {
-                    String[] process_1 = process_0[i].trim().split(" +");
-                    RunningProcess runningProcess = new RunningProcess();
-                    runningProcess.setPid(process_1[0]);
-                    runningProcess.setProcessName(process_1[1]);
-                    runningProcess.setCmdline(process_1[2]);
-                    running_processes.put(process_1[1], runningProcess);
-                    if (adjusted_processes_mkey_pid.containsKey(runningProcess.getPid())) {
-                        if (!adjusted_processes_mkey_pid.get(runningProcess.getPid()).equals(runningProcess.getProcessName())) {
-                            LogBuff.I("Detected pid set but processed killed condition:[" + runningProcess.getPid() + "], restoring");
-                            AudioHqApis.unsetForPid(runningProcess.getPid());
-                            adjusted_processes_mkey_pid.remove(runningProcess.getPid());
-                            adjusted_processes.remove(runningProcess.getProcessName());
-                        }
-                    }
-                }
-
-                //Dynamically adjustment
-                List<ProcessProfile> processProfiles = general_profile.getProcessProfile();
-                for (ProcessProfile i : processProfiles) {
-                    if (running_processes.containsKey(i.getProcessName()) && !adjusted_processes.containsKey(i.getProcessName())) {
-                        LogBuff.I("Profile found for :[" + i.getProcessName() + "], doing adjust");
-                        RunningProcess runningProcess = running_processes.get(i.getProcessName());
-                        AudioHqApis.setPidVolume(runningProcess.getPid(),
-                                i.getGeneral(),
-                                i.getLeft(),
-                                i.getRight(),
-                                i.getControl_lr()
-                        );
-                        LogBuff.I("Native adjust done, recording adjusted");
-                        adjusted_processes.put(runningProcess.getProcessName(), runningProcess.getPid());
-                        adjusted_processes_mkey_pid.put(runningProcess.getPid(), runningProcess.getProcessName());
-                    }
-                }
+//                running_processes.clear();
+//
+//                //Update running process info
+//                String[] process_0 = Objects.requireNonNull(val).responseMsg.split("\n");
+//                for (int i = 1; i < process_0.length; i++) {
+//                    String[] process_1 = process_0[i].trim().split(" +");
+//                    RunningProcess runningProcess = new RunningProcess();
+//                    runningProcess.setPid(process_1[0]);
+//                    runningProcess.setProcessName(process_1[1]);
+//                    runningProcess.setCmdline(process_1[2]);
+//                    running_processes.put(process_1[1], runningProcess);
+//                    if (adjusted_processes_mkey_pid.containsKey(runningProcess.getPid())) {
+//                        if (!adjusted_processes_mkey_pid.get(runningProcess.getPid()).equals(runningProcess.getProcessName())) {
+//                            LogBuff.I("Detected pid set but processed killed condition:[" + runningProcess.getPid() + "], restoring");
+//                            AudioHqApis.unsetForPid(runningProcess.getPid());
+//                            adjusted_processes_mkey_pid.remove(runningProcess.getPid());
+//                            adjusted_processes.remove(runningProcess.getProcessName());
+//                        }
+//                    }
+//                }
+//
+//                //Dynamically adjustment
+//                List<ProcessProfile> processProfiles = general_profile.getProcessProfile();
+//                for (ProcessProfile i : processProfiles) {
+//                    if (running_processes.containsKey(i.getProcessName()) && !adjusted_processes.containsKey(i.getProcessName())) {
+//                        LogBuff.I("Profile found for :[" + i.getProcessName() + "], doing adjust");
+//                        RunningProcess runningProcess = running_processes.get(i.getProcessName());
+//                        AudioHqApis.setPidVolume(runningProcess.getPid(),
+//                                i.getGeneral(),
+//                                i.getLeft(),
+//                                i.getRight(),
+//                                i.getControl_lr()
+//                        );
+//                        LogBuff.I("Native adjust done, recording adjusted");
+//                        adjusted_processes.put(runningProcess.getProcessName(), runningProcess.getPid());
+//                        adjusted_processes_mkey_pid.put(runningProcess.getPid(), runningProcess.getProcessName());
+//                    }
+//                }
 
                 return false;
             }

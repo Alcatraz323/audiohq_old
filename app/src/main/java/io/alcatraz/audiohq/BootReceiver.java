@@ -13,16 +13,6 @@ import io.alcatraz.audiohq.utils.SharedPreferenceUtil;
 public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        SharedPreferenceUtil spf = SharedPreferenceUtil.getInstance();
-        String service_type = (String) spf.get(context, Constants.PREF_SERVICE_TYPE, Constants.DEFAULT_VALUE_PREF_SERVICE);
-        boolean boot = (boolean) spf.get(context, Constants.PREF_BOOT, Constants.DEFAULT_VALUE_PREF_BOOT);
-        if(boot && !service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE)) {
-            File files_dir = context.getFilesDir();
-            new Thread(() -> {
-                ShellUtils.execCommand("mkdir " + files_dir + "/native_output", false);
-                ShellUtils.execCommand("touch " + files_dir + "/native_output/server.log", false);
-                AudioHqApis.startServer(service_type, files_dir + "/native_output/server.log");
-            }).start();
-        }
+
     }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 import io.alcatraz.audiohq.AsyncInterface;
 import io.alcatraz.audiohq.R;
 import io.alcatraz.audiohq.beans.ServerStatus;
+import io.alcatraz.audiohq.core.utils.AudioHqApis;
 import io.alcatraz.audiohq.core.utils.ShellUtils;
 
 public class InstallUtils {
@@ -22,6 +23,7 @@ public class InstallUtils {
     public static String LIB64_NAME = "libaudioflinger64.so";
     public static String ELF64_NAME = "audiohq64";
 
+    @Deprecated
     public static int install(Context context, boolean need64, boolean modifyrc) {
         String[] test_commands = {"mount -o remount,rw /system", "touch /system/test_audiohq"};
 
@@ -95,13 +97,13 @@ public class InstallUtils {
     }
 
     public static void checkAndShowInstallation(Activity activity) {
-        ServerStatus.updateStatus(activity);
-        ServerStatus.requestForPending(() -> activity.runOnUiThread(() -> {
-            if (!ServerStatus.isServerInstalled())
-                Panels.getNotInstalledPanel(activity).show();
-        }));
+        ShellUtils.CommandResult result = AudioHqApis.getAudioFlingerInfo();
+        if (result.responseMsg == null || !result.responseMsg.contains("libaudioflinger")) {
+            Panels.getNotInstalledPanel(activity).show();
+        }
     }
 
+    @Deprecated
     public static ShellUtils.CommandResult modifyRCFile(boolean readproc, AsyncInterface<ShellUtils.CommandResult> beforeReboot) {
         ShellUtils.CommandResult original = ShellUtils.execCommand("cat /system/etc/init/audioserver.rc", false);
         String modify = original.responseMsg;
@@ -124,6 +126,7 @@ public class InstallUtils {
         return result;
     }
 
+    @Deprecated
     private static void showRetryDialog(Context context, String exc, boolean need64) {
         new AlertDialog.Builder(context)
                 .setTitle(R.string.install_confirm_title)

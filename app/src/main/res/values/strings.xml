@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
-    <!ENTITY current_match_version "0.7">
+    <!ENTITY current_match_version "0.8">
+    <!ENTITY current_match_version_code "1">
     ]>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Change every update -->
     <string name="support_lib_version">&current_match_version;</string>
-    <string name="update_title">20191124</string>
-    <string name="update_info">1.Added outside server mode which is not requiring .rc modification\n
-    2.Added setup wizard\n
-    3.Added preset function\n
-    4.Optimize multi-mode logic\n
-    5.Now it can be fully systemless\n
-    6.Added pid mode to enable adjust temporarily\n
-    7.Fixed wrong root toast\n
-    8."Check sourcecode" now has its own link</string>
+    <string name="update_title">20200211</string>
+    <string name="update_info">1.Reconstructed code
+    2.No need to modify rc\n
+    3.Can run under enforced linux\n
+    4.Use daemon based control\n
+    5.Support Android 10 arm/arm64 now\n
+    6.Full api to every system\n
+    7.Fixed mute section bug\n
+    8.Fixed bluetooth/wired earphone issues\n
+    9.Fixed progress not saving issues\n
+    10.Fixed preset issues\n
+    11.Fixed status error\n
+    12.added switch profile\n
+    13.deleted useless functions\n
+    14.adjusted layout\n
+    15.Stability upgrade\n
+    16.Fixed scrolling issues\n
+    17.Added default profile setting\n
+    18.Optimized sequence to solve the performance abd battery issue\n
+    19.Fixed memory leak risk</string>
 
     <!-- Common -->
     <string name="app_name">AudioHQ</string>
@@ -53,6 +65,10 @@
     <string name="check_native_elf_info">Native version</string>
     <string name="check_native_lib_info">Lib version</string>
     <string name="check_audioserver_info">\'audioserver\' elf info </string>
+    <string name="check_daemon_status">Daemon status</string>
+    <string name="check_daemon_status_alive">Alive</string>
+    <string name="check_daemon_status_dead">Dead</string>
+    <string name="check_daemon_restart">Try restart daemon</string>
     <string name="aplc_split_control">Split control</string>
     <string name="aplc_precise_control">Precise control</string>
     <string name="aplc_left">L[0,1]</string>
@@ -116,13 +132,15 @@
     <string name="pref_1_2_summary">Modify audioserver.rc to enable built-in server.
         This would NOT work when /system is ro or .rc files are packaged in boot.img</string>
     <string name="pref_1_3">Boot</string>
-    <string name="pref_1_3_summary">Better way developing</string>
+    <string name="pref_1_3_summary">Forced to start native daemon on boot</string>
     <string name="pref_2_t">Security</string>
     <string name="pref_2_1">Unset progress default silenced</string>
-    <string name="pref_2_1_summary">Warning:Not work after reboot</string>
+    <string name="pref_2_1_summary">Process with no profile will be default silenced</string>
     <string name="pref_2_2">Pid Mode</string>
     <string name="pref_2_2_summary">Use pid as adjust indicator,use it when you don\t wnt to save settings
     or the proc read function does not work</string>
+    <string name="pref_2_3">Default Profile</string>
+    <string name="pref_2_3_summary">Set default volume when there are no profile</string>
     <string name="pref_3_t">Others</string>
     <string name="pref_3_1">Check update</string>
     <string name="pref_3_2">Clear profiles</string>

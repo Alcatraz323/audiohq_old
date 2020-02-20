@@ -7,8 +7,8 @@ android {
         minSdkVersion 28
         maxSdkVersion 29
         targetSdkVersion 28
-        versionCode 4
-        versionName "0.4_2019_11_28_Q(arm64)_support"
+        versionCode 6
+        versionName "0.5_2020_2_11_recons_beta2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

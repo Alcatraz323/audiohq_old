@@ -31,6 +31,7 @@ public class ShellDataBridge {
         new Thread(() -> {
             Looper.prepare();
             ShellUtils.CommandResult raw = AudioHqApis.getAllPlayingClients();
+            ShellUtils.CommandResult default_pro = AudioHqApis.getDefaultProfile();
 
             InstallUtils.checkAndShowInstallation(context);
             HashMap<String, AppListBean> out = new HashMap<>();
@@ -48,11 +49,10 @@ public class ShellDataBridge {
                     if (!Utils.isStringNotEmpty(i))
                         continue;
 
-                    if (i.contains("Operating Thread")) {
-                        String[] thread = i.split(" -> ");
-                        if (thread.length >= 2)
-                            current_thread = thread[1];
-
+                    if (i.contains("][")) {
+                        String[] pro_1 = i.split("]\\[");
+                        String[] pro_2 = pro_1[1].split("]");
+                        current_thread = pro_2[0];
                         continue;
                     }
 
@@ -82,15 +82,14 @@ public class ShellDataBridge {
                     saved_pids.add(current.getPid());
                     AppListBean new_app = new AppListBean();
 
+                    if (default_pro.responseMsg != null) {
+                        new_app.setDefault_profile(default_pro.responseMsg);
+                    }
+
                     //new_app.setPkgName(PackageCtlUtils.getProcessName(current.getPid()));
-                    new_app.setPkgName(context.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_TYPE_JAVA) ?
-                            PackageCtlUtils.getProcessName(current.getPid()).replaceAll("[\n\t]", "") : process_2[5]);
-                    new_app.setProfile(context.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE) ?
-                            process_2[6] : "1,1,1,0");
-                    if(context.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE))
-                        new_app.setMuted(process_2[7].equals("muted"));
-                    else
-                        new_app.setMuted(false);
+                    new_app.setPkgName(process_2[5]);
+                    new_app.setProfile(process_2[6]);
+                    new_app.setMuted(process_2[7].equals("muted"));
 
                     Drawable icon = PackageCtlUtils.getIcon(context, new_app.getPkgName().contains(":") ?
                             new_app.getPkgName().split(":")[0] : new_app.getPkgName());

@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alcatraz.support.v4.appcompat.DrawerLayoutUtil;
@@ -36,9 +37,9 @@ import io.alcatraz.audiohq.LogBuff;
 import io.alcatraz.audiohq.R;
 import io.alcatraz.audiohq.adapters.PlayingExpandableAdapter;
 import io.alcatraz.audiohq.beans.AppListBean;
-import io.alcatraz.audiohq.beans.ServerStatus;
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
 import io.alcatraz.audiohq.core.utils.CheckUtils;
+import io.alcatraz.audiohq.core.utils.ShellUtils;
 import io.alcatraz.audiohq.extended.CompatWithPipeActivity;
 import io.alcatraz.audiohq.services.AudiohqJavaServer;
 import io.alcatraz.audiohq.utils.InstallUtils;
@@ -60,9 +61,9 @@ public class MainActivity extends CompatWithPipeActivity {
     //SwipeRefreshLayout playing_refresh;
 
     //Status panel
-    List<TextView> status_txvs = new LinkedList<>();
-    List<ImageView> status_imgvs = new LinkedList<>();
-    SwipeRefreshLayout status_refresh;
+    ImageView daemon_status_indicator;
+    TextView daemon_status;
+    LinearLayout daemon_status_back;
 
     //Preset Panel
     CardView preset_disabled_panel;
@@ -103,9 +104,8 @@ public class MainActivity extends CompatWithPipeActivity {
                     .show();
         vpd.add(initPlayingList());
         vpd.add(initPresetPanel());
-        vpd.add(initStatusPanel());
         vpd.add(initConsolePanel());
-        vpd.add(Panels.getCheckPanel(this));
+        vpd.add(initStatusPanel());
 
         List<String> t = Arrays.asList(getResources().getStringArray(R.array.main_tabs));
 
@@ -125,10 +125,10 @@ public class MainActivity extends CompatWithPipeActivity {
                         updatePresetPanel();
                         break;
                     case 2:
-                        updateStatus();
+                        updateConsole();
                         break;
                     case 3:
-                        updateConsole();
+                        updateStatus();
                         break;
                 }
             }
@@ -170,14 +170,6 @@ public class MainActivity extends CompatWithPipeActivity {
         updatePlayingData();
     }
 
-    private View initStatusPanel() {
-        View view = Panels.getStatusPanel(this, status_txvs, status_imgvs);
-        status_refresh = view.findViewById(R.id.status_refresh);
-        Utils.setupSRL(status_refresh);
-        status_refresh.setOnRefreshListener(this::updateStatus);
-        return view;
-    }
-
     private View initPresetPanel() {
         View view = Panels.getPresetPanel(this, preset_widgets);
         preset_disabled_panel = view.findViewById(R.id.preset_disabled_panel);
@@ -186,85 +178,8 @@ public class MainActivity extends CompatWithPipeActivity {
     }
 
     private void updatePresetPanel() {
-        Utils.setViewsEnabled(preset_widgets, false);
-        preset_disabled_panel.setVisibility(View.VISIBLE);
-        ServerStatus.setUpdatePending(true);
-        new Thread(() -> ServerStatus.updateStatus(this)).start();
-
-        ServerStatus.requestForPending(() -> runOnUiThread(() -> {
-            if (ServerStatus.isServerRunning() || CheckUtils.hasModifiedRC()) {
-                preset_apply.setEnabled(true);
-                preset_disabled_panel.setVisibility(View.GONE);
-                Utils.setViewsEnabled(preset_widgets, true);
-            } else {
-                preset_disabled_panel.setVisibility(View.VISIBLE);
-            }
-        }));
-    }
-
-    private void updateStatus() {
-        status_refresh.setRefreshing(true);
-        AlertDialog alertDialog = Utils.getProcessingDialog(this, new ArrayList<>(), false, false);
-        alertDialog.show();
-        new Thread(() -> {
-            String server = AudioHqApis.getRunningServerType().responseMsg;
-            String autoremove = AudioHqApis.getAutoRemoveFlag().responseMsg;
-            String track_ctl_position = AudioHqApis.getTrackCtrlPosition().responseMsg;
-            String track_ctl_lock = AudioHqApis.getTrackCtrlLockState().responseMsg;
-            String threads = AudioHqApis.getPlaybackThreadsCount().responseMsg;
-
-            InstallUtils.checkAndShowInstallation(this);
-
-            runOnUiThread(() -> {
-                status_txvs.get(0).setText(server);
-                status_txvs.get(1).setText(autoremove);
-                status_txvs.get(2).setText(track_ctl_position);
-                status_txvs.get(3).setText(track_ctl_lock);
-                status_txvs.get(4).setText(threads);
-
-                int server_indicator_image, server_indicator_color;
-                int lock_image, lock_color;
-                if (server.contains("running")) {
-                    server_indicator_image = R.drawable.ic_alert;
-                    server_indicator_color = getResources().getColor(R.color.orange_colorPrimary);
-                } else if (!server.equals(track_ctl_lock)) {
-                    server_indicator_image = R.drawable.ic_close;
-                    server_indicator_color = getResources().getColor(android.R.color.holo_red_light);
-                    lock_image = R.drawable.ic_close;
-                    lock_color = getResources().getColor(android.R.color.holo_red_light);
-                } else {
-                    server_indicator_image = R.drawable.ic_check;
-                    server_indicator_color = getResources().getColor(R.color.green_colorPrimary);
-                }
-
-                if (track_ctl_lock.contains("0")) {
-                    lock_image = R.drawable.ic_alert;
-                    lock_color = getResources().getColor(R.color.orange_colorPrimary);
-                } else {
-                    lock_image = R.drawable.ic_check;
-                    lock_color = getResources().getColor(R.color.green_colorPrimary);
-                }
-
-                if (PackageCtlUtils.isAudiohqJavaServiceRunning(this)){
-                    server_indicator_image = R.drawable.ic_check;
-                    server_indicator_color = getResources().getColor(R.color.green_colorPrimary);
-                    status_txvs.get(0).setText(R.string.java_server_running);
-                    lock_image = R.drawable.ic_check;
-                    lock_color = getResources().getColor(R.color.green_colorPrimary);
-                }
-
-                if (service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE)) {
-                    lock_image = R.drawable.ic_check;
-                    lock_color = getResources().getColor(R.color.green_colorPrimary);
-                    server_indicator_image = R.drawable.ic_check;
-                    server_indicator_color = getResources().getColor(R.color.green_colorPrimary);
-                }
-                Utils.setImageWithTint(status_imgvs.get(0), server_indicator_image, server_indicator_color);
-                Utils.setImageWithTint(status_imgvs.get(1), lock_image, lock_color);
-                status_refresh.setRefreshing(false);
-                alertDialog.dismiss();
-            });
-        }).start();
+        Utils.setViewsEnabled(preset_widgets, true);
+        preset_disabled_panel.setVisibility(View.GONE);
     }
 
     private void updateConsole() {
@@ -280,6 +195,28 @@ public class MainActivity extends CompatWithPipeActivity {
         Utils.setupSRL(console_refresh);
         console_refresh.setOnRefreshListener(this::updateConsole);
         return root;
+    }
+
+    private View initStatusPanel() {
+        View root = Panels.getCheckPanel(this);
+        daemon_status = root.findViewById(R.id.check_daemon_status);
+        daemon_status_back = root.findViewById(R.id.check_daemon_status_back);
+        daemon_status_indicator = root.findViewById(R.id.check_daemon_status_indicator);
+        return root;
+    }
+
+    private void updateStatus() {
+        ShellUtils.CommandResult result =
+                ShellUtils.execCommand("ps -A -o PID -o CMDLINE | grep -v \"PID NAME\" | grep \"audiohq --daemon\" | grep -v \"grep\"", true);
+        if (result.responseMsg != null && result.responseMsg.contains("audiohq --daemon")) {
+            daemon_status.setText(R.string.check_daemon_status_alive);
+            daemon_status_back.setBackgroundColor(getResources().getColor(R.color.green_colorPrimary));
+            daemon_status_indicator.setImageResource(R.drawable.ic_check);
+        } else {
+            daemon_status.setText(R.string.check_daemon_status_dead);
+            daemon_status_back.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+            daemon_status_indicator.setImageResource(R.drawable.ic_alert);
+        }
     }
 
     private void updatePlayingData() {
@@ -305,7 +242,7 @@ public class MainActivity extends CompatWithPipeActivity {
             public void onFailure(String reason) {
 
             }
-        },dialog_widgets);
+        }, dialog_widgets);
 
     }
 
@@ -324,8 +261,7 @@ public class MainActivity extends CompatWithPipeActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater mi = new MenuInflater(this);
-        mi.inflate(service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE) ?
-                R.menu.activity_main_simplified_menu : R.menu.activity_main_menu, menu);
+        mi.inflate(R.menu.activity_main_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -339,28 +275,6 @@ public class MainActivity extends CompatWithPipeActivity {
                 startActivity(new Intent(this, AboutActivity.class));
                 break;
             case R.id.item3:
-                switch (service_type) {
-                    case AudioHqApis.AUDIOHQ_SERVER_TYPE_JAVA:
-                        startService(new Intent(this, AudiohqJavaServer.class));
-                        break;
-                    case AudioHqApis.AUDIOHQ_SERVER_NONE:
-                        break;
-                    default:
-                        if (!CheckUtils.hasModifiedRC())
-                            NativeServerControl.startServer(this);
-                        else
-                            toast(R.string.rc_modified_server_noneed);
-                        break;
-                }
-                break;
-            case R.id.item4:
-                stopService(new Intent(this, AudiohqJavaServer.class));
-                if (!CheckUtils.hasModifiedRC())
-                    NativeServerControl.stopServer(this);
-                else
-                    toast(R.string.rc_modified_server_noneed);
-                break;
-            case R.id.item5:
                 switch (viewPager.getCurrentItem()) {
                     case 0:
                         updatePlayingData();
@@ -369,10 +283,10 @@ public class MainActivity extends CompatWithPipeActivity {
                         updatePresetPanel();
                         break;
                     case 2:
-                        updateStatus();
+                        updateConsole();
                         break;
                     case 3:
-                        updateConsole();
+                        updateStatus();
                 }
                 break;
         }

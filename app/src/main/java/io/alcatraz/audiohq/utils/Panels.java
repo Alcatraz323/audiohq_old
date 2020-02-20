@@ -60,32 +60,6 @@ public class Panels {
         return view;
     }
 
-    @SuppressLint("SetTextI18n")
-    public static View getStatusPanel(Activity activity, List<TextView> textViews, List<ImageView> imgvs) {
-        textViews.clear();
-        imgvs.clear();
-        LayoutInflater lf = activity.getLayoutInflater();
-        @SuppressLint("InflateParams") View view = lf.inflate(R.layout.panel_status, null);
-
-        TextView server = view.findViewById(R.id.status_server);
-        TextView auto_remove = view.findViewById(R.id.status_auto_remove);
-        TextView trackctl_position = view.findViewById(R.id.status_track_ctl_position);
-        TextView trackctl_lock = view.findViewById(R.id.status_track_ctl_lock_type);
-        TextView existing_threads = view.findViewById(R.id.status_exitsing_threads);
-        ImageView server_indiator = view.findViewById(R.id.status_server_indicator);
-        ImageView lock_type_indicator = view.findViewById(R.id.status_lock_type_indicator);
-
-        textViews.add(server);
-        textViews.add(auto_remove);
-        textViews.add(trackctl_position);
-        textViews.add(trackctl_lock);
-        textViews.add(existing_threads);
-
-        imgvs.add(server_indiator);
-        imgvs.add(lock_type_indicator);
-        return view;
-    }
-
     public static View getPresetPanel(CompatWithPipeActivity activity, List<View> preset_widgets) {
         preset_widgets.clear();
         LayoutInflater lf = activity.getLayoutInflater();
@@ -126,41 +100,14 @@ public class Panels {
             right.setErrorEnabled(false);
             if (Utils.checkAndSetErr(general) && Utils.checkAndSetErr(left) && Utils.checkAndSetErr(right) &&
                     Utils.isStringNotEmpty(process_name.getEditText().getText().toString())) {
-                /*if (ServerStatus.isServerRunning()) {
-                    AudioHqApis.setPkgVolume(bean.getPkgName().replaceAll("\r|\n", ""),
-                            Float.parseFloat(general.getEditText().getText().toString()),
-                            Float.parseFloat(left.getEditText().getText().toString()),
-                            Float.parseFloat(right.getEditText().getText().toString()),
-                            split_control.isChecked());
-                } else {
-                    AudioHqApis.setPidVolume(bean.getPid(),
-                            Float.parseFloat(general.getEditText().getText().toString()),
-                            Float.parseFloat(left.getEditText().getText().toString()),
-                            Float.parseFloat(right.getEditText().getText().toString()),
-                            split_control.isChecked());
-                }*/
-                if(activity.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_TYPE_JAVA)){
-                    AudioHqApis.sendAdjustBroadcast(activity,
-                            process_name.getEditText().getText().toString().replaceAll("\r|\n", ""),
-                            Float.parseFloat(general.getEditText().getText().toString()),
-                            Float.parseFloat(left.getEditText().getText().toString()),
-                            Float.parseFloat(right.getEditText().getText().toString()),
-                            split_control.isChecked());
-                }else {
-                    if (CheckUtils.hasModifiedRC()) {
-                        AudioHqApis.setMPackageVolume(process_name.getEditText().getText().toString().replaceAll("\r|\n", ""),
-                                Float.parseFloat(general.getEditText().getText().toString()),
-                                Float.parseFloat(left.getEditText().getText().toString()),
-                                Float.parseFloat(right.getEditText().getText().toString()),
-                                split_control.isChecked());
-                    } else {
-                        AudioHqApis.setPkgVolume(process_name.getEditText().getText().toString().replaceAll("\r|\n", ""),
-                                Float.parseFloat(general.getEditText().getText().toString()),
-                                Float.parseFloat(left.getEditText().getText().toString()),
-                                Float.parseFloat(right.getEditText().getText().toString()),
-                                split_control.isChecked());
-                    }
-                }
+
+                AudioHqApis.setProfile(process_name.getEditText().getText().toString().replaceAll("\r|\n", ""),
+                        Float.parseFloat(general.getEditText().getText().toString()),
+                        Float.parseFloat(left.getEditText().getText().toString()),
+                        Float.parseFloat(right.getEditText().getText().toString()),
+                        split_control.isChecked());
+
+
             } else {
                 adjust_apply_cover.setVisibility(View.GONE);
                 adjust_cancel.setEnabled(true);
@@ -181,7 +128,10 @@ public class Panels {
 
     @SuppressWarnings("unchecked")
     @SuppressLint("SetTextI18n")
-    public static AlertDialog getAdjustPanel(CompatWithPipeActivity ctx, AppListBean bean, AsyncInterface through) {
+    public static AlertDialog getAdjustPanel(Activity ctx,
+                                             AppListBean bean,
+                                             AsyncInterface through,
+                                             boolean isForDefault) {
         LayoutInflater lf = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams") View root = lf.inflate(R.layout.panel_adjust, null);
         TextInputLayout general = root.findViewById(R.id.adjust_general);
@@ -192,10 +142,6 @@ public class Panels {
         LinearLayout split_control_panel = root.findViewById(R.id.adjust_split_control_panel);
         Button adjust_cancel = root.findViewById(R.id.adjust_cancel);
         Button adjust_apply = root.findViewById(R.id.adjust_apply);
-
-        adjust_apply.setEnabled(false);
-        ServerStatus.setUpdatePending(true);
-        new Thread(() -> ServerStatus.updateStatus(ctx)).start();
 
         split_control.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
@@ -226,11 +172,6 @@ public class Panels {
 
         adjust_cancel.setOnClickListener(view -> alertDialog.dismiss());
 
-        ServerStatus.requestForPending(() -> ctx.runOnUiThread(() -> {
-            if(ServerStatus.isServerRunning() || ctx.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_NONE))
-            adjust_apply.setEnabled(true);
-        }));
-
         adjust_apply.setOnClickListener(view -> {
             adjust_cancel.setEnabled(false);
             alertDialog.setCancelable(false);
@@ -241,40 +182,18 @@ public class Panels {
             left.setErrorEnabled(false);
             right.setErrorEnabled(false);
             if (Utils.checkAndSetErr(general) && Utils.checkAndSetErr(left) & Utils.checkAndSetErr(right)) {
-                /*if (ServerStatus.isServerRunning()) {
-                    AudioHqApis.setPkgVolume(bean.getPkgName().replaceAll("\r|\n", ""),
+                if (isForDefault) {
+                    AudioHqApis.setDefaultProfile(
                             Float.parseFloat(general.getEditText().getText().toString()),
                             Float.parseFloat(left.getEditText().getText().toString()),
                             Float.parseFloat(right.getEditText().getText().toString()),
                             split_control.isChecked());
                 } else {
-                    AudioHqApis.setPidVolume(bean.getPid(),
+                    AudioHqApis.setProfile(bean.getPkgName().replaceAll("\r|\n", ""),
                             Float.parseFloat(general.getEditText().getText().toString()),
                             Float.parseFloat(left.getEditText().getText().toString()),
                             Float.parseFloat(right.getEditText().getText().toString()),
                             split_control.isChecked());
-                }*/
-                if(ctx.service_type.equals(AudioHqApis.AUDIOHQ_SERVER_TYPE_JAVA)){
-                    AudioHqApis.sendAdjustBroadcast(ctx,
-                            bean.getPkgName().replaceAll("\r|\n", ""),
-                            Float.parseFloat(general.getEditText().getText().toString()),
-                            Float.parseFloat(left.getEditText().getText().toString()),
-                            Float.parseFloat(right.getEditText().getText().toString()),
-                            split_control.isChecked());
-                }else {
-                    if (CheckUtils.hasModifiedRC()) {
-                        AudioHqApis.setMPackageVolume(bean.getPkgName().replaceAll("\r|\n", ""),
-                                Float.parseFloat(general.getEditText().getText().toString()),
-                                Float.parseFloat(left.getEditText().getText().toString()),
-                                Float.parseFloat(right.getEditText().getText().toString()),
-                                split_control.isChecked());
-                    } else {
-                        AudioHqApis.setPkgVolume(bean.getPkgName().replaceAll("\r|\n", ""),
-                                Float.parseFloat(general.getEditText().getText().toString()),
-                                Float.parseFloat(left.getEditText().getText().toString()),
-                                Float.parseFloat(right.getEditText().getText().toString()),
-                                split_control.isChecked());
-                    }
                 }
 
                 alertDialog.dismiss();
