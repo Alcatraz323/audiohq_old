@@ -85,11 +85,11 @@
                 android:layout_marginStart="16dp"
                 android:text="@string/setup_3_installed_summary" />
 
-            <TextView
-                android:id="@+id/setup_3_detected"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp" />
+<!--            <TextView-->
+<!--                android:id="@+id/setup_3_detected"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="16dp" />-->
 
             <CheckBox
                 android:id="@+id/setup_3_installed"

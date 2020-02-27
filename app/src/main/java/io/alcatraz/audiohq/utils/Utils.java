@@ -23,6 +23,8 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -248,5 +250,22 @@ public class Utils {
             isSuccess = false;
         }
         return isSuccess;
+    }
+
+    public static <T> T json2Object(String s, Class<T> type) {
+        return new Gson().fromJson(s, type);
+    }
+
+    public static String extractPackageName(String process){
+        if(process.contains(":")){
+            process = process.split(":")[0];
+        }
+        return process;
+    }
+
+    public static String getFinalProcessName(boolean isweakkey,String process){
+        if(isweakkey)
+            process = extractPackageName(process);
+        return process;
     }
 }

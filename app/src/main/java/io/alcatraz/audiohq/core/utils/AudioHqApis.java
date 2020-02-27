@@ -1,38 +1,27 @@
 package io.alcatraz.audiohq.core.utils;
 
-import android.content.Context;
-import android.content.Intent;
-
-import io.alcatraz.audiohq.beans.ProcessProfile;
-import io.alcatraz.audiohq.services.AudiohqJavaServer;
-
 public class AudioHqApis {
     public static ShellUtils.CommandResult setProfile(String process_name,
                                                       float prog_general,
                                                       float prog_left,
                                                       float prog_right,
-                                                      boolean split_control) {
-        String split = "0";
-        if (split_control)
-            split = "1";
+                                                      boolean split_control,
+                                                      boolean isweakkey) {
         return runAudioHqCmd(AudioHqCmds.SET_PROFILE, process_name,
-                prog_left + "", prog_right + "", prog_general + "", split);
+                prog_left + "", prog_right + "", prog_general + "",
+                split_control ? "true" : "false", isweakkey ? "true" : "false");
     }
 
-    public static ShellUtils.CommandResult listProfile() {
-        return runAudioHqCmd(AudioHqCmds.LIST_PROFILE);
+    public static ShellUtils.CommandResult getSwitches() {
+        ShellUtils.CommandResult command = runAudioHqCmd(AudioHqCmds.GET_SWITCHES);
+        if(command.responseMsg!=null){
+            command.responseMsg = command.responseMsg.replaceAll("[\n]","");
+        }
+        return command;
     }
 
-    public static ShellUtils.CommandResult getAllPlayingClients() {
-        return runAudioHqCmd(AudioHqCmds.GET_ALL_PLAYING_CLIENTS);
-    }
-
-    public static ShellUtils.CommandResult unsetProfile(String process_name) {
-        return runAudioHqCmd(AudioHqCmds.UNSET_PROFILE, process_name);
-    }
-
-    public static ShellUtils.CommandResult getPlaybackThreadsCount() {
-        return runAudioHqCmd(AudioHqCmds.GET_CURRENT_PLAYBACKTHREAD_COUNT);
+    public static ShellUtils.CommandResult getAllPlayingClients(int mode) {
+        return runAudioHqCmd(AudioHqCmds.LIST_ALL_BUFFER, mode + "");
     }
 
     public static ShellUtils.CommandResult clearAllNativeSettings() {
@@ -43,47 +32,40 @@ public class AudioHqApis {
         return runAudioHqCmd(AudioHqCmds.GET_NATIVE_ELF_INFO);
     }
 
-    public static ShellUtils.CommandResult getAudioFlingerInfo() {
-        return runAudioHqCmd(AudioHqCmds.GET_LIB_INFO);
-    }
-
-    public static ShellUtils.CommandResult getDefaultSilentState() {
-        return runAudioHqCmd(AudioHqCmds.GET_DEFAULT_SILENT_STATE);
-    }
-
     public static ShellUtils.CommandResult setDefaultSilentState(boolean state) {
         return runAudioHqCmd(AudioHqCmds.SET_DEFAULT_SILENT_STATE, state ? "true" : "false");
     }
 
-    public static ShellUtils.CommandResult muteProcess(String process_name) {
-        return runAudioHqCmd(AudioHqCmds.MUTE_PROCESS, process_name);
+    public static ShellUtils.CommandResult setWeakKeyAdjust(boolean state) {
+        return runAudioHqCmd(AudioHqCmds.SET_WEAK_KEY_ADJUST, state ? "true" : "false");
     }
 
-    public static ShellUtils.CommandResult unmuteProcess(String process_name) {
-        return runAudioHqCmd(AudioHqCmds.UNMUTE_PROCESS, process_name);
+    public static ShellUtils.CommandResult muteProcess(String process_name, boolean isweakkey) {
+        return runAudioHqCmd(AudioHqCmds.MUTE_PROCESS, process_name, isweakkey ? "true" : "false");
     }
 
-    public static ShellUtils.CommandResult getLog() {
-        return runAudioHqCmd(AudioHqCmds.GET_LOG);
+    public static ShellUtils.CommandResult unmuteProcess(String process_name, boolean isweakkey) {
+        return runAudioHqCmd(AudioHqCmds.UNMUTE_PROCESS, process_name, isweakkey ? "true" : "false");
     }
 
-    public static ShellUtils.CommandResult saveLog() {
-        return runAudioHqCmd(AudioHqCmds.UNMUTE_PROCESS);
+    public static void startNativeService(){
+        runAudioHqCmd(AudioHqCmds.START_NATIVE_SERVICE);
     }
 
     public static ShellUtils.CommandResult getDefaultProfile() {
-        return runAudioHqCmd(AudioHqCmds.GET_DEFAULT_PROFILE);
+        ShellUtils.CommandResult command = runAudioHqCmd(AudioHqCmds.GET_DEFAULT_PROFILE);
+        if(command.responseMsg!=null){
+            command.responseMsg = command.responseMsg.replaceAll("[\n\t]","");
+        }
+        return command;
     }
 
     public static ShellUtils.CommandResult setDefaultProfile(float prog_general,
-                                                                 float prog_left,
-                                                                 float prog_right,
-                                                                 boolean split_control) {
-        String split = "0";
-        if (split_control)
-            split = "1";
+                                                             float prog_left,
+                                                             float prog_right,
+                                                             boolean split_control) {
         return runAudioHqCmd(AudioHqCmds.SET_DEFAULT_PROFILE,
-                prog_left + "", prog_right + "", prog_general + "", split);
+                prog_left + "", prog_right + "", prog_general + "", split_control ? "true" : "false");
     }
 
     public static ShellUtils.CommandResult runAudioHqCmd(AudioHqCmds audioHqCmds, String... params) {
@@ -92,26 +74,26 @@ public class AudioHqApis {
             cmd = audioHqCmds.createCmd(params);
         else
             cmd = audioHqCmds.getCmd_raw();
-        return ShellUtils.execCommand(cmd, audioHqCmds.requiresRoot());
+        ShellUtils.CommandResult result = ShellUtils.execCommand(cmd, audioHqCmds.requiresRoot());
+        if(result.responseMsg!=null&&result.responseMsg.length()!=0){
+            result.responseMsg = result.responseMsg.substring(0,result.responseMsg.length()-1);
+        }
+        return result;
     }
 
     enum AudioHqCmds {
-        SET_PROFILE("audiohq --set-profile \"%s|%s,%s,%s,%s\"", true, true),
-        LIST_PROFILE("audiohq --list-profile", false, false),
-        GET_ALL_PLAYING_CLIENTS("audiohq --list-tracks -t all", false, false),
-        UNSET_PROFILE("audiohq --unset-profile \"%s\"", true, true),
-        GET_CURRENT_PLAYBACKTHREAD_COUNT("audiohq --count", false, false),
-        CLEAR_ALL_SETTINGS("audiohq --clear", true, false),
-        GET_NATIVE_ELF_INFO("audiohq --elf-info", false, false),
-        GET_LIB_INFO("audiohq --lib-info", true, false),
-        GET_DEFAULT_SILENT_STATE("audiohq --def-silent", false, false),
-        SET_DEFAULT_SILENT_STATE("audiohq --def-silent %s", true, true),
-        MUTE_PROCESS("audiohq --mute \"%s\"", true, true),
-        UNMUTE_PROCESS("audiohq --unmute \"%s\"", true, true),
-        GET_LOG("audiohq --get-log", false, false),
-        SAVE_LOG("audiohq --save-log", true, false),
+        SET_PROFILE("audiohq --set-profile \"%s\" %s %s %s %s %s", false, true),
+        GET_SWITCHES("audiohq --switches", false, false),
+        SET_DEFAULT_SILENT_STATE("audiohq --def-silent %s", false, true),
         GET_DEFAULT_PROFILE("audiohq --def-profile", false, false),
-        SET_DEFAULT_PROFILE("audiohq --def-profile \"%s,%s,%s,%s\"", true, true);
+        SET_DEFAULT_PROFILE("audiohq --def-profile %s %s %s %s", false, true),
+        MUTE_PROCESS("audiohq --mute \"%s\" %s", false, true),
+        UNMUTE_PROCESS("audiohq --unmute \"%s\" %s", false, true),
+        CLEAR_ALL_SETTINGS("audiohq --clear", false, false),
+        LIST_ALL_BUFFER("audiohq --list-buffers %s", false, true),
+        GET_NATIVE_ELF_INFO("audiohq --elf-info", false, false),
+        SET_WEAK_KEY_ADJUST("audiohq --weak-key %s",false,true),
+        START_NATIVE_SERVICE("audiohq --service",true,false);
 
 
         private String cmd_raw;

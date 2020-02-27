@@ -10,16 +10,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.Spinner;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
 
-import io.alcatraz.audiohq.Constants;
 import io.alcatraz.audiohq.R;
 import io.alcatraz.audiohq.beans.SetupPage;
 import io.alcatraz.audiohq.core.utils.CheckUtils;
-import io.alcatraz.audiohq.core.utils.OSUtils;
 import io.alcatraz.audiohq.core.utils.ShellUtils;
 import io.alcatraz.audiohq.extended.SetupWizardBaseActivity;
 import io.alcatraz.audiohq.utils.AnimateUtils;
@@ -73,19 +71,20 @@ public class SetupActivity extends SetupWizardBaseActivity {
     @Override
     public void onUpdate(List<SetupPage> pages) {
         SetupPage page = new SetupPage(getResources().getString(R.string.setup_current_update), R.layout.setup_6);
+        pages.add(getSelinuxCheckPage());
         pages.add(page);
+
     }
 
     @Override
     public void onFinishSetup() {
         startActivity(new Intent(this, MainActivity.class));
-
         finish();
     }
 
     @Override
     public int getVersionCode() {
-        return 6;
+        return 7;
     }
 
     private void onSelectSetup4_Apply() {
@@ -112,17 +111,10 @@ public class SetupActivity extends SetupWizardBaseActivity {
         View root_view = getPageList().get(2).getRootView();
 
         Button btn_go_website = root_view.findViewById(R.id.setup_3_go_website);
-        TextView detected_version = root_view.findViewById(R.id.setup_3_detected);
         CheckBox installed = root_view.findViewById(R.id.setup_3_installed);
 
         //Initial state setup
         installed.setChecked(false);
-
-        String current_version = CheckUtils.getLibVersion();
-        detected_version.setText(String.format(getResources().getString(R.string.setup_3_installed_detected), current_version));
-
-        if (!getString(R.string.support_lib_version).equals(current_version))
-            detected_version.setTextColor(getResources().getColor(android.R.color.holo_red_light, null));
 
         endPending();
         banNextStep();
@@ -154,8 +146,6 @@ public class SetupActivity extends SetupWizardBaseActivity {
         CardView api_check = root_view.findViewById(R.id.setup_2_api_check);
         CardView requirements_not_meet = root_view.findViewById(R.id.setup_2_requirements_not_meet);
 
-        TextView vendor_warning_title = root_view.findViewById(R.id.setup_2_warning_title);
-        Button vendor_unlock = root_view.findViewById(R.id.setup_2_vendor_unlock);
         Button requirement_unlock = root_view.findViewById(R.id.setup_2_requirements_not_meet_unlock);
 
         TextView root_check_title = root_view.findViewById(R.id.setup_2_root_check_title);
@@ -171,18 +161,10 @@ public class SetupActivity extends SetupWizardBaseActivity {
         ImageView api_check_indicator = root_view.findViewById(R.id.setup_2_api_check_indicator);
 
         //Initial state setup
-        vendor_warning.setVisibility(View.GONE);
         root_check.setVisibility(View.GONE);
         audioserver_check.setVisibility(View.GONE);
         api_check.setVisibility(View.GONE);
         requirements_not_meet.setVisibility(View.GONE);
-
-        OSUtils.ROM_TYPE rom = OSUtils.getRomType();
-        if (rom != OSUtils.ROM_TYPE.OTHER) {
-            AnimateUtils.playstart(vendor_warning, () -> {
-            });
-            can_go_next = false;
-        }
 
         if (!ShellUtils.hasRootPermission()) {
             root_check_title.setTextColor(color_red);
@@ -200,7 +182,7 @@ public class SetupActivity extends SetupWizardBaseActivity {
                 Utils.setImageWithTint(audioserver_check_indicator, R.drawable.ic_close, color_red);
                 can_go_next = false;
             }
-            String audioserver_info_processed[] = audioserver_info.split(":")[1].split(",");
+            String[] audioserver_info_processed = audioserver_info.split(":")[1].split(",");
             audioserver_check_state.setText(audioserver_info_processed[0] + "," + audioserver_info_processed[1]);
             AnimateUtils.playstart(audioserver_check, () -> {
             });
@@ -230,17 +212,41 @@ public class SetupActivity extends SetupWizardBaseActivity {
             });
             restoreState();
             banNextStep();
+        }else {
+            banNextStep();
+            toast(R.string.setup_2_warning_delay);
+            new Thread(() -> {
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                runOnUiThread(this::restoreState);
+            }).start();
         }
 
-        vendor_warning_title.setText(String.format(getResources().getString(R.string.setup_2_warning_vendor_system_title),
-                OSUtils.getRomType().name()));
-        vendor_unlock.setOnClickListener(view -> {
-            AnimateUtils.playEnd(vendor_warning/*, () -> {}*/);
-            restoreState();
-        });
         requirement_unlock.setOnClickListener(view -> {
             AnimateUtils.playEnd(requirements_not_meet/*, () -> {}*/);
             restoreState();
         });
+    }
+
+    public SetupPage getSelinuxCheckPage(){
+        SetupPage page = new SetupPage(getString(R.string.setup_selinux_check),R.layout.setup_7);
+        View root = getLayoutInflater().inflate(R.layout.setup_7,null);
+        LinearLayout background = root.findViewById(R.id.setup_selinux_background);
+        TextView status = root.findViewById(R.id.setup_selinux_status);
+        ImageView indicator = root.findViewById(R.id.setup_selinux_indicator);
+
+        String enforcing = CheckUtils.getSeLinuxEnforce();
+        boolean isEnforcing = enforcing.contains("Enforcing");
+        status.setText(enforcing);
+        if(!isEnforcing){
+            background.setBackgroundColor(getColor(R.color.green_colorPrimary));
+            indicator.setImageResource(R.drawable.ic_check);
+        }
+
+        page.setRootView(root);
+        return page;
     }
 }

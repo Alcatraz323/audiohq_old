@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -27,24 +26,20 @@ import com.alcatraz.support.v4.appcompat.ViewPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import io.alcatraz.audiohq.AsyncInterface;
-import io.alcatraz.audiohq.LogBuff;
 import io.alcatraz.audiohq.R;
 import io.alcatraz.audiohq.adapters.PlayingExpandableAdapter;
-import io.alcatraz.audiohq.beans.AppListBean;
+import io.alcatraz.audiohq.adapters.PlyPkgExpandableAdapter;
+import io.alcatraz.audiohq.beans.nativebuffers.PackageBuffers;
+import io.alcatraz.audiohq.beans.nativebuffers.ProcessBuffers;
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
 import io.alcatraz.audiohq.core.utils.CheckUtils;
 import io.alcatraz.audiohq.core.utils.ShellUtils;
 import io.alcatraz.audiohq.extended.CompatWithPipeActivity;
-import io.alcatraz.audiohq.services.AudiohqJavaServer;
-import io.alcatraz.audiohq.utils.InstallUtils;
-import io.alcatraz.audiohq.utils.NativeServerControl;
-import io.alcatraz.audiohq.utils.PackageCtlUtils;
+import io.alcatraz.audiohq.services.AHQProtector;
 import io.alcatraz.audiohq.utils.Panels;
 import io.alcatraz.audiohq.utils.ShellDataBridge;
 import io.alcatraz.audiohq.utils.Utils;
@@ -55,10 +50,12 @@ public class MainActivity extends CompatWithPipeActivity {
     ViewPager viewPager;
 
     //Playing panel
-    PlayingExpandableAdapter playingExpandableAdapter;
     ExpandableListView playing_list;
-    Map<String, AppListBean> playing_data = new HashMap<>();
-    //SwipeRefreshLayout playing_refresh;
+    PlayingExpandableAdapter playingExpandableAdapter;
+    ProcessBuffers processBuffers = new ProcessBuffers();
+
+    PlyPkgExpandableAdapter plyPkgExpandableAdapter;
+    PackageBuffers packageBuffers = new PackageBuffers();
 
     //Status panel
     ImageView daemon_status_indicator;
@@ -70,13 +67,10 @@ public class MainActivity extends CompatWithPipeActivity {
     Button preset_apply;
     List<View> preset_widgets = new LinkedList<>();
 
-    //Console out
-    TextView console;
-    SwipeRefreshLayout console_refresh;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkAndProtectService();
         setContentView(R.layout.activity_main);
         if (!CheckUtils.getRootStatus()) {
             toast(R.string.toast_no_root);
@@ -104,7 +98,6 @@ public class MainActivity extends CompatWithPipeActivity {
                     .show();
         vpd.add(initPlayingList());
         vpd.add(initPresetPanel());
-        vpd.add(initConsolePanel());
         vpd.add(initStatusPanel());
 
         List<String> t = Arrays.asList(getResources().getStringArray(R.array.main_tabs));
@@ -125,9 +118,6 @@ public class MainActivity extends CompatWithPipeActivity {
                         updatePresetPanel();
                         break;
                     case 2:
-                        updateConsole();
-                        break;
-                    case 3:
                         updateStatus();
                         break;
                 }
@@ -144,23 +134,8 @@ public class MainActivity extends CompatWithPipeActivity {
     private View initPlayingList() {
         @SuppressLint("InflateParams") View root = getLayoutInflater().inflate(R.layout.app_list_panel, null);
         playing_list = root.findViewById(R.id.app_list_expl);
-//        playing_refresh = root.findViewById(R.id.app_list_refresh);
-//        Utils.setupSRL(playing_refresh);
-//        playing_refresh.setOnRefreshListener(this::updatePlayingData);
-        playingExpandableAdapter = new PlayingExpandableAdapter(this, playing_data, new AsyncInterface() {
-            @Override
-            public boolean onAyncDone(@Nullable Object val) {
-                updatePlayingData();
-                return true;
-            }
-
-            @Override
-            public void onFailure(String reason) {
-
-            }
-        });
-        playing_list.setAdapter(playingExpandableAdapter);
-//        updatePlayingData();
+        playingExpandableAdapter = new PlayingExpandableAdapter(this, processBuffers);
+        plyPkgExpandableAdapter = new PlyPkgExpandableAdapter(this, packageBuffers);
         return root;
     }
 
@@ -182,21 +157,6 @@ public class MainActivity extends CompatWithPipeActivity {
         preset_disabled_panel.setVisibility(View.GONE);
     }
 
-    private void updateConsole() {
-        console_refresh.setRefreshing(true);
-        console.setText(LogBuff.getFinalLog());
-        console_refresh.setRefreshing(false);
-    }
-
-    private View initConsolePanel() {
-        @SuppressLint("InflateParams") View root = getLayoutInflater().inflate(R.layout.panel_console, null);
-        console = root.findViewById(R.id.console_text);
-        console_refresh = root.findViewById(R.id.console_refresh);
-        Utils.setupSRL(console_refresh);
-        console_refresh.setOnRefreshListener(this::updateConsole);
-        return root;
-    }
-
     private View initStatusPanel() {
         View root = Panels.getCheckPanel(this);
         daemon_status = root.findViewById(R.id.check_daemon_status);
@@ -207,8 +167,8 @@ public class MainActivity extends CompatWithPipeActivity {
 
     private void updateStatus() {
         ShellUtils.CommandResult result =
-                ShellUtils.execCommand("ps -A -o PID -o CMDLINE | grep -v \"PID NAME\" | grep \"audiohq --daemon\" | grep -v \"grep\"", true);
-        if (result.responseMsg != null && result.responseMsg.contains("audiohq --daemon")) {
+                ShellUtils.execCommand("ps -A -o PID -o CMDLINE | grep -v \"PID NAME\" | grep \"audiohq --service\" | grep -v \"grep\"", true);
+        if (result.responseMsg != null && result.responseMsg.contains("audiohq --service")) {
             daemon_status.setText(R.string.check_daemon_status_alive);
             daemon_status_back.setBackgroundColor(getResources().getColor(R.color.green_colorPrimary));
             daemon_status_indicator.setImageResource(R.drawable.ic_check);
@@ -220,36 +180,60 @@ public class MainActivity extends CompatWithPipeActivity {
     }
 
     private void updatePlayingData() {
-        playing_data.clear();
         ArrayList<View> dialog_widgets = new ArrayList<>();
         AlertDialog alertDialog = Utils.getProcessingDialog(this, dialog_widgets, false, true);
         alertDialog.show();
-        ShellDataBridge.getPlayingMap(this, new AsyncInterface<Map<String, AppListBean>>() {
-            @Override
-            public boolean onAyncDone(@Nullable Map<String, AppListBean> val) {
-                if (val != null) {
-                    playing_data.putAll(val);
-                }
-                runOnUiThread(() -> {
-                    playingExpandableAdapter.notifyDataSetChanged();
-                    alertDialog.dismiss();
-//                    playing_refresh.setRefreshing(false);
+
+        ShellUtils.CommandResult switches = AudioHqApis.getSwitches();
+        if (switches.responseMsg != null) {
+            String[] switches_str = switches.responseMsg.split(";");
+            boolean isweakkey = switches_str[2].equals("true");
+            if(fold_same_pkg || isweakkey){
+                ShellDataBridge.getPackageBuffers(new AsyncInterface<PackageBuffers>() {
+                    @Override
+                    public boolean onAyncDone(@Nullable PackageBuffers val) {
+                        runOnUiThread(() -> {
+                            packageBuffers = (val == null ? new PackageBuffers() : val);
+                            plyPkgExpandableAdapter.setNewData(packageBuffers);
+                            plyPkgExpandableAdapter.setWeakkey(isweakkey);
+                            playing_list.setAdapter(plyPkgExpandableAdapter);
+                            alertDialog.dismiss();
+                        });
+                        return false;
+                    }
+
+                    @Override
+                    public void onFailure(String reason) {
+                        runOnUiThread(() -> toast(reason));
+                    }
                 });
-                return true;
+            }else {
+                ShellDataBridge.getProcessBuffers(new AsyncInterface<ProcessBuffers>() {
+                    @Override
+                    public boolean onAyncDone(@Nullable ProcessBuffers val) {
+                        runOnUiThread(() -> {
+                            processBuffers = (val == null ? new ProcessBuffers() : val);
+                            playingExpandableAdapter.setNewData(processBuffers);
+                            playing_list.setAdapter(playingExpandableAdapter);
+                            alertDialog.dismiss();
+                        });
+                        return false;
+                    }
+
+                    @Override
+                    public void onFailure(String reason) {
+
+                    }
+                });
             }
-
-            @Override
-            public void onFailure(String reason) {
-
-            }
-        }, dialog_widgets);
-
+        }
     }
 
     @Override
     public void onReloadPreferenceDone() {
         super.onReloadPreferenceDone();
         invalidateOptionsMenu();
+        updatePlayingData();
     }
 
     public List<PackageInfo> getAppList() {
@@ -283,13 +267,21 @@ public class MainActivity extends CompatWithPipeActivity {
                         updatePresetPanel();
                         break;
                     case 2:
-                        updateConsole();
-                        break;
-                    case 3:
                         updateStatus();
+                        break;
                 }
+                break;
+            case R.id.item4:
+                Panels.getLogConsole(this).show();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void checkAndProtectService(){
+        AudioHqApis.startNativeService();
+        if(protector_service){
+            startService(new Intent(this, AHQProtector.class));
+        }
     }
 }

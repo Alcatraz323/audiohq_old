@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +21,10 @@ import java.util.List;
 import java.util.Objects;
 
 import io.alcatraz.audiohq.AsyncInterface;
+import io.alcatraz.audiohq.LogBuff;
 import io.alcatraz.audiohq.R;
-import io.alcatraz.audiohq.beans.AppListBean;
-import io.alcatraz.audiohq.beans.ServerStatus;
+import io.alcatraz.audiohq.beans.nativebuffers.Buffers;
+import io.alcatraz.audiohq.beans.nativebuffers.Processes;
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
 import io.alcatraz.audiohq.core.utils.CheckUtils;
 import io.alcatraz.audiohq.extended.CompatWithPipeActivity;
@@ -38,7 +40,6 @@ public class Panels {
         TextView selinux = view.findViewById(R.id.check_selinux);
         TextView supported = view.findViewById(R.id.check_supported);
         TextView elf_info = view.findViewById(R.id.check_elf_info);
-        TextView lib_info = view.findViewById(R.id.check_lib_info);
         TextView audioserver_info = view.findViewById(R.id.check_audioserver_info);
         ImageView support_indicator = view.findViewById(R.id.check_support_indicator);
 
@@ -50,7 +51,6 @@ public class Panels {
                 + Utils.extractStringArr(CheckUtils.getSupportArch()) + ")");
 
         elf_info.setText(AudioHqApis.getAudioHqNativeInfo().responseMsg);
-        lib_info.setText(AudioHqApis.getAudioFlingerInfo().responseMsg);
         audioserver_info.setText(CheckUtils.getAudioServerInfo());
 
         if (support)
@@ -93,8 +93,6 @@ public class Panels {
         adjust_apply.setOnClickListener(view1 -> {
             adjust_cancel.setEnabled(false);
             adjust_apply.setEnabled(false);
-            adjust_apply.setVisibility(View.INVISIBLE);
-            adjust_apply_cover.setVisibility(View.VISIBLE);
             general.setErrorEnabled(false);
             left.setErrorEnabled(false);
             right.setErrorEnabled(false);
@@ -105,7 +103,7 @@ public class Panels {
                         Float.parseFloat(general.getEditText().getText().toString()),
                         Float.parseFloat(left.getEditText().getText().toString()),
                         Float.parseFloat(right.getEditText().getText().toString()),
-                        split_control.isChecked());
+                        split_control.isChecked(), false);
 
 
             } else {
@@ -114,6 +112,7 @@ public class Panels {
                 adjust_apply.setEnabled(true);
                 adjust_apply.setVisibility(View.VISIBLE);
             }
+            adjust_apply.setEnabled(true);
         });
 
         preset_widgets.add(general);
@@ -126,12 +125,34 @@ public class Panels {
         return view;
     }
 
+    public static AlertDialog getLogConsole(Context context) {
+        LayoutInflater lf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        @SuppressLint("InflateParams") View root = lf.inflate(R.layout.panel_console, null);
+        TextView console = root.findViewById(R.id.console_text);
+        SwipeRefreshLayout console_refresh = root.findViewById(R.id.console_refresh);
+        Utils.setupSRL(console_refresh);
+        console_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateConsole(console, console_refresh);
+            }
+        });
+
+        updateConsole(console, console_refresh);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                .setView(root);
+
+        return builder.create();
+    }
+
     @SuppressWarnings("unchecked")
     @SuppressLint("SetTextI18n")
-    public static AlertDialog getAdjustPanel(Activity ctx,
-                                             AppListBean bean,
-                                             AsyncInterface through,
-                                             boolean isForDefault) {
+    public static AlertDialog getAdjustPanel(Context ctx,
+                                             Processes bean,
+                                             boolean isForDefault,
+                                             boolean isweakkey,
+                                             AsyncInterface<AlertDialog> asyncInterface) {
         LayoutInflater lf = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams") View root = lf.inflate(R.layout.panel_adjust, null);
         TextInputLayout general = root.findViewById(R.id.adjust_general);
@@ -157,13 +178,13 @@ public class Panels {
             }
         });
 
-        if (!bean.getProfile().contains("unset")) {
-            String process_1[] = bean.getProfile().replaceAll("\r|\n", "").split(",");
-            split_control.setChecked(process_1[3].equals("1"));
-            Objects.requireNonNull(general.getEditText()).setText(Float.parseFloat(process_1[2]) + "");
-            Objects.requireNonNull(left.getEditText()).setText(Float.parseFloat(process_1[0]) + "");
-            Objects.requireNonNull(right.getEditText()).setText(Float.parseFloat(process_1[1]) + "");
-        }
+        Buffers buffers = bean.getBuffers().get(0);
+
+        split_control.setChecked(buffers.getControl_lr().equals("true"));
+        Objects.requireNonNull(general.getEditText()).setText(Float.parseFloat(buffers.getFinalv()) + "");
+        Objects.requireNonNull(left.getEditText()).setText(Float.parseFloat(buffers.getLeft()) + "");
+        Objects.requireNonNull(right.getEditText()).setText(Float.parseFloat(buffers.getRight()) + "");
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx)
                 .setView(root);
@@ -189,15 +210,13 @@ public class Panels {
                             Float.parseFloat(right.getEditText().getText().toString()),
                             split_control.isChecked());
                 } else {
-                    AudioHqApis.setProfile(bean.getPkgName().replaceAll("\r|\n", ""),
+                    AudioHqApis.setProfile(Utils.getFinalProcessName(isweakkey, bean.getProcess()),
                             Float.parseFloat(general.getEditText().getText().toString()),
                             Float.parseFloat(left.getEditText().getText().toString()),
                             Float.parseFloat(right.getEditText().getText().toString()),
-                            split_control.isChecked());
+                            split_control.isChecked(), isweakkey);
                 }
-
-                alertDialog.dismiss();
-                through.onAyncDone(null);
+                asyncInterface.onAyncDone(alertDialog);
                 adjust_apply_cover.setVisibility(View.GONE);
                 adjust_cancel.setEnabled(true);
                 adjust_apply.setEnabled(true);
@@ -273,5 +292,11 @@ public class Panels {
                     }
                 });
         return builder.create();
+    }
+
+    private static void updateConsole(TextView console, SwipeRefreshLayout console_refresh) {
+        console_refresh.setRefreshing(true);
+        console.setText(LogBuff.getFinalLog());
+        console_refresh.setRefreshing(false);
     }
 }

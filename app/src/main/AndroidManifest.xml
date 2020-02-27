@@ -29,5 +29,6 @@
             </intent-filter>
         </receiver>
         <service android:name=".services.AudiohqJavaServer" />
+        <service android:name=".services.AHQProtector" />
     </application>
 </manifest>

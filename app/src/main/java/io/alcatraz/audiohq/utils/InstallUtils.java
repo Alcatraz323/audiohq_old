@@ -96,12 +96,12 @@ public class InstallUtils {
         return 0;
     }
 
-    public static void checkAndShowInstallation(Activity activity) {
-        ShellUtils.CommandResult result = AudioHqApis.getAudioFlingerInfo();
-        if (result.responseMsg == null || !result.responseMsg.contains("libaudioflinger")) {
-            Panels.getNotInstalledPanel(activity).show();
-        }
-    }
+//    public static void checkAndShowInstallation(Activity activity) {
+//        ShellUtils.CommandResult result = AudioHqApis.getAudioFlingerInfo();
+//        if (result.responseMsg == null || !result.responseMsg.contains("libaudioflinger")) {
+//            Panels.getNotInstalledPanel(activity).show();
+//        }
+//    }
 
     @Deprecated
     public static ShellUtils.CommandResult modifyRCFile(boolean readproc, AsyncInterface<ShellUtils.CommandResult> beforeReboot) {

@@ -61,14 +61,6 @@
                         android:layout_height="wrap_content"
                         android:text="@string/setup_2_warning_vendor_system_info" />
 
-                    <Button
-                        android:id="@+id/setup_2_vendor_unlock"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/setup_2_warning_vendor_system_unlock"
-                        android:textColor="@android:color/holo_red_light" />
                 </LinearLayout>
             </RelativeLayout>
         </android.support.v7.widget.CardView>

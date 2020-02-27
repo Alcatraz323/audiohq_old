@@ -3,7 +3,6 @@
     <string-array name="main_tabs">
         <item>正在播放</item>
         <item>预设</item>
-        <item>日志</item>
         <item>状态</item>
     </string-array>
 

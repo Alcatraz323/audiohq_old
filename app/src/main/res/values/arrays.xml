@@ -3,7 +3,6 @@
     <string-array name="main_tabs">
         <item>Playing</item>
         <item>Preset</item>
-        <item>Log</item>
         <item>Status</item>
     </string-array>
 

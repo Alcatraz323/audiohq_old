@@ -17,7 +17,6 @@ public class LogBuff {
     private static String whole_message = "";
     private static int num = 0;
 
-    @SuppressWarnings("ThrowableNotThrown")
     public static void I(String infoMsg) {
         String classname = new Exception().getStackTrace()[1].getClassName().replace(Constants.MY_PACKAGE_NAME,"");
         String method_name = new Exception().getStackTrace()[1].getMethodName();
@@ -25,7 +24,6 @@ public class LogBuff {
                 infoMsg, COLOR_LEVEL_INFO));
     }
 
-    @SuppressWarnings("ThrowableNotThrown")
     public static void W(String warnMsg) {
         String classname = new Exception().getStackTrace()[1].getClassName().replace(Constants.MY_PACKAGE_NAME,"");
         String method_name = new Exception().getStackTrace()[1].getMethodName();
@@ -33,7 +31,6 @@ public class LogBuff {
                 warnMsg, COLOR_LEVEL_WARN));
     }
 
-    @SuppressWarnings("ThrowableNotThrown")
     public static void E(String errMsg) {
         String classname = new Exception().getStackTrace()[1].getClassName().replace(Constants.MY_PACKAGE_NAME,"");
         String method_name = new Exception().getStackTrace()[1].getMethodName();
@@ -41,7 +38,6 @@ public class LogBuff {
                 errMsg, COLOR_LEVEL_ERROR));
     }
 
-    @SuppressWarnings("ThrowableNotThrown")
     public static void D(String dbgMsg) {
         String classname = new Exception().getStackTrace()[1].getClassName().replace(Constants.MY_PACKAGE_NAME,"");
         String method_name = new Exception().getStackTrace()[1].getMethodName();

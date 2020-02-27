@@ -33,7 +33,7 @@ public class PackageCtlUtils {
             ApplicationInfo ai = pm.getApplicationInfo(pkg, PackageManager.GET_META_DATA);
             return pm.getApplicationLabel(ai).toString();
         } catch (PackageManager.NameNotFoundException e) {
-            return null;
+            return pkg;
         }
     }
 

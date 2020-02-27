@@ -14,17 +14,28 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_2_t">
-
         <CheckBoxPreference
             android:key="default_silent"
             android:summary="@string/pref_2_1_summary"
             android:title="@string/pref_2_1" />
+        <CheckBoxPreference
+            android:key="protector_service"
+            android:summary="@string/pref_2_4_summary"
+            android:title="@string/pref_2_4" />
         <PreferenceScreen
             android:key="default_profile"
             android:summary="@string/pref_2_3_summary"
             android:title="@string/pref_2_3" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_3_t">
+        <CheckBoxPreference
+            android:key="fold_same_pkg"
+            android:summary="@string/pref_3_5_summary"
+            android:title="@string/pref_3_5" />
+        <CheckBoxPreference
+            android:key="weak_key"
+            android:summary="@string/pref_3_4_summary"
+            android:title="@string/pref_3_4" />
         <PreferenceScreen
             android:key="check_update"
             android:title="@string/pref_3_1" />

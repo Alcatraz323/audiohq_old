@@ -22,7 +22,8 @@ import java.util.List;
 import io.alcatraz.audiohq.AsyncInterface;
 import io.alcatraz.audiohq.R;
 import io.alcatraz.audiohq.beans.nativebuffers.Buffers;
-import io.alcatraz.audiohq.beans.nativebuffers.ProcessBuffers;
+import io.alcatraz.audiohq.beans.nativebuffers.PackageBuffers;
+import io.alcatraz.audiohq.beans.nativebuffers.Pkgs;
 import io.alcatraz.audiohq.beans.nativebuffers.Processes;
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
 import io.alcatraz.audiohq.utils.AnimateUtils;
@@ -30,40 +31,49 @@ import io.alcatraz.audiohq.utils.PackageCtlUtils;
 import io.alcatraz.audiohq.utils.Panels;
 import io.alcatraz.audiohq.utils.Utils;
 
-public class PlayingExpandableAdapter extends BaseExpandableListAdapter {
-    private ProcessBuffers data;
+public class PlyPkgExpandableAdapter extends BaseExpandableListAdapter {
+    private PackageBuffers data;
     private Context context;
-    private LayoutInflater lf;
+    private LayoutInflater inflater;
+    private boolean isweakkey;
 
-    public PlayingExpandableAdapter(Context context, ProcessBuffers data) {
-        this.data = data;
+    public PlyPkgExpandableAdapter(Context context, PackageBuffers initdata) {
+        this.data = initdata;
         this.context = context;
-        lf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void setNewData(ProcessBuffers data) {
-        this.data = data;
+    public void setNewData(PackageBuffers buffers) {
+        data = buffers;
+        notifyDataSetChanged();
+    }
+
+    public void setWeakkey(boolean weakkey) {
+        isweakkey = weakkey;
         notifyDataSetChanged();
     }
 
     @Override
     public int getGroupCount() {
-        return data.getProcesses().size();
+        return data.getPkgs().size();
     }
 
     @Override
     public int getChildrenCount(int i) {
-        return 0;/*data.getProcesses().get(i).getBuffers().size();*/
+        int count = data.getPkgs().get(i).getProcesses().size();
+        if(isweakkey)
+            count = 0;
+        return count;
     }
 
     @Override
     public Object getGroup(int i) {
-        return data.getProcesses().get(i);
+        return data.getPkgs().get(i);
     }
 
     @Override
     public Object getChild(int i, int i1) {
-        return data.getProcesses().get(i).getBuffers().get(i1);
+        return data.getPkgs().get(i).getProcesses().get(i1);
     }
 
     @Override
@@ -81,22 +91,99 @@ public class PlayingExpandableAdapter extends BaseExpandableListAdapter {
         return false;
     }
 
-    @Override
-    public boolean isChildSelectable(int i, int i1) {
-        return false;
-    }
-
-    @SuppressLint({"SetTextI18n", "InflateParams"})
+    @SuppressLint({"InflateParams", "SetTextI18n"})
     @Override
     public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
-        if (view == null) {
-            view = lf.inflate(R.layout.app_list_parent, null);
-        }
-        Processes process = data.getProcesses().get(i);
+        if (!isweakkey) {
+            view = inflater.inflate(R.layout.app_list_pkg_mode_parent, null);
+            Pkgs pkgs = data.getPkgs().get(i);
 
-        TextView aplc_label = view.findViewById(R.id.app_label);
-        TextView aplc_pkgname = view.findViewById(R.id.app_pkg);
-        ImageView aplc_icon = view.findViewById(R.id.app_icon);
+            ImageView icon = view.findViewById(R.id.app_list_pkg_icon);
+            TextView label = view.findViewById(R.id.app_list_pkg_label);
+            TextView pkg_name = view.findViewById(R.id.app_list_pkg_name);
+            Drawable icon_d = PackageCtlUtils.getIcon(context, pkgs.getPkg());
+            if (icon_d != null) {
+                icon.setImageDrawable(icon_d);
+            }
+            label.setText(PackageCtlUtils.getLabel(context, pkgs.getPkg())+" ("+pkgs.getProcesses().size()+")");
+            pkg_name.setText(pkgs.getPkg());
+            return view;
+        } else {
+            view = inflater.inflate(R.layout.app_list_parent, null);
+
+            Pkgs pkgs = data.getPkgs().get(i);
+            Processes process = pkgs.getProcesses().get(0);
+
+            TextView aplc_label = view.findViewById(R.id.app_label);
+            TextView aplc_pkgname = view.findViewById(R.id.app_pkg);
+            ImageView aplc_icon = view.findViewById(R.id.app_icon);
+            ImageButton show_adjust = view.findViewById(R.id.app_adjust_switch);
+            Switch app_allowed = view.findViewById(R.id.app_allowed);
+
+            app_allowed.setChecked(!process.getBuffers().get(0).getMuted().equals("true"));
+
+            app_allowed.setOnClickListener(view1 -> {
+                boolean muted = process.getBuffers().get(0).getMuted().equals("true");
+                if (muted) {
+                    AudioHqApis.unmuteProcess(Utils.getFinalProcessName(isweakkey, process.getProcess()), isweakkey);
+                    setMuted(process, false);
+                } else {
+                    AudioHqApis.muteProcess(Utils.getFinalProcessName(isweakkey, process.getProcess()), isweakkey);
+                    setMuted(process, true);
+                }
+            });
+
+            aplc_pkgname.setText(pkgs.getPkg());
+
+            Drawable icon = PackageCtlUtils.getIcon(context, pkgs.getPkg());
+
+            if (icon != null)
+                aplc_icon.setImageDrawable(icon);
+
+            String label = PackageCtlUtils.getLabel(context, pkgs.getPkg());
+
+            if (Utils.isStringNotEmpty(label)) {
+                aplc_label.setText(label);
+            } else {
+                aplc_label.setText(process.getProcess());
+            }
+            show_adjust.setOnClickListener(view1 ->
+                    Panels.getAdjustPanel(context, process, false, false, new AsyncInterface<AlertDialog>() {
+                        @Override
+                        public boolean onAyncDone(@Nullable AlertDialog val) {
+                            assert val != null;
+                            val.dismiss();
+                            notifyDataSetChanged();
+                            return false;
+                        }
+
+                        @Override
+                        public void onFailure(String reason) {
+
+                        }
+                    }).show());
+
+            setupControlPanel(view, process);
+
+            return view;
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
+        if (isweakkey) {
+            return null;
+        }
+
+        if (view == null) {
+            view = inflater.inflate(R.layout.app_list_parent, null);
+        }
+
+        Processes process = data.getPkgs().get(i).getProcesses().get(i1);
+
+        TextView pid = view.findViewById(R.id.app_label);
+        TextView process_name = view.findViewById(R.id.app_pkg);
         ImageButton show_adjust = view.findViewById(R.id.app_adjust_switch);
         Switch app_allowed = view.findViewById(R.id.app_allowed);
 
@@ -113,22 +200,12 @@ public class PlayingExpandableAdapter extends BaseExpandableListAdapter {
             }
         });
 
-        aplc_pkgname.setText(process.getProcess());
+        pid.setText("PID : "+process.getPid());
 
-        Drawable icon = PackageCtlUtils.getIcon(context, Utils.extractPackageName(process.getProcess()));
+        process_name.setText(process.getProcess());
 
-        if (icon != null)
-            aplc_icon.setImageDrawable(icon);
-
-        String label = PackageCtlUtils.getLabel(context, Utils.extractPackageName(process.getProcess()));
-
-        if (Utils.isStringNotEmpty(label)) {
-            aplc_label.setText(label + " (" + process.getPid() + ")");
-        } else {
-            aplc_label.setText(process.getProcess().trim() + " (" + process.getPid() + ")");
-        }
         show_adjust.setOnClickListener(view1 ->
-                Panels.getAdjustPanel(context, process, false, false, new AsyncInterface<AlertDialog>() {
+                Panels.getAdjustPanel(context, process, false, isweakkey, new AsyncInterface<AlertDialog>() {
                     @Override
                     public boolean onAyncDone(@Nullable AlertDialog val) {
                         assert val != null;
@@ -148,14 +225,9 @@ public class PlayingExpandableAdapter extends BaseExpandableListAdapter {
         return view;
     }
 
-    @SuppressLint({"SetTextI18n", "InflateParams"})
     @Override
-    public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
-        if (view == null) {
-            view = lf.inflate(R.layout.app_list_track_item, null);
-        }
-        //TODO : May add split track control
-        return null;
+    public boolean isChildSelectable(int i, int i1) {
+        return false;
     }
 
     private void setupControlPanel(View root, Processes bean) {
@@ -193,11 +265,11 @@ public class PlayingExpandableAdapter extends BaseExpandableListAdapter {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if(b) {
-                    AudioHqApis.setProfile(bean.getProcess(),
+                    AudioHqApis.setProfile(Utils.getFinalProcessName(isweakkey, bean.getProcess()),
                             general.getProgress() * 0.0001f,
                             left.getProgress() * 0.0001f,
                             right.getProgress() * 0.0001f,
-                            split_control.isChecked(), false);
+                            split_control.isChecked(), isweakkey);
                 }
             }
 
@@ -217,11 +289,11 @@ public class PlayingExpandableAdapter extends BaseExpandableListAdapter {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if(b) {
-                    AudioHqApis.setProfile(bean.getProcess(),
+                    AudioHqApis.setProfile(Utils.getFinalProcessName(isweakkey, bean.getProcess()),
                             general.getProgress() * 0.0001f,
                             left.getProgress() * 0.0001f,
                             right.getProgress() * 0.0001f,
-                            split_control.isChecked(), false);
+                            split_control.isChecked(), isweakkey);
                 }
             }
 
@@ -241,11 +313,11 @@ public class PlayingExpandableAdapter extends BaseExpandableListAdapter {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if(b) {
-                    AudioHqApis.setProfile(bean.getProcess(),
+                    AudioHqApis.setProfile(Utils.getFinalProcessName(isweakkey, bean.getProcess()),
                             general.getProgress() * 0.0001f,
                             left.getProgress() * 0.0001f,
                             right.getProgress() * 0.0001f,
-                            split_control.isChecked(), false);
+                            split_control.isChecked(), isweakkey);
                 }
             }
 

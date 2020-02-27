@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import io.alcatraz.audiohq.beans.QueryElement;
-import io.alcatraz.audiohq.core.utils.AudioHqApis;
 
 public class Constants {
     public static String[] SUPPORT_ABIS = {"armeabi", "armeabi-v7a", "arm64-v8a"};
@@ -17,6 +16,12 @@ public class Constants {
     public static final boolean DEFAULT_VALUE_PREF_BOOT = true;
     public static final String PREF_DEFAULT_SILENT = "default_silent";
     public static final boolean DEFAULT_VALUE_PREF_DEFAULT_SILENT = false;
+    public static final String PREF_WEAK_KEY_ADJUST = "weak_key";
+    public static final boolean DEFAULT_VALUE_PREF_WEAK_KEY_ADJUST = false;
+    public static final String PREF_FOLD_SAME_PKG = "fold_same_pkg";
+    public static final boolean DEFAULT_VALUE_PREF_FOLD_SAME_PKG = false;
+    public static final String PREF_PROTECTOR = "protector_service";
+    public static final boolean DEFAULT_VALUE_PREF_PROTECTOR = false;
 
     public static final String PREF_DEFAULT_PROFILE = "default_profile";
     public static final String PREF_CHECK_UPDATE = "check_update";

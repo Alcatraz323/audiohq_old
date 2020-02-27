@@ -64,16 +64,16 @@ public class CheckUtils {
         return modify.contains("readproc");
     }
 
-    public static String getLibVersion() {
-        String raw = AudioHqApis.getAudioFlingerInfo().responseMsg;
-
-        if (Utils.isStringNotEmpty(raw)) {
-            String[] process_1 = raw.split("\\[");
-            String[] process_2 = process_1[1].split("]");
-            return process_2[0];
-        }
-        return null;
-    }
+//    public static String getLibVersion() {
+//        String raw = AudioHqApis.getAudioFlingerInfo().responseMsg;
+//
+//        if (Utils.isStringNotEmpty(raw)) {
+//            String[] process_1 = raw.split("\\[");
+//            String[] process_2 = process_1[1].split("]");
+//            return process_2[0];
+//        }
+//        return null;
+//    }
 
     public static boolean getMagiskInstalled(Context context) {
         final PackageManager packageManager = context.getPackageManager();//获取packagemanager

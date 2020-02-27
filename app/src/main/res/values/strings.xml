@@ -6,26 +6,29 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Change every update -->
     <string name="support_lib_version">&current_match_version;</string>
-    <string name="update_title">20200211</string>
-    <string name="update_info">1.Reconstructed code
+    <string name="update_title">20200226 beta1</string>
+    <string name="update_info">1.Reconstructed code again!\n
     2.No need to modify rc\n
-    3.Can run under enforced linux\n
-    4.Use daemon based control\n
-    5.Support Android 10 arm/arm64 now\n
-    6.Full api to every system\n
-    7.Fixed mute section bug\n
-    8.Fixed bluetooth/wired earphone issues\n
-    9.Fixed progress not saving issues\n
-    10.Fixed preset issues\n
-    11.Fixed status error\n
-    12.added switch profile\n
-    13.deleted useless functions\n
-    14.adjusted layout\n
-    15.Stability upgrade\n
-    16.Fixed scrolling issues\n
-    17.Added default profile setting\n
-    18.Optimized sequence to solve the performance abd battery issue\n
-    19.Fixed memory leak risk</string>
+    3.Use binder based control\n
+    4.Support Android 10 arm/arm64 now\n
+    5.Full api to every supported system\n
+    6.Fixed mute section bug\n
+    7.Fixed bluetooth/wired earphone issues\n
+    8.Fixed progress not saving issues\n
+    9.Fixed preset issues\n
+    10.Fixed status error\n
+    11.added switch profile\n
+    12.deleted useless functions\n
+    13.adjusted layout\n
+    14.Stability upgrade\n
+    15.Fixed scrolling issues\n
+    16.Added default profile setting\n
+    17.Optimized sequence to solve the performance and battery issue\n
+    18.Fixed memory leak risk\n
+    19.Now may support MIUI(Still have some problem)\n
+    20.Volume can be adjusted real time now\n
+    21.Fixed preset widget issue\n
+    22.Fixed native service null pointer dereference\n</string>
 
     <!-- Common -->
     <string name="app_name">AudioHQ</string>
@@ -35,6 +38,7 @@
     <string name="main_menu_3">Start service</string>
     <string name="main_menu_4">Stop service</string>
     <string name="main_menu_5">Refresh</string>
+    <string name="main_menu_6">Console output</string>
     <string name="main_report_bug">Please deliver the error to the address below</string>
     <string name="toast_no_root">No root, this program will not work</string>
     <string name="toast_implementing">Implementing</string>
@@ -81,7 +85,8 @@
     <string name="preset_tutorial_title">Tutorial</string>
     <string name="preset_tutorial_content">Assume you want to set a process called io.alcatraz.audiohq:play
     (Attention!!!Process name does not equals to package name, you can try run \'ps\' command to find out),
-    Then you type the full process name below and the parameter below, after everything is checked ,apply it</string>
+    Then you type the full process name below and the parameter below, after everything is checked ,apply it(If you
+        are  using weakkey mode you can use package name here),Finally, use it at your own risk, good luck</string>
     <string name="preset_process_name">Process name:</string>
 
     <string name="status_server">Native server</string>
@@ -95,15 +100,18 @@
     <string name="setup_step_next_final">Done</string>
     <string name="setup_step_before">Forward</string>
     <string name="setup_1_intro">Hello my friend, before you can start, let\'s take some minutes to complete the setup</string>
-    <string name="setup_2_warning_vendor_system_title">Caution!Vendor modified system detected:%s</string>
-    <string name="setup_2_warning_vendor_system_info">I strongly recommend you NOT TO try installing,
-        this action may cause your phone stuck at the boot animation,if you know what you are doing, and know
-        how to remove the module from the recovery, click the button below to unlock the next step</string>
+    <string name="setup_2_warning_vendor_system_title">Caution!</string>
+    <string name="setup_2_warning_vendor_system_info">This software(the module) will try rebind some
+    critical system libraries, it may cause you stuck at the boot animation and may make your audio system
+    crash, make sure you know how to recover before you flash the module,Also please MAKE SURE YOUR SeLinux
+    is PERMISSIVE or can be set to permissive, the module will try shut down SeLinux on booting, this software
+    will not work and your audio system will crash when selinux is enforcing and u:r:audioserver:s0 is not permissive</string>
     <string name="setup_2_warning_vendor_system_unlock">Understood and unlock</string>
     <string name="setup_2_requirements_not_meet_title">Requirements not meet</string>
     <string name="setup_2_requirements_not_meet_info">There are risks to proceed further installation.
     Next step has been locked, if you know what you are doing and know how to remove the module from recovery
     You can click unlock below</string>
+    <string name="setup_2_warning_delay">Please read the warning carefully, this page will lock for 10s</string>
     <string name="setup_check_granted">Granted</string>
     <string name="setup_check_deny">Denied</string>
     <string name="setup_3_install_title">Installation</string>
@@ -112,8 +120,8 @@
     install the module</string>
     <string name="setup_3_install_page">Download</string>
     <string name="setup_3_installed">I have installed the matched module</string>
-    <string name="setup_3_installed_title">Install Status</string>
-    <string name="setup_3_installed_summary">Current apk supports lib revision : &current_match_version;</string>
+    <string name="setup_3_installed_title">Install Version</string>
+    <string name="setup_3_installed_summary">Current apk supports native revision : &current_match_version;</string>
     <string name="setup_3_installed_detected">Detected : %s</string>
     <string name="setup_4_modify_rc_title">Modify audioserver.rc(requires reboot)</string>
     <string name="setup_4_modify_rc_info">Modify /system/etc/init/audioserver.rc,
@@ -124,6 +132,10 @@
     <string name="setup_4_modify_rc_warning">This action requires reboot, proceed?</string>
     <string name="setup_6_done">Congratulation, now the installation process is completed</string>
     <string name="setup_current_update">Current Update</string>
+    <string name="setup_selinux_check">SeLinux Check</string>
+    <string name="setup_selinux_definition">Your SeLinux is required to be turned to permissive,if you don\'t do
+    it your audio system will crash, the module will try \'setenforce 0\' on boot if it still shows Enforcing below,
+    that means your kernel denied to turn it off</string>
 
     <!--Preferences-->
     <string name="pref_1_t">Background</string>
@@ -141,10 +153,17 @@
     or the proc read function does not work</string>
     <string name="pref_2_3">Default Profile</string>
     <string name="pref_2_3_summary">Set default volume when there are no profile</string>
+    <string name="pref_2_4">Activate protector service</string>
+    <string name="pref_2_4_summary">May be killed by some system, if you want to use this, put this apk to /system/priv-app</string>
     <string name="pref_3_t">Others</string>
     <string name="pref_3_1">Check update</string>
     <string name="pref_3_2">Clear profiles</string>
     <string name="pref_3_3">Uninstall native files</string>
+    <string name="pref_3_4">Use package name as primary key</string>
+    <string name="pref_3_4_summary">The layout and effect will be changed</string>
+    <string name="pref_3_5">Show process with same package name in group</string>
+    <string name="pref_3_5_summary">Beta</string>
+    <string name="pref_need_to_restart_playing_process">Need to restart playing process</string>
 
     <string name="pref_default_silent_warning_title">Warning</string>
     <string name="pref_default_silent_warning_message">If you enable this option,
