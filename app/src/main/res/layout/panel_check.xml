@@ -106,6 +106,7 @@
                         android:layout_margin="8dp"
                         android:scaleX="0.85"
                         android:scaleY="0.85"
+                        android:tint="#E4979797"
                         app:srcCompat="@drawable/ic_information_outline" />
 
                     <LinearLayout
@@ -147,6 +148,7 @@
                         android:layout_margin="8dp"
                         android:scaleX="0.85"
                         android:scaleY="0.85"
+                        android:tint="#E4979797"
                         app:srcCompat="@drawable/ic_security" />
 
                     <LinearLayout

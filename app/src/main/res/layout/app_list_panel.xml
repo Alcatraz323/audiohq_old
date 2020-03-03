@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ExpandableListView
+    <ListView
+        android:divider="@null"
         android:id="@+id/app_list_expl"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

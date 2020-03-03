@@ -17,9 +17,9 @@
             android:id="@+id/app_icon"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:scaleType="fitCenter"
             app:srcCompat="@mipmap/ic_launcher_round" />
 
@@ -63,6 +63,7 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:tint="#E4979797"
             android:layout_marginEnd="4dp"
             android:layout_marginStart="4dp"
             android:layout_weight="0.05"

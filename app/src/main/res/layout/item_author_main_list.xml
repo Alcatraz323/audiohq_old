@@ -9,6 +9,7 @@
     <ImageView
         android:id="@+id/authoritemImageView1"
         android:layout_width="24dp"
+        android:tint="#E4979797"
         android:layout_height="24dp"
         android:layout_margin="16dp" />
 

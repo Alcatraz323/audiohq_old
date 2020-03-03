@@ -7,8 +7,8 @@ android {
         minSdkVersion 28
         maxSdkVersion 29
         targetSdkVersion 28
-        versionCode 7
-        versionName "0.6_2020_2_26_recons_beta1"
+        versionCode 10
+        versionName "0.7_2020_3_3_beta1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -22,6 +22,12 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
     }
 }
 

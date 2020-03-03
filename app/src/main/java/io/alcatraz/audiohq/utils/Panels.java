@@ -23,6 +23,7 @@ import java.util.Objects;
 import io.alcatraz.audiohq.AsyncInterface;
 import io.alcatraz.audiohq.LogBuff;
 import io.alcatraz.audiohq.R;
+import io.alcatraz.audiohq.beans.PrecisePanelBridge;
 import io.alcatraz.audiohq.beans.nativebuffers.Buffers;
 import io.alcatraz.audiohq.beans.nativebuffers.Processes;
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
@@ -146,13 +147,19 @@ public class Panels {
         return builder.create();
     }
 
+    public static View getPresetListPanel(Context context){
+        LayoutInflater lf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        @SuppressLint("InflateParams") View view = lf.inflate(R.layout.panel_preset_list, null);
+        return view;
+    }
+
     @SuppressWarnings("unchecked")
     @SuppressLint("SetTextI18n")
     public static AlertDialog getAdjustPanel(Context ctx,
                                              Processes bean,
                                              boolean isForDefault,
                                              boolean isweakkey,
-                                             AsyncInterface<AlertDialog> asyncInterface) {
+                                             AsyncInterface<PrecisePanelBridge> asyncInterface) {
         LayoutInflater lf = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams") View root = lf.inflate(R.layout.panel_adjust, null);
         TextInputLayout general = root.findViewById(R.id.adjust_general);
@@ -216,7 +223,15 @@ public class Panels {
                             Float.parseFloat(right.getEditText().getText().toString()),
                             split_control.isChecked(), isweakkey);
                 }
-                asyncInterface.onAyncDone(alertDialog);
+
+                PrecisePanelBridge bridge = new PrecisePanelBridge();
+                bridge.setAlertDialog(alertDialog);
+                bridge.setGeneral(Float.parseFloat(general.getEditText().getText().toString()));
+                bridge.setLeft(Float.parseFloat(left.getEditText().getText().toString()));
+                bridge.setRight(Float.parseFloat(right.getEditText().getText().toString()));
+                bridge.setControl_lr(split_control.isChecked());
+
+                asyncInterface.onAyncDone(bridge);
                 adjust_apply_cover.setVisibility(View.GONE);
                 adjust_cancel.setEnabled(true);
                 adjust_apply.setEnabled(true);

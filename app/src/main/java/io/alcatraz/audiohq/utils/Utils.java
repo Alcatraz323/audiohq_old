@@ -4,9 +4,13 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -268,4 +272,25 @@ public class Utils {
             process = extractPackageName(process);
         return process;
     }
+
+
+    public static void ignoreBatteryOptimization(Context context) {
+
+        PowerManager powerManager = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
+
+        boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
+        if(!hasIgnored) {
+            Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+            intent.setData(Uri.parse("package:"+context.getPackageName()));
+            context.startActivity(intent);
+        }
+    }
+
+    public static void setViewSize(View view,int width,int height){
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        params.width = width;
+        params.height = height;
+        view.setLayoutParams(params);
+    }
+
 }

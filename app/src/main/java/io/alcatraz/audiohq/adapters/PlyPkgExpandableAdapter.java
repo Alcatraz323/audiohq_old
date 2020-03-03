@@ -1,10 +1,8 @@
 package io.alcatraz.audiohq.adapters;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +17,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import io.alcatraz.audiohq.AsyncInterface;
 import io.alcatraz.audiohq.R;
 import io.alcatraz.audiohq.beans.nativebuffers.Buffers;
 import io.alcatraz.audiohq.beans.nativebuffers.PackageBuffers;
@@ -28,9 +25,9 @@ import io.alcatraz.audiohq.beans.nativebuffers.Processes;
 import io.alcatraz.audiohq.core.utils.AudioHqApis;
 import io.alcatraz.audiohq.utils.AnimateUtils;
 import io.alcatraz.audiohq.utils.PackageCtlUtils;
-import io.alcatraz.audiohq.utils.Panels;
 import io.alcatraz.audiohq.utils.Utils;
 
+@Deprecated
 public class PlyPkgExpandableAdapter extends BaseExpandableListAdapter {
     private PackageBuffers data;
     private Context context;
@@ -98,15 +95,15 @@ public class PlyPkgExpandableAdapter extends BaseExpandableListAdapter {
             view = inflater.inflate(R.layout.app_list_pkg_mode_parent, null);
             Pkgs pkgs = data.getPkgs().get(i);
 
-            ImageView icon = view.findViewById(R.id.app_list_pkg_icon);
-            TextView label = view.findViewById(R.id.app_list_pkg_label);
-            TextView pkg_name = view.findViewById(R.id.app_list_pkg_name);
-            Drawable icon_d = PackageCtlUtils.getIcon(context, pkgs.getPkg());
-            if (icon_d != null) {
-                icon.setImageDrawable(icon_d);
-            }
-            label.setText(PackageCtlUtils.getLabel(context, pkgs.getPkg())+" ("+pkgs.getProcesses().size()+")");
-            pkg_name.setText(pkgs.getPkg());
+//            ImageView icon = view.findViewById(R.id.app_list_pkg_icon);
+//            TextView label = view.findViewById(R.id.app_list_pkg_label);
+//            TextView pkg_name = view.findViewById(R.id.app_list_pkg_name);
+//            Drawable icon_d = PackageCtlUtils.getIcon(context, pkgs.getPkg());
+//            if (icon_d != null) {
+//                icon.setImageDrawable(icon_d);
+//            }
+//            label.setText(PackageCtlUtils.getLabel(context, pkgs.getPkg())+" ("+pkgs.getProcesses().size()+")");
+//            pkg_name.setText(pkgs.getPkg());
             return view;
         } else {
             view = inflater.inflate(R.layout.app_list_parent, null);
@@ -147,21 +144,21 @@ public class PlyPkgExpandableAdapter extends BaseExpandableListAdapter {
             } else {
                 aplc_label.setText(process.getProcess());
             }
-            show_adjust.setOnClickListener(view1 ->
-                    Panels.getAdjustPanel(context, process, false, false, new AsyncInterface<AlertDialog>() {
-                        @Override
-                        public boolean onAyncDone(@Nullable AlertDialog val) {
-                            assert val != null;
-                            val.dismiss();
-                            notifyDataSetChanged();
-                            return false;
-                        }
-
-                        @Override
-                        public void onFailure(String reason) {
-
-                        }
-                    }).show());
+//            show_adjust.setOnClickListener(view1 ->
+//                    Panels.getAdjustPanel(context, process, false, false, new AsyncInterface<AlertDialog>() {
+//                        @Override
+//                        public boolean onAyncDone(@Nullable AlertDialog val) {
+//                            assert val != null;
+//                            val.dismiss();
+//                            notifyDataSetChanged();
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public void onFailure(String reason) {
+//
+//                        }
+//                    }).show());
 
             setupControlPanel(view, process);
 
@@ -204,21 +201,21 @@ public class PlyPkgExpandableAdapter extends BaseExpandableListAdapter {
 
         process_name.setText(process.getProcess());
 
-        show_adjust.setOnClickListener(view1 ->
-                Panels.getAdjustPanel(context, process, false, isweakkey, new AsyncInterface<AlertDialog>() {
-                    @Override
-                    public boolean onAyncDone(@Nullable AlertDialog val) {
-                        assert val != null;
-                        val.dismiss();
-                        notifyDataSetChanged();
-                        return false;
-                    }
-
-                    @Override
-                    public void onFailure(String reason) {
-
-                    }
-                }).show());
+//        show_adjust.setOnClickListener(view1 ->
+//                Panels.getAdjustPanel(context, process, false, isweakkey, new AsyncInterface<AlertDialog>() {
+//                    @Override
+//                    public boolean onAyncDone(@Nullable AlertDialog val) {
+//                        assert val != null;
+//                        val.dismiss();
+//                        notifyDataSetChanged();
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public void onFailure(String reason) {
+//
+//                    }
+//                }).show());
 
         setupControlPanel(view, process);
 

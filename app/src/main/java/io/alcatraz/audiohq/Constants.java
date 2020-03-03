@@ -16,12 +16,34 @@ public class Constants {
     public static final boolean DEFAULT_VALUE_PREF_BOOT = true;
     public static final String PREF_DEFAULT_SILENT = "default_silent";
     public static final boolean DEFAULT_VALUE_PREF_DEFAULT_SILENT = false;
-    public static final String PREF_WEAK_KEY_ADJUST = "weak_key";
-    public static final boolean DEFAULT_VALUE_PREF_WEAK_KEY_ADJUST = false;
-    public static final String PREF_FOLD_SAME_PKG = "fold_same_pkg";
-    public static final boolean DEFAULT_VALUE_PREF_FOLD_SAME_PKG = false;
+//    public static final String PREF_WEAK_KEY_ADJUST = "weak_key";
+//    public static final boolean DEFAULT_VALUE_PREF_WEAK_KEY_ADJUST = false;
+//    public static final String PREF_FOLD_SAME_PKG = "fold_same_pkg";
+//    public static final boolean DEFAULT_VALUE_PREF_FOLD_SAME_PKG = false;
     public static final String PREF_PROTECTOR = "protector_service";
     public static final boolean DEFAULT_VALUE_PREF_PROTECTOR = false;
+    public static final String PREF_FLOAT_SERVICE = "float_service";
+    public static final boolean DEFAULT_VALUE_PREF_FLOAT_SERVICE = false;
+
+    public static final String PREF_FLOAT_WINDOW_GRAVITY = "float_gravity";
+    public static final String DEFAULT_VALUE_PREF_FLOAT_WINDOW_GRAVITY = "start_top";
+    public static final String PREF_FLOAT_FOREGROUND_SERVICE = "float_foreground_notification";
+    public static final boolean DEFAULT_VALUE_PREF_FLOAT_FOREGROUND_SERVICE = false;
+    public static final String PREF_FLOAT_WINDOW_BACKGROUND = "float_background";
+    public static final String DEFAULT_VALUE_PREF_FLOAT_WINDOW_BACKGROUND = "#ffffff";
+    public static final String PREF_FLOAT_WINDOW_DISMISS_DELAY = "float_dismiss_delay";
+    public static final String DEFAULT_VALUE_PREF_FLOAT_WINDOW_DISMISS_DELAY = "3000";
+    public static final String PREF_FLOAT_WINDOW_MARGIN_TOP = "float_margin_top";
+    public static final String DEFAULT_VALUE_PREF_FLOAT_WINDOW_MARGIN_TOP = "0";
+    public static final String PREF_FLOAT_WINDOW_MARGIN_TOP_LANDSCAPE = "float_margin_top_landscape";
+    public static final String DEFAULT_VALUE_PREF_FLOAT_WINDOW_MARGIN_TOP_LANDSCAPE = "0";
+    public static final String PREF_FLOAT_WINDOW_ICON_TINT = "float_icon_tint";
+    public static final String DEFAULT_VALUE_PREF_FLOAT_WINDOW_ICON_TINT = "#009688";
+    public static final String PREF_FLOAT_WINDOW_TOGGLE_SIZE = "float_toggle_size";
+    public static final String DEFAULT_VALUE_PREF_FLOAT_WINDOW_TOGGLE_SIZE = "52";
+    public static final String PREF_FLOAT_WINDOW_FONT_COLOR = "float_font_color";
+    public static final String DEFAULT_VALUE_PREF_FLOAT_WINDOW_FONT_COLOR = "#009688";
+
 
     public static final String PREF_DEFAULT_PROFILE = "default_profile";
     public static final String PREF_CHECK_UPDATE = "check_update";

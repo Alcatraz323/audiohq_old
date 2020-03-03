@@ -12,7 +12,7 @@ public class AnimateUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Animator a = ViewAnimationUtils.createCircularReveal(v, (int) v.getX(), (int) v.getY(), 0, (float) Math.hypot((double) v.getWidth(), (double) v.getHeight()));
             a.setInterpolator(new AccelerateInterpolator());
-            a.setDuration(500);
+            a.setDuration(400);
             a.start();
             a.addListener(new Animator.AnimatorListener() {
 
@@ -92,7 +92,7 @@ public class AnimateUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Animator a1 = ViewAnimationUtils.createCircularReveal(v, (int) v.getX(), (int) v.getY(), (float) Math.hypot(v.getWidth(), v.getHeight()), 0);
             a1.setInterpolator(new AccelerateInterpolator());
-            a1.setDuration(500);
+            a1.setDuration(450);
             a1.start();
             a1.addListener(new Animator.AnimatorListener() {
 

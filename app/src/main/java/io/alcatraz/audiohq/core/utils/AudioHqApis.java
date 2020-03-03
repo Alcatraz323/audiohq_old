@@ -12,10 +12,14 @@ public class AudioHqApis {
                 split_control ? "true" : "false", isweakkey ? "true" : "false");
     }
 
+    public static ShellUtils.CommandResult unsetProfile(String process_name, boolean weakkey) {
+        return runAudioHqCmd(AudioHqCmds.UNSET_PROFILE, process_name, weakkey ? "true" : "false");
+    }
+
     public static ShellUtils.CommandResult getSwitches() {
         ShellUtils.CommandResult command = runAudioHqCmd(AudioHqCmds.GET_SWITCHES);
-        if(command.responseMsg!=null){
-            command.responseMsg = command.responseMsg.replaceAll("[\n]","");
+        if (command.responseMsg != null) {
+            command.responseMsg = command.responseMsg.replaceAll("[\n]", "");
         }
         return command;
     }
@@ -48,14 +52,14 @@ public class AudioHqApis {
         return runAudioHqCmd(AudioHqCmds.UNMUTE_PROCESS, process_name, isweakkey ? "true" : "false");
     }
 
-    public static void startNativeService(){
+    public static void startNativeService() {
         runAudioHqCmd(AudioHqCmds.START_NATIVE_SERVICE);
     }
 
     public static ShellUtils.CommandResult getDefaultProfile() {
         ShellUtils.CommandResult command = runAudioHqCmd(AudioHqCmds.GET_DEFAULT_PROFILE);
-        if(command.responseMsg!=null){
-            command.responseMsg = command.responseMsg.replaceAll("[\n\t]","");
+        if (command.responseMsg != null) {
+            command.responseMsg = command.responseMsg.replaceAll("[\n\t]", "");
         }
         return command;
     }
@@ -75,14 +79,15 @@ public class AudioHqApis {
         else
             cmd = audioHqCmds.getCmd_raw();
         ShellUtils.CommandResult result = ShellUtils.execCommand(cmd, audioHqCmds.requiresRoot());
-        if(result.responseMsg!=null&&result.responseMsg.length()!=0){
-            result.responseMsg = result.responseMsg.substring(0,result.responseMsg.length()-1);
+        if (result.responseMsg != null && result.responseMsg.length() != 0) {
+            result.responseMsg = result.responseMsg.substring(0, result.responseMsg.length() - 1);
         }
         return result;
     }
 
     enum AudioHqCmds {
         SET_PROFILE("audiohq --set-profile \"%s\" %s %s %s %s %s", false, true),
+        UNSET_PROFILE("audiohq --unset-profile \"%s\" %s", false, true),
         GET_SWITCHES("audiohq --switches", false, false),
         SET_DEFAULT_SILENT_STATE("audiohq --def-silent %s", false, true),
         GET_DEFAULT_PROFILE("audiohq --def-profile", false, false),
@@ -92,8 +97,8 @@ public class AudioHqApis {
         CLEAR_ALL_SETTINGS("audiohq --clear", false, false),
         LIST_ALL_BUFFER("audiohq --list-buffers %s", false, true),
         GET_NATIVE_ELF_INFO("audiohq --elf-info", false, false),
-        SET_WEAK_KEY_ADJUST("audiohq --weak-key %s",false,true),
-        START_NATIVE_SERVICE("audiohq --service",true,false);
+        SET_WEAK_KEY_ADJUST("audiohq --weak-key %s", false, true),
+        START_NATIVE_SERVICE("audiohq --service", true, false);
 
 
         private String cmd_raw;

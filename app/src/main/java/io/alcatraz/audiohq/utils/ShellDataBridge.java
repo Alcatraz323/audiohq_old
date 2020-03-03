@@ -26,6 +26,20 @@ public class ShellDataBridge {
         }).start();
     }
 
+    public static void getProcessBuffersService(AsyncInterface<PackageBuffers> asyncInterface) {
+        ShellUtils.CommandResult buffers_res = AudioHqApis.getAllPlayingClients(1);
+        if (buffers_res.responseMsg != null) {
+            try {
+                PackageBuffers buffers = Utils.json2Object(buffers_res.responseMsg, PackageBuffers.class);
+                asyncInterface.onAyncDone(buffers);
+            } catch (Exception e) {
+                asyncInterface.onFailure(e.getMessage());
+            }
+        } else {
+            asyncInterface.onFailure("Null shell result!");
+        }
+    }
+
     public static void getPackageBuffers(AsyncInterface<PackageBuffers> asyncInterface) {
         new Thread(() -> {
             Looper.prepare();

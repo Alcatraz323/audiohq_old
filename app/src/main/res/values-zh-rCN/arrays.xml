@@ -15,6 +15,11 @@
         <item>不启动外挂服务(修改的rc)</item>
     </string-array>
 
+    <string-array name="entries_for_float_gravity">
+        <item>左上</item>
+        <item>右上</item>
+    </string-array>
+
     <string-array name="setup_page_titles">
         <item>欢迎</item>
         <item>安装要求检查</item>

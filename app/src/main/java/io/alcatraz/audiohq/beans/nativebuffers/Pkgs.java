@@ -29,4 +29,7 @@ public class Pkgs {
          return processes;
      }
 
+     public boolean isweakkeyed(){
+        return processes.get(0).getBuffers().get(0).getIsweakkey().equals("yes");
+     }
 }

@@ -1,9 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY current_match_version "0.8"><!ENTITY current_match_version_code "1">]>
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY current_match_version "0.9"><!ENTITY current_match_version_code "1">]>
 <resources>
     <!-- 更新修改部分 -->
     <string name="support_lib_version">&current_match_version;</string>
-    <string name="update_title">20200226 beta 1</string>
-    <string name="update_info">1.再次代码重构\n
+    <string name="update_title">20200303 beta1</string>
+    <string name="update_info">
+    1.模块安装脚本添加不可关闭Selinux情况的阻止操作\n
+    2.添加安全机制，服务以外死亡，Selinux未关闭将表现为恢复系统音量，不会导致音频系统崩溃\n
+    3.悬浮窗(给权限后，去设置手动启用)\n
+    4.游戏音轨可正常移除了\n
+    5.主列表优化\n
+    6.暂停态音轨不移除了\n
+    7.预设列表列出本机应用\n
+    8.添加悬浮窗自定义选项\n
+    9.预设添加搜索功能\n
+    10.修复悬浮窗附近无法点击问题\n
+    11.bug fix\n\n
+
+        20200226 beta 1\n
+    1.再次代码重构\n
     2.不需要修改rc了,实现systemless\n
     3.使用原生服务后台\n
     4.添加支持Android10 arm/arm64\n
@@ -75,6 +89,7 @@
     <string name="aplc_left">L[0,1]</string>
     <string name="aplc_right">R[0,1]</string>
     <string name="aplc_general">综合[0.1]</string>
+    <string name="aplc_use_process_control">使用进程控制</string>
 
     <string name="preset_disabled">预设功能不可用</string>
     <string name="preset_disabled_define">系统服务未运行</string>
@@ -82,12 +97,19 @@
     <string name="preset_tutorial_content">填入完整进程名，如io.alcatraz.audiohq:play(注意!!!进程名与包名不是一个概念
         你可以通过ps命令查看正在运行的进程的进程名), 随后填入其他数据，检查无误后点击应用(若设置启用包名作为关键字此处可为包名)</string>
     <string name="preset_process_name">进程名:</string>
+    <string name="preset_list_sum">%d 个应用程序</string>
+    <string name="preset_list_notice">注意: 此列表不会载入你之前的设置</string>
+    <string name="preset_loading">加载中…</string>
+    <string name="preset_search_hint">应用名/包名</string>
 
     <string name="status_server">原生服务</string>
     <string name="status_track_ctl_position">音轨控制位置</string>
     <string name="status_auto_remove_flag">自动移除配置</string>
     <string name="status_thread_count">回放线程</string>
     <string name="status_track_lock_ctl">音轨控制类型</string>
+
+    <string name="toast_cant_overlay">请允许显示在请他应用上层</string>
+    <string name="notification_overlay">AudioHQ 后台服务</string>
 
     <!--向导-->
     <string name="setup_step_next">下一步</string>
@@ -97,8 +119,7 @@
     <string name="setup_2_warning_vendor_system_title">警告！</string>
     <string name="setup_2_warning_vendor_system_info">本软件(模块)将尝试重定向一些系统关键库，这将会带来卡在开机界面
         以及音频系统异常的风险，如果你知道你在做什么并且懂得怎么通过twrp删除模块，你可以继续操作，并且！！！请确保你的SeLinux
-    已经关闭(permissive)或可被关闭，模块将会在开机前尝试关闭SeLinux,如果你的Selinux开启并且audioserver不具有permissive的
-    配置，软件将不会工作，且音频将无法播放.最后，使用本软件造成的任何后果由用户承担，祝你好运</string>
+    已经关闭(permissive)或可被关闭，模块将会在开机前尝试关闭SeLinux.最后，使用本软件造成的任何后果由用户承担，祝你好运</string>
     <string name="setup_2_warning_vendor_system_unlock">明白风险并解锁</string>
     <string name="setup_2_requirements_not_meet_title">未满足全部安装要求</string>
     <string name="setup_2_requirements_not_meet_info">继续操作存在风险，下一步骤已被锁定，如果你清楚你在做什么，
@@ -122,8 +143,14 @@
     <string name="setup_6_done">好耶,安装过程已完成</string>
     <string name="setup_current_update">当前更新</string>
     <string name="setup_selinux_check">SeLinux 检查</string>
-    <string name="setup_selinux_definition">当前版本要求关闭SeLinux,若你的Selinux未关闭,且安装了模块,你的音频系统将失效！！！
-    且本软件不会工作,模块尝试在开机时执行setenforce 0,若下方仍显示SeLinux Enforcing,则表明你的内核不允许关闭SeLinux</string>
+    <string name="setup_selinux_definition">当前版本要求关闭SeLinux,若你的Selinux未关闭本软件将不会工作,
+        模块尝试在开机时执行setenforce 0,若下方仍显示SeLinux Enforcing,则表明你的内核不允许关闭SeLinux</string>
+    <string name="setup_permissions">权限</string>
+    <string name="setup_permission_ignore_battery">忽略电池优化</string>
+    <string name="setup_permission_overlay">悬浮窗(授权后去设置手动启用)</string>
+    <string name="setup_permission_request">请求权限</string>
+    <string name="setup_permission_granted">已授权</string>
+
 
     <!--设置-->
     <string name="pref_1_t">后台</string>
@@ -132,6 +159,8 @@
     <string name="pref_1_2_summary">修改audioserver.rc以使用audioserver嵌入方式./system无法写入或rc打包于boot.img时将不会工作</string>
     <string name="pref_1_3">开机启动</string>
     <string name="pref_1_3_summary">开机时将强制启动二进制daemon程序</string>
+    <string name="pref_1_4">悬浮窗服务</string>
+    <string name="pref_1_4_summary">运行服务以实现系统音量改变时出现悬浮窗(请授权忽略电池优化,非类原生放入/system/priv-app)</string>
     <string name="pref_2_t">实验室-安全</string>
     <string name="pref_2_1">未设置进程默认静音</string>
     <string name="pref_2_1_summary">或许以后会有动态授权之类的会用到此项</string>
@@ -140,7 +169,7 @@
     <string name="pref_2_3">默认配置</string>
     <string name="pref_2_3_summary">所有未手动设置的进程的默认配置</string>
     <string name="pref_2_4">启动守护服务</string>
-    <string name="pref_2_4_summary">守护服务可能被系统杀死，最好放到/system/priv-app</string>
+    <string name="pref_2_4_summary">守护服务可能被系统杀死,请授权忽略电池优化,非类原生放入/system/priv-app</string>
     <string name="pref_3_t">其他</string>
     <string name="pref_3_1">检查更新</string>
     <string name="pref_3_2">清除配置</string>
@@ -149,6 +178,19 @@
     <string name="pref_3_4_summary">界面和效果同时生效</string>
     <string name="pref_3_5">折叠同包名进程</string>
     <string name="pref_3_5_summary">将所有同包名进程在一组中显示(测试)</string>
+    <string name="pref_4_t">悬浮窗(退出本界面生效)</string>
+    <string name="pref_4_1">窗口对齐</string>
+    <string name="pref_4_2">背景色</string>
+    <string name="pref_4_3">使用前台服务</string>
+    <string name="pref_4_3_summary">这将会创建一个前台常驻通知以保证悬浮窗服务存活</string>
+    <string name="pref_4_4">无操作消失时间(毫秒)</string>
+    <string name="pref_4_5">顶部修正距离(dp)</string>
+    <string name="pref_4_6">横屏顶部修正距离(dp)</string>
+    <string name="pref_4_7">图标颜色</string>
+    <string name="pref_4_8">开关边长(dp)</string>
+    <string name="pref_4_9">字体颜色</string>
+    <string name="pref_invalid_integer">无效整数</string>
+    <string name="pref_invalid_color">无效颜色</string>
     <string name="pref_need_to_restart_playing_process">需要完全重启播放进程(重启系统最好)</string>
 
     <string name="pref_default_silent_warning_title">警告</string>

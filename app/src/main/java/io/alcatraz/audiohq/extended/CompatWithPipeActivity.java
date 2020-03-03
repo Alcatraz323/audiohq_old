@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.alcatraz.support.v4.appcompat.StatusBarUtil;
 
 import io.alcatraz.audiohq.Constants;
+import io.alcatraz.audiohq.R;
 import io.alcatraz.audiohq.utils.PermissionInterface;
 import io.alcatraz.audiohq.utils.SharedPreferenceUtil;
 
@@ -28,8 +29,9 @@ public class CompatWithPipeActivity extends AppCompatActivity {
     //=========PREFERENCES==============
     public boolean default_silent;
     public boolean boot;
-    public boolean fold_same_pkg;
+//    public boolean fold_same_pkg;
     public boolean protector_service;
+    public boolean float_service;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -42,6 +44,7 @@ public class CompatWithPipeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppTheme_Dark);
         loadPrefernce();
         registReceivers();
     }
@@ -63,8 +66,9 @@ public class CompatWithPipeActivity extends AppCompatActivity {
         SharedPreferenceUtil spf = SharedPreferenceUtil.getInstance();
         boot = (boolean) spf.get(this, Constants.PREF_BOOT, Constants.DEFAULT_VALUE_PREF_BOOT);
         default_silent = (boolean) spf.get(this, Constants.PREF_DEFAULT_SILENT, Constants.DEFAULT_VALUE_PREF_DEFAULT_SILENT);
-        fold_same_pkg = (boolean) spf.get(this,Constants.PREF_FOLD_SAME_PKG,Constants.DEFAULT_VALUE_PREF_FOLD_SAME_PKG);
+//        fold_same_pkg = (boolean) spf.get(this,Constants.PREF_FOLD_SAME_PKG,Constants.DEFAULT_VALUE_PREF_FOLD_SAME_PKG);
         protector_service = (boolean) spf.get(this,Constants.PREF_PROTECTOR,Constants.DEFAULT_VALUE_PREF_PROTECTOR);
+        float_service = (boolean) spf.get(this,Constants.PREF_FLOAT_SERVICE,Constants.DEFAULT_VALUE_PREF_FLOAT_SERVICE);
     }
 
     public void registReceivers() {

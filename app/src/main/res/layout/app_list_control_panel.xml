@@ -16,8 +16,8 @@
             android:id="@+id/aplc_combined_control"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
             android:layout_weight="0.8"
             android:max="10000"
             android:progress="10000" />

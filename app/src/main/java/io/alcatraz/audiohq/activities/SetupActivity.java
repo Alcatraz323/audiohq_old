@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.view.View;
@@ -72,8 +73,8 @@ public class SetupActivity extends SetupWizardBaseActivity {
     public void onUpdate(List<SetupPage> pages) {
         SetupPage page = new SetupPage(getResources().getString(R.string.setup_current_update), R.layout.setup_6);
         pages.add(getSelinuxCheckPage());
+        pages.add(getPermissionPage());
         pages.add(page);
-
     }
 
     @Override
@@ -84,7 +85,7 @@ public class SetupActivity extends SetupWizardBaseActivity {
 
     @Override
     public int getVersionCode() {
-        return 7;
+        return 10;
     }
 
     private void onSelectSetup4_Apply() {
@@ -246,6 +247,28 @@ public class SetupActivity extends SetupWizardBaseActivity {
             indicator.setImageResource(R.drawable.ic_check);
         }
 
+        page.setRootView(root);
+        return page;
+    }
+
+    public SetupPage getPermissionPage(){
+        SetupPage page = new SetupPage(getString(R.string.setup_permissions),R.layout.setup_8);
+        View root = getLayoutInflater().inflate(R.layout.setup_8,null);
+        Button request_battery_ignore = root.findViewById(R.id.request_battery_ignore);
+        Button request_overlay = root.findViewById(R.id.request_overlay);
+        request_battery_ignore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.ignoreBatteryOptimization(SetupActivity.this);
+            }
+        });
+
+        request_overlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())));
+            }
+        });
         page.setRootView(root);
         return page;
     }
